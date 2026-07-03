@@ -351,9 +351,29 @@ async function processVideoAsync(job_id, user_id, youtube_url, existingVideoPath
     await supabase.from('processing_jobs').update({ status: 'completed' }).eq('id', job_id);
 
     try {
-      await supabase.rpc('decrement_credits', { user_id, amount: clipIds.length });
+      const { data: creditRow, error: creditReadError } = await supabase
+        .from('users')
+        .select('credits')
+        .eq('id', user_id)
+        .single();
+
+      if (creditReadError) {
+        logger(`Credit read error: ${creditReadError.message}`);
+      } else {
+        const novoSaldo = Math.max(0, (creditRow.credits || 0) - clipIds.length);
+        const { error: creditUpdateError } = await supabase
+          .from('users')
+          .update({ credits: novoSaldo })
+          .eq('id', user_id);
+
+        if (creditUpdateError) {
+          logger(`Credit update error: ${creditUpdateError.message}`);
+        } else {
+          logger(`Credits updated for ${user_id}: ${novoSaldo} remaining`);
+        }
+      }
     } catch (e) {
-      await supabase.from('users').update({ credits: supabase.rpc('greatest', { a: 0, b: supabase.literal(`credits - ${clipIds.length}`) }) }).eq('id', user_id);
+      logger(`Credit decrement failed: ${e.message}`);
     }
 
     logger(`Job ${job_id} done: ${clipIds.length} clips`);
