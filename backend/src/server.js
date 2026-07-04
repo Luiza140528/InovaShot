@@ -117,6 +117,7 @@ app.get('/api/user/me', authenticateUser, async (req, res) => {
       email: userData.email || req.user.email,
       plan: userData.plan || 'free',
       credits_used,
+      clips_used: credits_used,
       credits_remaining: credits,
       clips_limit,
     });
@@ -421,20 +422,31 @@ async function downloadVideo(url, job_id) {
 
     const formats = response.data.formats;
     let downloadUrl = null;
-    for (const itag of ['18', '134', '135', '136', '22']) {
-      if (formats[itag]?.url) {
-        downloadUrl = formats[itag].url;
-        logger(`Usando itag ${itag}`);
-        break;
+    if (Array.isArray(formats)) {
+      const preferredItags = [18, 22, 134, 135, 136];
+      for (const itag of preferredItags) {
+        const fmt = formats.find(f => f.itag === itag && f.url);
+        if (fmt) { downloadUrl = fmt.url; break; }
+      }
+      if (!downloadUrl) {
+        const first = formats.find(f => f.url && f.mimeType && f.mimeType.includes("video"));
+        if (first) downloadUrl = first.url;
+      }
+    } else {
+      for (const itag of ["18", "134", "135", "136", "22"]) {
+        if (formats[itag] && formats[itag].url) { downloadUrl = formats[itag].url; break; }
+      }
+      if (!downloadUrl) {
+        const first = Object.values(formats).find(f => f.url && f.mimeType && f.mimeType.includes("video"));
+        if (first) downloadUrl = first.url;
       }
     }
 
-    if (!downloadUrl) {
-      const first = Object.values(formats).find(f => f.url && f.mimeType?.includes('video'));
-      if (first) downloadUrl = first.url;
-    }
-
     if (!downloadUrl) throw new Error('Nenhum formato encontrado');
+
+    const { HttpsProxyAgent } = require('https-proxy-agent');
+    const proxyUrl = process.env.WEBSHARE_PROXY;
+    const proxyAgent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : undefined;
 
     const videoRes = await axios({
       method: 'GET',
@@ -442,6 +454,9 @@ async function downloadVideo(url, job_id) {
       responseType: 'stream',
       timeout: 300000,
       headers: { 'User-Agent': 'Mozilla/5.0' },
+      httpsAgent: proxyAgent,
+      httpAgent: proxyAgent,
+      maxRedirects: 5,
     });
 
     await new Promise((resolve, reject) => {
@@ -517,7 +532,7 @@ async function analyzeWithClaude(transcript, config = {}) {
     const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
     const message = await client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'claude-haiku-4-5',
       max_tokens: 1024,
       messages: [{
         role: 'user',
@@ -628,9 +643,110 @@ app.post('/api/pagamento/webhook', async (req, res) => {
   }
 });
 
+
+// ============================================
+// RESOLVE YOUTUBE URL (download acontece no celular)
+// ============================================
+function extractVideoId(url) {
+  if (!url) return null;
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/ \s]{11})/i;
+  const match = url.match(regExp);
+  return (match && match[1]) ? match[1] : url;
+}
+
+app.post('/api/process/resolve', authenticateUser, async (req, res) => {
+  try {
+    const { youtube_url } = req.body;
+    if (!youtube_url) return res.status(400).json({ error: 'URL obrigatoria' });
+
+    const videoId = extractVideoId(youtube_url);
+    logger(`Resolving video ID: ${videoId}`);
+
+    const response = await axios.get('https://ytstream-download-youtube-videos.p.rapidapi.com/dl', {
+      params: { id: videoId },
+      headers: {
+        'x-rapidapi-host': 'ytstream-download-youtube-videos.p.rapidapi.com',
+        'x-rapidapi-key': process.env.RAPIDAPI_KEY,
+      },
+      timeout: 30000,
+    });
+
+    if (!response.data || !response.data.formats) {
+      return res.status(500).json({ error: 'Nao foi possivel obter formatos do video' });
+    }
+
+    const formats = response.data.formats;
+    let downloadUrl = null;
+    const preferredItags = [18, 22, 134, 135, 136];
+
+    if (Array.isArray(formats)) {
+      for (const itag of preferredItags) {
+        const fmt = formats.find(f => f.itag === itag && f.url);
+        if (fmt) { downloadUrl = fmt.url; break; }
+      }
+      if (!downloadUrl) {
+        const first = formats.find(f => f.url && f.mimeType && f.mimeType.includes("video"));
+        if (first) downloadUrl = first.url;
+      }
+    } else {
+      for (const itag of ["18", "134", "135", "136", "22"]) {
+        if (formats[itag] && formats[itag].url) { downloadUrl = formats[itag].url; break; }
+      }
+    }
+
+    if (!downloadUrl) return res.status(500).json({ error: 'Nenhum formato encontrado' });
+
+    return res.json({ 
+      ok: true, 
+      downloadUrl,
+      videoId,
+      title: response.data.title || ''
+    });
+  } catch (e) {
+    logger(`Resolve error: ${e.message}`);
+    return res.status(500).json({ error: 'Falha ao resolver URL' });
+  }
+});
+
 // ============================================
 // HEALTH
 // ============================================
+
+// ============================================
+// ADMIN - visivel apenas para a fundadora
+// ============================================
+const ADMIN_EMAIL = 'luizasoares0310@gmail.com';
+
+app.get('/api/admin/stats', authenticateUser, async (req, res) => {
+  try {
+    if (req.user.email !== ADMIN_EMAIL) {
+      return res.status(403).json({ error: 'Acesso negado' });
+    }
+
+    const { data: usuarios, error: usersError } = await supabase
+      .from('users')
+      .select('email, plan, credits, created_at')
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    const { data: pagamentos, error: transError } = await supabase
+      .from('transactions')
+      .select('user_id, amount, plan, status, created_at')
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (usersError) logger(`Admin users error: ${usersError.message}`);
+    if (transError) logger(`Admin transactions error: ${transError.message}`);
+
+    res.json({
+      usuarios: usuarios || [],
+      pagamentos: pagamentos || [],
+    });
+  } catch (error) {
+    logger(`Admin stats error: ${error.message}`);
+    res.status(500).json({ error: 'Falha ao carregar estatisticas' });
+  }
+});
 
 app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 app.get('/', (req, res) => res.json({ service: 'InovaShot API', status: 'running' }));
