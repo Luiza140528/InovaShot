@@ -1,1 +1,65 @@
 
+require('dotenv').config();
+const cron = require('node-cron');
+const { createClient } = require('@supabase/supabase-js');
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+const logger = (message) => {
+  console.log(`[${new Date().toISOString()}] [limpeza] ${message}`);
+};
+
+async function limparClipsAntigos() {
+  const limite = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+
+  const { data: clipsAntigos, error } = await supabase
+    .from('clips')
+    .select('id, storage_url')
+    .lt('created_at', limite);
+
+  if (error) {
+    logger(`erro ao buscar clips antigos: ${error.message}`);
+    return;
+  }
+
+  if (!clipsAntigos || clipsAntigos.length === 0) {
+    logger('nenhum clip para remover.');
+    return;
+  }
+
+  let removidos = 0;
+
+  for (const clip of clipsAntigos) {
+    if (clip.storage_url) {
+      const { error: storageError } = await supabase.storage
+        .from('clips')
+        .remove([clip.storage_url]);
+
+      if (storageError) {
+        logger(`erro ao remover arquivo do clip ${clip.id}: ${storageError.message}`);
+      }
+    }
+
+    const { error: deleteError } = await supabase
+      .from('clips')
+      .delete()
+      .eq('id', clip.id);
+
+    if (deleteError) {
+      logger(`erro ao remover registro do clip ${clip.id}: ${deleteError.message}`);
+    } else {
+      removidos++;
+    }
+  }
+
+  logger(`${removidos} clip(s) removido(s) de ${clipsAntigos.length} encontrado(s).`);
+}
+
+cron.schedule('0 3 * * *', limparClipsAntigos);
+
+logger('job de limpeza agendado (todo dia às 3h).');
+
+module.exports = { limparClipsAntigos };
