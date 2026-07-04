@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./jobs/limparClipsAntigos');
+require('./limparClipsAntigos');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
