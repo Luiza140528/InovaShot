@@ -752,6 +752,35 @@ app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() 
 app.get('/', (req, res) => res.json({ service: 'InovaShot API', status: 'running' }));
 
 const PORT = process.env.PORT || 8080;
+// ============================================
+// ROTA: Buscar Tendências (Módulo Político)
+// Usa o mesmo padrão (SDK Anthropic + ANTHROPIC_API_KEY do .env)
+// já usado na função analyzeWithClaude()
+// ============================================
+
+app.post('/api/tendencias', authenticateUser, async (req, res) => {
+  try {
+    const Anthropic = require('@anthropic-ai/sdk');
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 500,
+      messages: [{
+        role: 'user',
+        content: `Liste 5 tendências atuais de formato e conteúdo para TikTok e Reels no Brasil em ${new Date().toLocaleDateString('pt-BR')}. Foco em conteúdo político e criadores de conteúdo. Seja específico e prático. Responda em português, formato lista simples.`
+      }],
+    });
+
+    const text = message.content[0]?.text || 'Não foi possível buscar tendências agora.';
+    return res.json({ text });
+
+  } catch (e) {
+    logger(`Erro /api/tendencias: ${e.message}`);
+    return res.status(500).json({ erro: 'Erro ao buscar tendências.' });
+  }
+});
+
 app.listen(PORT, () => {
   logger(`InovaShot server running on port ${PORT}`);
   logger(`Environment: ${process.env.NODE_ENV || 'development'}`);
