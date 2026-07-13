@@ -1,4 +1,4 @@
-const ACCESS_TOKEN = "COLE_SEU_TOKEN_AQUI";
+const ACCESS_TOKEN = "27567513142918699";
 const THREADS_USER_ID = "27567513142918699";
 const BASE_URL = "https://graph.threads.net/v1.0";
 
