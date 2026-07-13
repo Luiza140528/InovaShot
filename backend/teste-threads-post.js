@@ -21,7 +21,7 @@ async function publicarNoThreads(texto) {
     // ETAPA 1 — Criar o container do post
     console.log("1/2 — Criando container...");
     const criarContainer = await fetch(
-      `${BASE_URL}/${THREADS_USER_ID}/threads?` +
+      `${BASE_URL}/${THREADS_USER_ID}/threads?` +27567513142918699
         new URLSearchParams({
           media_type: "TEXT",
           text: texto,
