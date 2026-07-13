@@ -11,7 +11,7 @@
  * Depois do teste, o ideal é mover o token pro .env e usar process.env.THREADS_ACCESS_TOKEN
  */
 
-const ACCESS_TOKEN = "COLE_SEU_TOKEN_AQUI";
+const ACCESS_TOKEN = "27567513142918699";
 const THREADS_USER_ID = "27567513142918699"; // já preenchido, é o ID da @inovashot.cortes
 
 const BASE_URL = "https://graph.threads.net/v1.0";
