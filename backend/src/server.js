@@ -197,7 +197,7 @@ app.post('/api/process', authenticateUser, async (req, res) => {
       .single();
 
     if (!userData || userData.credits <= 0) {
-      return res.status(402).json({ error: 'No credits available' });
+      return res.status(402).json({ error: 'Créditos insuficientes' });
     }
 
     const job_id = `job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -242,7 +242,7 @@ app.post('/api/process/upload', authenticateUser, upload.single('video'), async 
 
     if (!userData || userData.credits <= 0) {
       fs.unlink(req.file.path, () => {});
-      return res.status(402).json({ error: 'No credits available' });
+      return res.status(402).json({ error: 'Créditos insuficientes' });
     }
 
     const job_id = `job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -291,6 +291,18 @@ async function processVideoAsync(job_id, user_id, youtube_url, existingVideoPath
     const transcription = await transcribeVideo(videoPath);
     const transcript = transcription.text;
     const words = transcription.words || [];
+
+    try {
+      const { transcriptionQueue } = require('./orchestrator/transcription-step');
+      await transcriptionQueue.add('transcribe', {
+        processingJobId: job_id,
+        text: transcription.text,
+        language: transcription.language,
+        confidence: transcription.confidence,
+      });
+    } catch (obsError) {
+      logger(`Observação do orquestrador falhou (não bloqueante): ${obsError.message}`);
+    }
 
     let videoDuration = 999;
     try {
@@ -505,6 +517,7 @@ async function transcribeVideo(videoPath) {
     form.append('language', 'pt');
     form.append('response_format', 'verbose_json');
     form.append('timestamp_granularities[]', 'word');
+    form.append('timestamp_granularities[]', 'segment');
 
     const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', form, {
       headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, ...form.getHeaders() },
@@ -512,7 +525,13 @@ async function transcribeVideo(videoPath) {
       maxBodyLength: Infinity,
     });
 
-    return { text: response.data.text, words: response.data.words || [] };
+    const segments = response.data.segments || [];
+    const avgLogprob = segments.length
+      ? segments.reduce((sum, s) => sum + (s.avg_logprob || 0), 0) / segments.length
+      : 0;
+    const confidence = Math.max(0, Math.min(1, Math.exp(avgLogprob)));
+
+    return { text: response.data.text, words: response.data.words || [], language: response.data.language, confidence };
   } catch (error) {
     throw new Error('Transcription failed');
   } finally {
@@ -575,7 +594,7 @@ async function generateClip(videoPath, startSeconds, endSeconds, reason, applyWa
   );
 
   if (!fs.existsSync(clipPath)) throw new Error('Clip não gerado');
-  return clipPath;
+  return await removeSilence(clipPath);
 }
 
 // ============================================
@@ -752,32 +771,77 @@ app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() 
 app.get('/', (req, res) => res.json({ service: 'InovaShot API', status: 'running' }));
 
 const PORT = process.env.PORT || 8080;
-// ============================================
-// ROTA: Buscar Tendências (Módulo Político)
-// Usa o mesmo padrão (SDK Anthropic + ANTHROPIC_API_KEY do .env)
-// já usado na função analyzeWithClaude()
-// ============================================
 
+// Rota: POST /api/tendencias
 app.post('/api/tendencias', authenticateUser, async (req, res) => {
   try {
-    const Anthropic = require('@anthropic-ai/sdk');
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 500,
-      messages: [{
-        role: 'user',
-        content: `Liste 5 tendências atuais de formato e conteúdo para TikTok e Reels no Brasil em ${new Date().toLocaleDateString('pt-BR')}. Foco em conteúdo político e criadores de conteúdo. Seja específico e prático. Responda em português, formato lista simples.`
-      }],
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 500,
+        messages: [{
+          role: 'user',
+          content: `Liste 5 tendências atuais de formato e conteúdo para TikTok e Reels no Brasil em ${new Date().toLocaleDateString('pt-BR')}. Foco em conteúdo político e criadores de conteúdo. Seja específico e prático. Responda em português, formato lista simples.`
+        }]
+      })
     });
 
-    const text = message.content[0]?.text || 'Não foi possível buscar tendências agora.';
-    return res.json({ text });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Erro na API Anthropic (tendencias):', response.status, errorText);
+      return res.status(502).json({ error: 'Falha ao buscar tendências' });
+    }
 
-  } catch (e) {
-    logger(`Erro /api/tendencias: ${e.message}`);
-    return res.status(500).json({ erro: 'Erro ao buscar tendências.' });
+    const data = await response.json();
+    const texto = data.content?.[0]?.text || 'Nenhuma tendência encontrada.';
+
+    res.json({ text: texto });
+  } catch (err) {
+    console.error('Erro na rota /api/tendencias:', err);
+    res.status(500).json({ error: 'Erro interno ao buscar tendências' });
+  }
+});
+
+
+// Rota: GET /api/trends
+app.get('/api/trends', async (req, res) => {
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 500,
+        messages: [{
+          role: 'user',
+          content: `Liste 5 tendências atuais de formato e conteúdo para TikTok e Reels no Brasil em ${new Date().toLocaleDateString('pt-BR')}. Foco em conteúdo político e criadores de conteúdo. Seja específico e prático. Responda em português, formato lista simples.`
+        }]
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Erro na API Anthropic (trends):', response.status, errorText);
+      return res.status(502).json({ error: 'Falha ao buscar tendências' });
+    }
+
+    const data = await response.json();
+    const texto = data.content?.[0]?.text || 'Nenhuma tendência encontrada.';
+
+    res.json({ trends: texto });
+  } catch (err) {
+    console.error('Erro na rota /api/trends:', err);
+    res.status(500).json({ error: 'Erro interno ao buscar tendências' });
   }
 });
 
@@ -785,3 +849,86 @@ app.listen(PORT, () => {
   logger(`InovaShot server running on port ${PORT}`);
   logger(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
+
+// ============================================
+// REMOÇÃO DE SILÊNCIO
+// ============================================
+
+async function removeSilence(clipPath) {
+  try {
+    const noiseThreshold = '-30dB';
+    const minSilenceDuration = 0.6;
+
+    let silenceLog = '';
+    try {
+      await execAsync(
+        `ffmpeg -i "${clipPath}" -af silencedetect=noise=${noiseThreshold}:d=${minSilenceDuration} -f null - 2>&1`,
+        { timeout: 60000 }
+      );
+    } catch (e) {
+      silenceLog = (e.stdout || '') + (e.stderr || '') + (e.message || '');
+    }
+
+    const starts = [...silenceLog.matchAll(/silence_start:\s*([\d.]+)/g)].map(m => parseFloat(m[1]));
+    const ends = [...silenceLog.matchAll(/silence_end:\s*([\d.]+)/g)].map(m => parseFloat(m[1]));
+
+    if (starts.length === 0) {
+      return clipPath;
+    }
+
+    const { stdout: durationOut } = await execAsync(
+      `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${clipPath}"`
+    );
+    const totalDuration = parseFloat(durationOut.trim());
+
+    const silences = starts.map((start, i) => ({
+      start,
+      end: ends[i] !== undefined ? ends[i] : totalDuration,
+    }));
+
+    let keepSegments = [];
+    let cursor = 0;
+    for (const s of silences) {
+      if (s.start > cursor) {
+        keepSegments.push({ start: cursor, end: s.start });
+      }
+      cursor = Math.max(cursor, s.end);
+    }
+    if (cursor < totalDuration) {
+      keepSegments.push({ start: cursor, end: totalDuration });
+    }
+
+    keepSegments = keepSegments.filter(seg => (seg.end - seg.start) > 0.15);
+
+    if (keepSegments.length === 0 || keepSegments.length > 25) {
+      logger(`Silence removal skipped: ${keepSegments.length} segmentos`);
+      return clipPath;
+    }
+
+    let filterParts = [];
+    let concatInputs = '';
+    keepSegments.forEach((seg, i) => {
+      filterParts.push(`[0:v]trim=start=${seg.start}:end=${seg.end},setpts=PTS-STARTPTS[v${i}]`);
+      filterParts.push(`[0:a]atrim=start=${seg.start}:end=${seg.end},asetpts=PTS-STARTPTS[a${i}]`);
+      concatInputs += `[v${i}][a${i}]`;
+    });
+    const filterComplex = filterParts.join(';') + `;${concatInputs}concat=n=${keepSegments.length}:v=1:a=1[outv][outa]`;
+
+    const outputPath = clipPath.replace('.mp4', '_nosilence.mp4');
+
+    await execAsync(
+      `ffmpeg -i "${clipPath}" -filter_complex "${filterComplex}" -map "[outv]" -map "[outa]" -c:v libx264 -preset ultrafast -c:a aac -movflags +faststart "${outputPath}" -y`,
+      { timeout: 120000 }
+    );
+
+    if (fs.existsSync(outputPath)) {
+      fs.unlinkSync(clipPath);
+      return outputPath;
+    }
+    return clipPath;
+
+  } catch (e) {
+    logger(`Silence removal error: ${e.message}`);
+    return clipPath;
+  }
+}
