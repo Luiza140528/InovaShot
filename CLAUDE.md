@@ -69,3 +69,27 @@ sessão relevante, não só revisado esporadicamente.
 - É cuidadora familiar (Dona Niza), o que limita o tempo disponível — prefira
   respostas diretas, objetivas e acionáveis, sem enrolação
 - Prefere que eu já resolva/implemente em vez de só explicar o que fazer
+- ## Protocolo de auto-otimização
+
+Antes de qualquer tarefa não-trivial, siga este protocolo:
+
+1. **Investigar**: consulte `learnings.md` primeiro — o problema pode já
+   ter sido visto antes.
+2. **Planejar**: descreva em poucas linhas o que vai fazer.
+3. **Implementar**: mudança mínima, arquivo completo (nunca trecho
+   solto).
+4. **Verificar**: rode os critérios de `verification-standard.md`
+   correspondentes ao tipo de mudança antes de reportar como concluído.
+
+Sempre que encontrar um erro, resolver um bug ou descobrir uma causa raiz
+não óbvia, registre em `learnings.md` no formato definido no próprio
+arquivo — isso vale tanto para sucessos quanto para tentativas que não
+funcionaram.
+
+Nunca marque uma feature como "implementada" ou "funcionando" sem
+verificação real (ver verification-standard.md). "O código parece
+correto" não é critério de aceitação.
+
+Referências:
+- @verification-standard.md
+- @learnings.md
