@@ -4,8 +4,8 @@
 > (causa raiz confirmada com evidência real), correção aprovada pela Luiza
 > e aplicada em `backend/src/server.js`, revalidada com o mesmo teste
 > ponta a ponta (saída passou a ser mais curta que a entrada, como
-> esperado). Detalhes completos em PROGRESS.md. Falta apenas o DEPLOY da
-> correção em produção (DigitalOcean) — fora do escopo deste loop.
+> esperado). Detalhes completos em PROGRESS.md. Deploy em produção feito e
+> confirmado em 28/07 (`pm2 restart inovashot` + `/health` retornando 200).
 
 ## Objetivo
 Confirmar, com evidência real (não suposição), se a remoção de silêncio via

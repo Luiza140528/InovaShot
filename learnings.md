@@ -43,8 +43,10 @@ Formato de cada entrada:
   (capturar `stdout`/`stderr` também no caminho de SUCESSO do `execAsync`,
   não só no `catch`) e reconfirmada com o mesmo harness: saída passou de
   10s (idêntica à entrada, bug) para 6.03s (corte correto, bate com os
-  blocos de áudio audível esperados). Ainda NÃO deployada em produção
-  (DigitalOcean) — só aplicada no código local/GitHub.
+  blocos de áudio audível esperados). Deployada em produção em 28/07 via
+  `pm2 restart inovashot` (este ambiente É o servidor de produção —
+  confirmado por `pm2 describe inovashot`), com `/health` respondendo 200
+  após o restart.
 - Como evitar de novo: nenhuma feature de processamento de mídia deve ser
   marcada como "implementada" sem teste com arquivo real (ver
   verification-standard.md, seção 2). Além disso: ao usar `execAsync`/

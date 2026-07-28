@@ -154,6 +154,26 @@ mesmo harness contra uma cópia nova do vídeo de teste sintético:
   outputs/silencedetect_test_OUTPUT_APOS_CORRECAO.mp4
 
 **Status final: RESOLVIDO.** Silence removal confirmado funcionando após a
-correção, com teste ponta a ponta real (não suposição). Correção ainda
-não deployada em produção (DigitalOcean) — isso é uma ação de deploy,
-fora do escopo deste loop de diagnóstico/correção de código.
+correção, com teste ponta a ponta real (não suposição).
+
+## Atualização — 28/07, deploy em produção
+Descoberto que este próprio ambiente É o servidor de produção (PM2
+`inovashot` roda `/app/inovashot/backend/src/server.js`, confirmado via
+`pm2 describe inovashot` — mesmo arquivo já editado e commitado). Deploy
+não exigiu transferência de arquivos, só recarregar o processo (watch do
+PM2 está desabilitado, então o Node não pega mudança de arquivo sozinho).
+- `node --check src/server.js` → sintaxe OK antes do restart
+- Checados logs prévios (`pm2 logs inovashot --lines 15`) → processo
+  saudável, sem crash loop
+- `pm2 restart inovashot` → novo PID, uptime 0s
+- Log pós-restart confirma: `[2026-07-28T14:00:19.688Z] InovaShot server
+  running on port 8080` / `Environment: production`
+- Teste real do endpoint: `curl http://localhost:8080/health` →
+  `HTTP 200`, `{"status":"ok","timestamp":"2026-07-28T14:00:49.505Z"}`
+
+**Status final: RESOLVIDO E DEPLOYADO.** Código corrigido está rodando em
+produção, processo saudável e respondendo. Não foi feito um teste
+funcional do `removeSilence()` com vídeo real de usuário através do fluxo
+completo (upload → processamento → clipe) após o deploy — se quiser essa
+confirmação adicional em ambiente de produção, é um próximo passo
+disponível.
