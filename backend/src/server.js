@@ -861,10 +861,11 @@ async function removeSilence(clipPath) {
 
     let silenceLog = '';
     try {
-      await execAsync(
+      const { stdout, stderr } = await execAsync(
         `ffmpeg -i "${clipPath}" -af silencedetect=noise=${noiseThreshold}:d=${minSilenceDuration} -f null - 2>&1`,
         { timeout: 60000 }
       );
+      silenceLog = (stdout || '') + (stderr || '');
     } catch (e) {
       silenceLog = (e.stdout || '') + (e.stderr || '') + (e.message || '');
     }

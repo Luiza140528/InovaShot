@@ -1,5 +1,12 @@
 # TASK.md — Verificação do Silence Removal (InovaShot)
 
+> **STATUS: RESOLVIDO (2026-07-28)** — Silence removal estava quebrado
+> (causa raiz confirmada com evidência real), correção aprovada pela Luiza
+> e aplicada em `backend/src/server.js`, revalidada com o mesmo teste
+> ponta a ponta (saída passou a ser mais curta que a entrada, como
+> esperado). Detalhes completos em PROGRESS.md. Falta apenas o DEPLOY da
+> correção em produção (DigitalOcean) — fora do escopo deste loop.
+
 ## Objetivo
 Confirmar, com evidência real (não suposição), se a remoção de silêncio via
 FFmpeg `silencedetect` está de fato funcionando no pipeline de processamento

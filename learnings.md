@@ -26,12 +26,32 @@ Formato de cada entrada:
   Isso resolve a dúvida de "será que está no código", mas NÃO é ainda
   um teste real com vídeo — falta rodar um processamento completo e
   comparar duração/conteúdo do output antes/depois.
-- Status: PARCIALMENTE RESOLVIDO. Código confirmado ativo em produção.
-  Falta teste funcional com arquivo real (ver verification-standard.md,
-  seção 2) antes de marcar como 100% concluído.
+- Atualização (28/07): teste funcional real executado (vídeo sintético de
+  10s com silêncio digital real em 2-4s e 6-8s, processado pela função
+  `removeSilence()` extraída verbatim de server.js e rodada isolada em
+  harness Node — ver PROGRESS.md/outputs/ para logs e arquivos completos).
+  CAUSA RAIZ ENCONTRADA: em `removeSilence()` (server.js:857-934), o log do
+  `ffmpeg -af silencedetect=... -f null -` só é capturado dentro do bloco
+  `catch` do `execAsync`, assumindo que esse comando sempre lança exceção.
+  Na prática, `silencedetect` escreve os timestamps no stderr mas o
+  processo termina com exit code 0 (sucesso) — então `execAsync` RESOLVE em
+  vez de rejeitar, o `catch` nunca roda, `silenceLog` fica sempre `''`, e a
+  função sempre cai em `if (starts.length === 0) return clipPath;`,
+  devolvendo o clipe ORIGINAL sem nenhum corte. Confirmado com `cmp`
+  byte-a-byte entre input e output.
+- Status: RESOLVIDO (28/07). Correção aplicada em `backend/src/server.js`
+  (capturar `stdout`/`stderr` também no caminho de SUCESSO do `execAsync`,
+  não só no `catch`) e reconfirmada com o mesmo harness: saída passou de
+  10s (idêntica à entrada, bug) para 6.03s (corte correto, bate com os
+  blocos de áudio audível esperados). Ainda NÃO deployada em produção
+  (DigitalOcean) — só aplicada no código local/GitHub.
 - Como evitar de novo: nenhuma feature de processamento de mídia deve ser
   marcada como "implementada" sem teste com arquivo real (ver
-  verification-standard.md, seção 2).
+  verification-standard.md, seção 2). Além disso: ao usar `execAsync`/
+  `exec` do Node para capturar log de uma ferramenta CLI (ffmpeg, etc),
+  NUNCA assumir que "informação relevante só vem via exceção" — exit code
+  0 é sucesso mesmo quando a ferramenta escreve warnings/dados no stderr;
+  sempre capturar `stdout`/`stderr` da resolução bem-sucedida também.
 
 ## [2026-07] GitHub desatualizado em relação à produção (InovaShot)
 - Sintoma: código no GitHub divergia significativamente do que rodava
