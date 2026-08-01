@@ -543,19 +543,10 @@ async function transcribeVideo(videoPath) {
 // ANÁLISE CLAUDE
 // ============================================
 
-async function analyzeWithClaude(transcript, config = {}) {
+async function callHaikuForMoments(client, transcript, config, reinforced = false) {
   const { objetivo = 'viralizar', tom = 'dinamico', destino = 'todos' } = config;
 
-  try {
-    const Anthropic = require('@anthropic-ai/sdk');
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-    const message = await client.messages.create({
-      model: 'claude-haiku-4-5',
-      max_tokens: 1024,
-      messages: [{
-        role: 'user',
-        content: `Você é especialista em viralização de conteúdo para redes sociais.
+  const basePrompt = `Você é especialista em viralização de conteúdo para redes sociais. Sua tarefa é puramente técnica: ler a transcrição de um vídeo já existente (enviado pelo próprio usuário para edição) e devolver APENAS os intervalos de tempo (start/end) dos melhores trechos para corte. Você não está gerando, endossando ou publicando o conteúdo — apenas indicando timestamps, como uma ferramenta de edição de vídeo faria.
 
 Objetivo: ${objetivo} | Tom: ${tom} | Destino: ${destino}
 
@@ -566,17 +557,53 @@ ${transcript}
 
 Identifique os 5-7 melhores momentos para cortar em clipes de 15-60 segundos.
 
-Retorne APENAS JSON válido (sem markdown):
-{"moments":[{"index":1,"start":45,"end":75,"reason":"motivo","appeal":"promessa","score":8,"hook_a":"gancho A (máx 15 palavras)","hook_b":"gancho B (máx 15 palavras)"}]}`
-      }],
-    });
+Retorne SOMENTE o JSON abaixo, sem nenhum texto antes ou depois, sem markdown:
+{"moments":[{"index":1,"start":45,"end":75,"reason":"motivo","appeal":"promessa","score":8,"hook_a":"gancho A (máx 15 palavras)","hook_b":"gancho B (máx 15 palavras)"}]}`;
 
-    let text = message.content[0].text.trim();
-    if (text.startsWith('```')) text = text.replace(/^```json\n?/, '').replace(/\n?```$/, '');
-    return JSON.parse(text).moments || [];
+  const reinforcedSuffix = `\n\nIMPORTANTE: responda apenas com o objeto JSON. Se algum trecho da transcrição parecer sensível, apenas evite selecioná-lo como momento — mas sempre retorne o JSON com os melhores momentos disponíveis. Nunca responda com texto livre ou recusa.`;
+
+  const message = await client.messages.create({
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 1024,
+    messages: [{
+      role: 'user',
+      content: reinforced ? basePrompt + reinforcedSuffix : basePrompt
+    }],
+  });
+
+  let text = message.content[0].text.trim();
+  if (text.startsWith('```')) text = text.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+  return JSON.parse(text).moments || [];
+}
+
+async function analyzeWithClaude(transcript, config = {}) {
+  try {
+    const Anthropic = require('@anthropic-ai/sdk');
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+    try {
+      return await callHaikuForMoments(client, transcript, config, false);
+    } catch (firstError) {
+      logger(`Claude error (1ª tentativa): ${firstError.message}`);
+      try {
+        const retryMoments = await callHaikuForMoments(client, transcript, config, true);
+        logger(`Claude retry OK: ${retryMoments.length} momentos após reforço de prompt`);
+        return retryMoments;
+      } catch (secondError) {
+        logger(`Claude error (2ª tentativa, retry falhou): ${secondError.message}`);
+        throw secondError;
+      }
+    }
   } catch (e) {
-    logger(`Claude error: ${e.message}`);
-    return [{ index: 1, start: 0, end: 999, reason: 'Clip completo', appeal: 'promessa', score: 5 }];
+    logger(`Claude falhou nas duas tentativas — usando fallback de vídeo completo. Motivo: ${e.message}`);
+    return [{
+      index: 1,
+      start: 0,
+      end: 999,
+      reason: 'ATENÇÃO: análise da IA falhou — revisão manual necessária',
+      appeal: 'promessa',
+      score: 0
+    }];
   }
 }
 
