@@ -313,9 +313,13 @@ async function processVideoAsync(job_id, user_id, youtube_url, existingVideoPath
     }
 
     const moments = await analyzeWithClaude(transcript, config);
+    logger(`DEBUG momentos: videoDuration=${videoDuration}s | moments brutos=${JSON.stringify(moments.map(m => ({ start: m.start, end: m.end })))}`);
     const validMoments = moments
       .filter(m => m.start < videoDuration)
       .map(m => ({ ...m, start: Math.max(0, m.start), end: Math.min(videoDuration - 0.5, m.end) }));
+    if (validMoments.length === 0) {
+      logger(`DEBUG: TODOS os momentos foram descartados pelo filtro (start >= videoDuration). Caindo no fallback de vídeo completo.`);
+    }
 
     const finalMoments = validMoments.length > 0 ? validMoments : [
       { index: 1, start: 0, end: videoDuration - 0.5, reason: 'Clip completo', appeal: 'promessa', score: 5 }
