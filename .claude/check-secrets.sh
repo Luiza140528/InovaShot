@@ -1,4 +1,4 @@
-.claude/check-secrets.sh#!/bin/bash
+#!/bin/bash
 # check-secrets.sh
 # Bloqueia commit se detectar padrões de token/API key/segredo no que está staged.
 # Usado como hook do Claude Code antes de comandos "git commit".
