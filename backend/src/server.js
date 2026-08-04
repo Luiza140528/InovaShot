@@ -808,6 +808,62 @@ app.get('/', (req, res) => res.json({ service: 'InovaShot API', status: 'running
 
 const PORT = process.env.PORT || 8080;
 
+// Rota: POST /api/estrategia — Assistente de Estratégia (recomendação antes de gerar os clips)
+app.post('/api/estrategia', authenticateUser, async (req, res) => {
+  try {
+    const { objetivo = 'viralizar', tom = 'dinamico', destino = 'todos' } = req.body;
+
+    const prompt = `IDENTIDADE: Você é o estrategista de conteúdo do InovaShot. Sua função é recomendar, antes do processamento, quais tipos de momento o usuário deve priorizar nos clips gerados, com base no contexto dele.
+
+CONTEXTO:
+- Objetivo: ${objetivo}
+- Tom: ${tom}
+- Plataforma de destino: ${destino}
+
+TAREFA: Devolva em JSON: (1) os 2-3 tipos de momento a priorizar (gancho, virada, prova social, dado surpreendente etc), (2) faixa de duração ideal por clip, (3) uma dica de ritmo/corte específica pro objetivo declarado.
+
+REGRA: Nunca recomende "cortar tudo e testar" — a resposta precisa ser acionável e específica ao contexto informado. Responda em português, no formato JSON abaixo, sem texto antes ou depois, sem markdown:
+{"momentos_priorizar":["momento 1","momento 2"],"duracao_ideal":"faixa em segundos","dica_ritmo":"dica curta e prática"}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 400,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Erro na API Anthropic (estrategia):', response.status, errorText);
+      return res.status(502).json({ error: 'Falha ao gerar recomendação de estratégia' });
+    }
+
+    const data = await response.json();
+    let text = (data.content?.[0]?.text || '').trim();
+    if (text.startsWith('```')) text = text.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+
+    let estrategia;
+    try {
+      estrategia = JSON.parse(text);
+    } catch (e) {
+      logger(`Estrategia parse error: ${e.message}`);
+      return res.status(502).json({ error: 'Não foi possível interpretar a recomendação' });
+    }
+
+    res.json(estrategia);
+  } catch (err) {
+    console.error('Erro na rota /api/estrategia:', err);
+    res.status(500).json({ error: 'Erro interno ao gerar recomendação de estratégia' });
+  }
+});
+
 // Rota: POST /api/tendencias
 app.post('/api/tendencias', authenticateUser, async (req, res) => {
   try {
