@@ -1795,6 +1795,19 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
                         </div>` : ''}
                     </div>` : '';
 
+                const seoHashtagsArr = Array.isArray(clip.seo_hashtags) ? clip.seo_hashtags : [];
+                const seoHashtagsText = seoHashtagsArr.join(' ');
+                const seoFullText = [clip.seo_caption, seoHashtagsText].filter(Boolean).join('\n\n');
+                const seoSection = (clip.seo_caption || seoHashtagsArr.length) ? `
+                    <div style="margin-bottom:12px; border-top:1px solid #2d2458; padding-top:10px;">
+                        <div style="font-size:11px; color:#a0a0c0; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">💡 Legenda com SEO</div>
+                        ${clip.seo_caption ? `<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px;">
+                            <span style="font-size:13px; color:#e0e0ff; line-height:1.4;">${clip.seo_caption}</span>
+                        </div>` : ''}
+                        ${seoHashtagsArr.length ? `<div style="font-size:12px; color:#38bdf8; line-height:1.6; margin-bottom:8px;">${seoHashtagsArr.join(' ')}</div>` : ''}
+                        ${seoFullText ? `<button onclick="navigator.clipboard.writeText('${seoFullText.replace(/'/g, "\'").replace(/\n/g, '\\n')}'); this.textContent='✓ Copiada!'; setTimeout(()=>this.textContent='📋 Copiar Legenda + Hashtags',1500)" style="width:100%; background:transparent; border:1px solid #38bdf8; color:#38bdf8; border-radius:8px; padding:8px; font-size:12px; font-weight:600; cursor:pointer;">📋 Copiar Legenda + Hashtags</button>` : ''}
+                    </div>` : '';
+
                 return `
                     <div class="clip-card">
                         <div class="clip-card-header">
@@ -1825,6 +1838,7 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
                         </button>
                         <div id="${dropId}" class="estrategia-dropdown">
                             ${hookSection}
+                            ${seoSection}
                             <div style="display:flex; gap:12px; border-top:1px solid #2d2458; padding-top:10px; flex-wrap:wrap;">
                                 <div style="font-size:12px; color:#a0a0c0; flex:1;">⏰ Melhor horário: <strong style="color:#fff;">${horario}</strong></div>
                                 <div style="font-size:12px; color:#a0a0c0;">🚀 Viralização: <strong style="color:#f472b6;">${scoreDisplay}</strong></div>
