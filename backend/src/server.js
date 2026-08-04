@@ -354,6 +354,9 @@ async function processVideoAsync(job_id, user_id, youtube_url, existingVideoPath
         virality_score: moment.score || null,
         start_time: moment.start || 0,
         end_time: moment.end || 30,
+        seo_caption: moment.seo_caption || null,
+        seo_hashtags: Array.isArray(moment.seo_hashtags) ? moment.seo_hashtags : null,
+        seo_keywords: Array.isArray(moment.seo_keywords) ? moment.seo_keywords : null,
       });
 
       if (insertError) {
@@ -561,8 +564,10 @@ ${transcript}
 
 Identifique os 5-7 melhores momentos para cortar em clipes de 15-60 segundos.
 
+Para cada momento, além do gancho, gere também material de SEO para a busca interna do Instagram/TikTok: 10 palavras-chave prováveis que alguém buscaria sobre esse assunto, uma legenda reescrita (até 150 caracteres) incorporando 3-4 dessas palavras-chave de forma natural (nunca robótica), e 5 hashtags de cauda longa específicas do tema (nunca genéricas como #viral ou #fyp).
+
 Retorne SOMENTE o JSON abaixo, sem nenhum texto antes ou depois, sem markdown:
-{"moments":[{"index":1,"start":45,"end":75,"reason":"motivo","appeal":"promessa","score":8,"hook_a":"gancho A (máx 15 palavras)","hook_b":"gancho B (máx 15 palavras)"}]}`;
+{"moments":[{"index":1,"start":45,"end":75,"reason":"motivo","appeal":"promessa","score":8,"hook_a":"gancho A (máx 15 palavras)","hook_b":"gancho B (máx 15 palavras)","seo_keywords":["palavra1","palavra2"],"seo_caption":"legenda otimizada com SEO (máx 150 caracteres)","seo_hashtags":["#hashtag1","#hashtag2","#hashtag3","#hashtag4","#hashtag5"]}]}`;
 
   const reinforcedSuffix = `\n\nIMPORTANTE: responda apenas com o objeto JSON. Se algum trecho da transcrição parecer sensível, apenas evite selecioná-lo como momento — mas sempre retorne o JSON com os melhores momentos disponíveis. Nunca responda com texto livre ou recusa.`;
 
