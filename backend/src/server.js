@@ -573,7 +573,7 @@ Retorne SOMENTE o JSON abaixo, sem nenhum texto antes ou depois, sem markdown:
 
   const message = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 1024,
+    max_tokens: 3000,
     messages: [{
       role: 'user',
       content: reinforced ? basePrompt + reinforcedSuffix : basePrompt
