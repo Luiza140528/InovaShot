@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como o InovaShot Roda no DigitalOcean: A Infraestrutura Por Trás de um SaaS de IA | InovaShot</title>
+    <meta name="description" content="Como o InovaShot é hospedado no DigitalOcean: Droplet, PM2 e Nginx. A infraestrutura real por trás de um SaaS de IA construído do zero, sozinha, pelo celular.">
+    <meta name="keywords" content="inovashot digitalocean, infraestrutura saas, hospedagem droplet, pm2 nginx, construir saas sozinho">
+    <link rel="canonical" href="https://inovashot.com.br/inovashot-infraestrutura-digitalocean.html">
+    <meta property="og:title" content="Como o InovaShot Roda no DigitalOcean">
+    <meta property="og:description" content="A infraestrutura real por trás de um SaaS de IA construído do zero, sozinha, pelo celular.">
+    <meta property="og:url" content="https://inovashot.com.br/inovashot-infraestrutura-digitalocean.html">
+    <meta property="og:type" content="article">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Como o InovaShot Roda no DigitalOcean: A Infraestrutura Por Trás de um SaaS de IA Construído do Zero pelo Celular",
+      "description": "A infraestrutura real por trás do InovaShot: Droplet, PM2 e Nginx, construída e mantida sozinha, sem equipe técnica, pelo celular.",
+      "author": { "@type": "Person", "name": "Luiza Costa Soares" },
+      "publisher": { "@type": "Organization", "name": "InovaShot", "url": "https://inovashot.com.br" },
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-07",
+      "mainEntityOfPage": "https://inovashot.com.br/inovashot-infraestrutura-digitalocean.html"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quem construiu o InovaShot?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O InovaShot foi e continua sendo construído inteiramente por uma pessoa, Luiza Costa Soares, pelo celular Android, sem equipe técnica, sem escritório e sem servidor físico."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Que infraestrutura o InovaShot usa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O InovaShot roda em um Droplet da DigitalOcean, com PM2 como gerenciador de processos Node.js e Nginx como proxy reverso cuidando do roteamento e do HTTPS."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Por que o InovaShot migrou para o DigitalOcean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A plataforma anterior (quando o produto ainda se chamava ClipMind) tinha cobranças inesperadas e custo mensal difícil de prever. O DigitalOcean resolveu isso com um Droplet de custo fixo e previsível."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #070412;
+            --card: #16103a;
+            --neon2: #a855f7;
+            --text: #ffffff;
+            --muted: #a0a0c0;
+            --border: rgba(168, 85, 247, 0.25);
+        }
+
+        @keyframes gradientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #f472b6, #a855f7, #38bdf8, #f472b6);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            display: inline-block;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        header {
+            padding: 18px 40px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(7, 4, 18, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 900;
+            text-decoration: none;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, #f472b6, #a855f7, #38bdf8);
+            color: #070412;
+            padding: 8px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover { opacity: 0.9; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: #a855f7;
+            text-decoration: none;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .article-meta {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .disclosure {
+            font-size: 13px;
+            color: var(--muted);
+            font-style: italic;
+            margin-bottom: 32px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 40px 0 16px;
+            color: #ffffff;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 28px 0 12px;
+            color: #c084fc;
+        }
+
+        p { margin-bottom: 20px; color: #d0d0e8; }
+
+        p a, li a, .faq-answer a {
+            color: #a855f7;
+            text-decoration: underline;
+        }
+
+        p a:hover, li a:hover, .faq-answer a:hover { color: #c084fc; }
+
+        ul { margin: 0 0 20px 20px; color: #d0d0e8; }
+        li { margin-bottom: 10px; }
+
+        .highlight-box {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+        }
+
+        .highlight-box p { margin-bottom: 0; color: #ffffff; }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(56,189,248,0.1));
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin: 48px 0;
+        }
+
+        .cta-box h2 { margin-top: 0; }
+        .cta-box p { color: var(--muted); margin-bottom: 24px; }
+
+        .btn-cta {
+            display: inline-block;
+            background: linear-gradient(135deg, #f472b6, #a855f7, #38bdf8);
+            color: #070412;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 14px 36px;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+        }
+
+        .faq-question {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .faq-answer {
+            font-size: 15px;
+            color: #d0d0e8;
+            line-height: 1.7;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px;
+            text-align: center;
+        }
+
+        footer p { color: var(--muted); font-size: 14px; margin: 8px 0; }
+        footer a { color: #a855f7; text-decoration: none; }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; }
+            .container { padding: 40px 20px; }
+            h1 { font-size: 26px; }
+            h2 { font-size: 20px; }
+            .cta-box { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="/" class="logo"><span class="gradient-text">⚡ InovaShot</span></a>
+        <a href="/app.html#login" class="nav-cta">Começar Grátis</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <div class="breadcrumb">
+        <a href="/">InovaShot</a> › <a href="/blog.html">Blog</a> › Infraestrutura no DigitalOcean
+    </div>
+
+    <h1>Como o InovaShot Roda no DigitalOcean: A Infraestrutura Por Trás de um SaaS de IA Construído do Zero pelo Celular</h1>
+
+    <div class="article-meta">
+        Publicado em 6 de agosto de 2026 · Atualizado em 7 de agosto de 2026 · Leitura: 5 minutos · Luiza Costa Soares
+    </div>
+
+    <div class="disclosure">
+        Ganhamos comissões quando você compra através dos links abaixo.
+    </div>
+
+    <p>Toda vez que alguém descobre o InovaShot e pergunta "qual é a equipe técnica por trás disso?", a resposta surpreende: não tem equipe. O InovaShot — nossa plataforma de <a href="/como-cortar-videos-longos-clipes-virais-ia.html">geração automática de clipes curtos via IA</a>, usando Whisper e Claude para transcrever, cortar e legendar vídeos — foi e continua sendo construído inteiramente por uma pessoa, pelo celular Android, sem escritório, sem time de dev, sem servidor físico embaixo da mesa.</p>
+
+    <p>Isso só é possível por causa de algumas escolhas de infraestrutura que priorizam simplicidade acima de tudo. Este artigo é sobre essas escolhas — o que funcionou, o que não funcionou, e por que o DigitalOcean acabou sendo a peça central de tudo isso.</p>
+
+    <div class="highlight-box">
+        <p><strong>Resumo:</strong> O InovaShot é um SaaS de IA construído e mantido sozinho por Luiza Costa Soares, pelo celular, sem equipe técnica. A infraestrutura roda em um Droplet da DigitalOcean, com PM2 gerenciando o processo Node.js e Nginx como proxy reverso — uma stack deliberadamente simples, gerenciada via SSH pelo app Termius.</p>
+    </div>
+
+    <h2>Por que DigitalOcean</h2>
+
+    <p>Antes do DigitalOcean, o InovaShot (então ainda chamado ClipMind) rodava em outra plataforma de hospedagem. Funcionava bem no começo, mas os problemas de billing começaram a aparecer conforme o uso crescia — cobranças inesperadas, dificuldade de prever custo mensal, e uma sensação geral de estar construindo em cima de terreno instável.</p>
+
+    <p>A migração para o DigitalOcean resolveu isso de forma direta: um Droplet (a máquina virtual deles) com custo fixo e previsível, sem surpresas no fim do mês. Para quem gerencia sozinha múltiplos produtos e não tem tempo de ficar monitorando faturas, isso é decisivo.</p>
+
+    <div class="highlight-box">
+        <p>Se você está pensando em hospedar seu próprio projeto e quer testar o DigitalOcean, <a href="https://www.awin1.com/cread.php?awinmid=123996&awinaffid=3021399" target="_blank" rel="noopener sponsored">este é o link que uso</a> — você ganha créditos iniciais para testar sem compromisso.</p>
+    </div>
+
+    <h2>A stack real do InovaShot</h2>
+
+    <p>Não tem segredo nem complexidade desnecessária. A stack inteira roda em cima de três peças:</p>
+
+    <h3>Droplet</h3>
+    <p>A máquina virtual onde tudo vive. É nela que o backend processa os vídeos: download, transcrição via Whisper, geração dos clipes, scoring de viralidade.</p>
+
+    <h3>PM2</h3>
+    <p>Gerenciador de processos Node.js que mantém a aplicação rodando 24/7, reinicia automaticamente se algo cair, e organiza os logs de forma que dá pra diagnosticar problema direto pelo celular, via SSH.</p>
+
+    <h3>Nginx</h3>
+    <p>Atua como proxy reverso, direcionando as requisições que chegam pro processo certo, e cuidando do HTTPS.</p>
+
+    <p>É uma stack deliberadamente simples. Cada peça faz uma coisa e faz bem — nada de arquitetura sofisticada demais para o tamanho atual do produto.</p>
+
+    <h2>Desafios que foram resolvidos nessa infraestrutura</h2>
+
+    <p>Construir e manter tudo isso pelo celular trouxe desafios específicos que vale contar:</p>
+
+    <h3>Diagnóstico remoto de bugs</h3>
+    <p>Um dos bugs mais complicados foi na remoção de silêncio dos vídeos — o processo às vezes cortava partes que não deveria. Resolver isso exigiu instalar o Claude Code diretamente no servidor DigitalOcean e usá-lo para investigar os logs e propor correções, tudo via terminal SSH pelo celular, usando o app Termius.</p>
+
+    <h3>Gerenciamento sem IDE tradicional</h3>
+    <p>Editar código sem um computador convencional significa depender de ferramentas mobile-first: GitHub mobile para revisar e mergear código, Termius para acessar o servidor, e o próprio Claude como parceiro de desenvolvimento para escrever e revisar as mudanças antes de subir pra produção.</p>
+
+    <h3>Integrações externas</h3>
+    <p>Conectar o InovaShot com APIs como Threads e Meta Graph exigiu depuração cuidadosa — inclusive descobrir que faltava um caso de uso específico ("Gerenciar tudo na sua Página") nas permissões da Meta, algo que só apareceu depois de investigar a fundo as respostas de erro da API.</p>
+
+    <p>Nada disso teria sido possível de forma tão ágil sem uma infraestrutura previsível como a do DigitalOcean como base.</p>
+
+    <h2>Lições para quem quer montar algo parecido</h2>
+
+    <p>Se você está começando a construir seu próprio SaaS sem equipe técnica, algumas coisas que aprendi nesse processo:</p>
+
+    <ul>
+        <li><strong>Escolha infraestrutura com custo previsível.</strong> Surpresas na fatura tiram tempo e energia que deveriam ir para o produto.</li>
+        <li><strong>Invista em ferramentas de acesso remoto confiáveis.</strong> Um bom app SSH (como o Termius) é tão importante quanto o código em si, quando você não tem acesso físico ao servidor.</li>
+        <li><strong>Não superdimensione a stack.</strong> Droplet + PM2 + Nginx resolve muito mais do que parece à primeira vista — não é preciso Kubernetes nem arquitetura de microsserviços para validar e crescer um produto.</li>
+        <li><strong>Documente enquanto constrói.</strong> Um <code>CLAUDE.md</code> e scripts de checagem de segredos no repositório fazem diferença enorme quando você é a única pessoa mantendo o contexto do projeto.</li>
+    </ul>
+
+    <div class="cta-box">
+        <h2>Testando o DigitalOcean</h2>
+        <p>Se depois de ler isso você quer testar a mesma infraestrutura que roda o InovaShot, você pode começar por aqui — o cadastro é rápido e você ganha créditos para experimentar sem risco.</p>
+        <a href="https://www.awin1.com/cread.php?awinmid=123996&awinaffid=3021399" target="_blank" rel="noopener sponsored" class="btn-cta">☁️ Testar o DigitalOcean</a>
+    </div>
+
+    <p>Construir um SaaS sozinha, pelo celular, é um exercício constante de simplificar onde dá e resolver problemas complexos quando não tem escolha. A infraestrutura certa não resolve tudo — mas tira do caminho um monte de dor de cabeça que você não precisa ter. Se quiser entender melhor o produto que essa infraestrutura sustenta, veja <a href="/alternativa-opus-clip-brasil.html">por que o InovaShot é a alternativa nacional ao Opus Clip</a>.</p>
+
+    <h2>Perguntas frequentes</h2>
+
+    <div class="faq-item">
+        <div class="faq-question">Quem construiu o InovaShot?</div>
+        <div class="faq-answer">O InovaShot foi e continua sendo construído inteiramente por uma pessoa, Luiza Costa Soares, pelo celular Android, sem equipe técnica, sem escritório e sem servidor físico.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Que infraestrutura o InovaShot usa?</div>
+        <div class="faq-answer">O InovaShot roda em um Droplet da DigitalOcean, com PM2 como gerenciador de processos Node.js e Nginx como proxy reverso cuidando do roteamento e do HTTPS.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Por que o InovaShot migrou para o DigitalOcean?</div>
+        <div class="faq-answer">A plataforma anterior (quando o produto ainda se chamava ClipMind) tinha cobranças inesperadas e custo mensal difícil de prever. O DigitalOcean resolveu isso com um Droplet de custo fixo e previsível.</div>
+    </div>
+
+</main>
+
+<footer>
+    <p><span class="gradient-text" style="font-size: 18px; font-weight: 800;">⚡ InovaShot</span></p>
+    <p style="margin-top: 10px;">High-Retention Short-Form Video com IA</p>
+    <p style="margin-top: 16px;">
+        <a href="/">Início</a> ·
+        <a href="/blog.html">Blog</a> ·
+        <a href="/app.html#login">Entrar</a> ·
+        <a href="mailto:contato@inovashot.pro">contato@inovashot.pro</a>
+    </p>
+    <p style="margin-top: 12px; font-size: 12px; color: #4a4060;">© 2026 InovaShot — Todos os direitos reservados</p>
+</footer>
+
+</body>
+</html>
