@@ -1,6 +1,6 @@
 ---
 name: deploy-inovashot
-description: "Use esta skill sempre que for fazer deploy de mudanças no backend do InovaShot (DigitalOcean, PM2, Nginx), ou quando a tarefa envolver commit e organização de mudanças no repositório (branch, stash). Cobre o fluxo padrão de commit → push → restart → verificação de logs, convenção de mensagens de commit, e gestão de stash pendente. Acionar quando o usuário disser 'faz o deploy', 'sobe pra produção', 'reinicia o servidor do InovaShot', 'commita isso' ou similar."
+description: "Use esta skill sempre que for fazer deploy de mudanças no backend do InovaShot (DigitalOcean, PM2, Nginx), ou quando a tarefa envolver commit e organização de mudanças no repositório (branch, stash). Cobre o fluxo padrão de commit → push → restart → verificação de logs, convenção de mensagens de commit, e gestão de stash pendente. Acionar quando o usuário disser 'faz o deploy', 'sobe pra produção', 'reinicia o servidor do InovaShot', 'commita isso', 'atualiza o servidor', 'puxa as mudanças do GitHub', 'dá restart no PM2', 'sobe essa correção', 'publica essa mudança', 'aplica isso em produção' ou similar."
 ---
 
 # Deploy do InovaShot (backend)

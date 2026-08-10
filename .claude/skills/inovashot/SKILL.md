@@ -130,4 +130,4 @@ Peça de referência: "Checklist Hook 3 Segundos" (7 slides, `inovashot_carrosse
 - Espaço vazio grande no meio do slide por falta de elemento full-bleed no rodapé
 - Nome do arquivo exportado sem "InovaShot" — sempre nomear como `InovaShot_<descrição>_<n>.png`
 - Legenda com "a IA avalia/identifica" em vez de "o InovaShot avalia/identifica" (regra de voz)
-
+- 

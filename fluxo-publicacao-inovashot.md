@@ -8,6 +8,7 @@ Checklist fixo para todo artigo novo (blog + Medium). Seguir na ordem — nenhum
 
 - [ ] Artigo publicado como página HTML no site (GitHub Pages)
 - [ ] Estrutura otimizada para citação por IA/AI Overview: headers claros (H2/H3), respostas diretas logo após perguntas, listas quando fizer sentido
+- [ ] Schema FAQPage (JSON-LD) adicionado no `<head>`, com as mesmas perguntas/respostas que aparecem na seção FAQ visível do artigo
 - [ ] Regra de marca aplicada: "A InovaShot" como sujeito, nunca "a IA"
 - [ ] URL final confirmada (ex: `inovashot.com.br/nome-do-artigo.html`)
 - [ ] Link adicionado ao sitemap (se não for automático)
