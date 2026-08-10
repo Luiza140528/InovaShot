@@ -132,3 +132,94 @@ Instagram, LinkedIn), Analytics.
   formato funciona.
 - Sem feature de B-roll/dublagem/upscaling — mais parecido em escopo com o
   InovaShot do que o Opus Clip é.
+
+---
+
+## Submagic (submagic.co) — pesquisado em 10/08/2026
+
+**O que é**: ferramenta de legendagem/edição por IA (legendas animadas,
+B-roll, remoção de silêncio/gagueira) — clipping de vídeo longo pra curto
+("Magic Clips") é um **add-on pago separado**, não vem incluído no plano
+base. Usado por Shopify, Zapier, Crisp.
+
+### Pricing (cobrança mensal, USD — valores anuais entre parênteses)
+| Plano | Base/mês | + Magic Clips/mês | Uso |
+|---|---|---|---|
+| Starter | $19 ($12 anual) | +$19 (+$12 anual) | 15 vídeos/mês, máx. 2min/vídeo, 3 créditos de IA |
+| Pro | $39 ($23 anual) | +$19 (+$12 anual) | 40 vídeos/mês, máx. 5min/vídeo, 6 créditos de IA |
+| Business + API | $69 ($41 anual) | +$19 (+$12 anual) | 100 vídeos/mês, máx. 30min/vídeo, 15 créditos de IA, 4K/60fps |
+| Custom | sob consulta | — | volume customizado |
+
+**Importante**: eles já publicam preço nativo em **BRL** na própria página
+de pricing — Starter R$79, Pro R$159, Business R$279 (+R$79/mês pro
+add-on Magic Clips). Ou seja, já localizam preço pro Brasil.
+
+Créditos de API separados: de 500 min/US$75/mês (US$0,15/min) até 10.000
+min/US$1000/mês (US$0,10/min).
+
+### Features
+- Legendas animadas automáticas, tradução de legenda, remoção de
+  silêncio/gagueira/"bad takes", correção de contato visual por IA
+- B-roll automático (Storyblocks/Movie Clips nos planos pagos)
+- "Magic Clips" (add-on): pega vídeo longo → gera clipes virais — mesma
+  função central do InovaShot, mas vendida separadamente
+- API de edição de vídeo pra automação
+
+### Leitura competitiva
+- Preço nativo em BRL confirma que pelo menos um concorrente internacional
+  já enxerga o Brasil como mercado prioritário — reforça a importância do
+  InovaShot manter vantagem de custo/localização como diferencial, não
+  suposição.
+- Comparando clipping equivalente: Starter (R$79) + Magic Clips (R$79) =
+  **R$158/mês** só pra ter a função de corte automático — mais de 3x o
+  Starter do InovaShot (R$49,90) pela mesma capacidade central. Isso é o
+  argumento de preço mais forte que o InovaShot tem contra um concorrente
+  internacional de peso.
+- Confirma o padrão já visto no Panda Video: em produtos que não nasceram
+  clipping-first, o corte automático é tratado como **feature adicional**,
+  não como o produto principal. O InovaShot sendo clipping-first desde o
+  início é diferencial de posicionamento genuíno, não só discurso de
+  marketing.
+
+---
+
+## Vizard AI (vizard.ai) — pesquisado em 10/08/2026
+
+**O que é**: clipping-first como o InovaShot (ao contrário do Submagic/
+Panda Video), com modelo de créditos por minuto. Usado por Google, Ubisoft,
+Stanford. Nota 4.7-4.9 em G2/Capterra/Software Advice.
+
+### Pricing (USD, mensal — valor anual com 50% off entre parênteses)
+| Plano | Preço/mês | Créditos | Uso |
+|---|---|---|---|
+| Free | $0 | 60/mês | 720p export, storage de 3 dias, 1 conta social |
+| Creator (mais popular) | $29 ($14,50 anual) | a partir de 600/mês (7.200/ano) | Sem marca d'água, export 4K, agendamento social, 100GB storage, 6 contas sociais |
+| Business | $39 ($19,50 anual) | a partir de 600/mês | Workspace compartilhado, 20 contas sociais, membros de equipe +$5/mês/assento, brand kit, storage ilimitado |
+
+Modelo de crédito: **1 crédito = 1 minuto de vídeo enviado** (consumo no
+upload, não no clipe gerado).
+
+### Features
+- Clipping por IA com reframe automático, emojis/palavras-chave em
+  destaque, B-roll de IA
+- Publicação direta em redes sociais (mais contas sociais = planos mais
+  caros, ao contrário do InovaShot)
+- API própria com rate limit por plano (1/min no Free até 10/min no
+  Business)
+- Tem página própria de "Vizard vs X" pra Opus, Capcut, Vidyo, Getmunch,
+  Captions, Submagic, Veed — mesma tática de SEO comparativo que o Klap usa
+
+### Leitura competitiva
+- É o concorrente mais parecido em modelo de negócio com o InovaShot:
+  clipping-first, sem hospedagem de vídeo, sem legenda/edição como produto
+  principal. Bom benchmark direto de feature-a-feature.
+- Preço de entrada ($29 ≈ R$160) é bem mais caro que o Starter do InovaShot
+  (R$49,90) em termos nominais, mas modelo de crédito por **minuto
+  enviado** (não por clipe gerado) pode punir usuários que sobem vídeos
+  longos e cortam pouco — vale considerar se o InovaShot quer comunicar
+  isso como vantagem ("sem cobrar pelo tamanho do vídeo que você manda,
+  só pelo que você usa").
+- Assim como Klap e agora confirmado por outro concorrente (Vizard), a
+  tática de página "[Produto] vs [Concorrente]" pra SEO é praticamente
+  padrão de mercado entre os players de clipping — mais um voto a favor de
+  priorizar esse formato de conteúdo pro InovaShot.
