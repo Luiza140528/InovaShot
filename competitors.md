@@ -223,3 +223,80 @@ upload, não no clipe gerado).
   tática de página "[Produto] vs [Concorrente]" pra SEO é praticamente
   padrão de mercado entre os players de clipping — mais um voto a favor de
   priorizar esse formato de conteúdo pro InovaShot.
+
+---
+
+## Veed.io (veed.io) — pesquisado em 10/08/2026 — **concorrente adjacente, não direto**
+
+**O que é**: estúdio de vídeo por IA muito amplo — geração de vídeo por
+texto, avatares de IA, clonagem de voz, geração de imagem, dublagem —
+com o corte de clipe viral sendo **uma ferramenta entre dezenas**, não o
+produto principal. Cliente enterprise pesado: Amazon, Netflix, Google,
+Meta, BBC, NBCUniversal.
+
+### Pricing (USD, créditos de IA cobrem a plataforma toda, não só clipes)
+| Plano | Preço/mês | Créditos/ano | Uso |
+|---|---|---|---|
+| Creator | $12 ($147/ano) | 6.000 (~1.500 vídeos de IA) | Sem marca d'água, legendas automáticas ilimitadas |
+| Pro (recomendado) | $22 ($265/ano) | 30.000 (~7.500 vídeos) | + múltiplos brand kits, tradução 50+ idiomas |
+| Studio | $39 ($465/ano) | 180.000 (~45.000 vídeos) | + templates customizados |
+| Enterprise | sob consulta | customizado | Gestão centralizada de equipes, controles de privacidade |
+
+### Features do "AI Clip Generator"
+- Extrai clipes de vídeos longos (podcast, webinar) com prompt opcional
+  guiando quais momentos priorizar
+- Sistema de pontuação por clipe em **4 eixos**: Flow, Impact, Clarity,
+  Relevance (0-10 cada) — mais granular que o "virality score" único
+  usado por Opus Clip/Panda Video
+- Editor baseado em transcript pra ajustar/estender clipe depois de gerado
+- Compara-se abertamente com o **Opus Clip** na própria landing page do
+  Clip Generator (logo do concorrente exibido)
+
+### Leitura competitiva
+- Não é concorrente direto no sentido estrito — é uma plataforma de IA
+  generativa de vídeo (avatares, texto-pra-vídeo, dublagem) onde clipping
+  é só mais uma ferramenta. Escopo mais parecido com Opus Clip do que com
+  o InovaShot.
+- O sistema de pontuação em 4 eixos (Flow/Impact/Clarity/Relevance) é uma
+  terceira nomenclatura diferente pra "potencial de viralização" — reforça
+  que não existe padrão único de mercado pro nome dessa métrica, o que
+  aumenta a chance de confusão de usuário vindo de qualquer um desses
+  concorrentes (mais um dado a favor da hipótese de nomenclatura confusa
+  no relato "hook_score vs virality_score").
+- Cliente-base é majoritariamente enterprise — não é ameaça direta ao
+  público criador brasileiro que o InovaShot atende, mas vale monitorar
+  se lançarem plano de entrada mais agressivo.
+
+---
+
+## Captions (captions.ai) — pesquisado em 10/08/2026 — **concorrente adjacente, não direto**
+
+**O que é**: app (mobile-first, iOS) de geração de conteúdo por IA
+generativa — avatares/"digital twins", UGC de IA, edição via chat — não é
+uma ferramenta de corte de vídeo longo em clipes. Repurposing de vídeo
+("AI Shorts", "Reddit to Reel") existe, mas é feature secundária dentro
+de "Link to video", não o produto central. Empresa: NOCAP, Inc. d/b/a
+Captions.
+
+### Pricing (USD — só planos iOS, créditos cobrem toda a IA generativa)
+| Plano | Preço/mês | Créditos |
+|---|---|---|
+| Max (mais popular) | $24,99 | 500/mês |
+| Scale | $69,99 | 1.400/mês |
+| Scale 2x | $139,99 | 2.800/mês |
+| Scale 4x | $279,99 | 5.600/mês |
+| Enterprise | sob consulta | customizado, com desconto de volume |
+
+### Leitura competitiva
+- Overlap real com o InovaShot é baixo — o produto central deles é criar
+  vídeo novo com avatar/ator de IA, não cortar vídeo longo existente.
+  "AI Shorts"/"Reddit to Reel" é a única feature que toca o caso de uso do
+  InovaShot, e aparece como item secundário na tabela de comparação.
+  Categorizar como referência de mercado adjacente (IA generativa de
+  vídeo), não como concorrente de clipping.
+- Preço de entrada ($24,99 ≈ R$138) é mais caro que o Pro do InovaShot
+  (R$97,90) pra um produto que nem foca em clipping — não é comparação
+  direta útil pra posicionamento de preço.
+- Vale reavaliar essa entrada só se a Captions expandir a feature de
+  repurposing de vídeo longo pra virar core do produto — hoje não é o
+  caso.
