@@ -300,3 +300,72 @@ Captions.
 - Vale reavaliar essa entrada só se a Captions expandir a feature de
   repurposing de vídeo longo pra virar core do produto — hoje não é o
   caso.
+
+---
+
+## Vidyo.ai → agora quso.ai — pesquisado em 10/08/2026
+
+**Atenção**: a marca "Vidyo.ai" **não existe mais como produto separado**
+— rebatizada pra **quso.ai**. A própria página de pricing avisa: "Coming
+from Vidyo.ai? Your plan and pricing are unchanged." Útil registrar isso
+pra não confundir em pesquisa futura ou em conteúdo comparativo ("Vidyo
+AI" ainda aparece em página de alternativas de outros concorrentes, mas
+o nome mudou).
+
+**O que é**: plataforma ampla de repurposing de conteúdo — clipping,
+legendas, agendamento social, planner de conteúdo, analytics, geração de
+legenda social — modelo de créditos cobrindo tudo junto. Fundada com time
+EUA + Índia.
+
+### Pricing (USD, mensal — valor anual entre parênteses)
+| Plano | Preço/mês | Créditos/mês (mensal→anual) | Uso |
+|---|---|---|---|
+| Free | $0 | 75 | 720p, publicação TikTok, CutMagic, retenção de 7 dias |
+| Lite | $29 ($19 anual) | 100→200 | Clipes 1080p ilimitados, editor avançado desktop, publica em 6 plataformas, 10GB storage |
+| Essential | $39 ($26 anual) | 300→600 | + remoção de silêncio/gagueira por IA, Content Planner, 25GB storage |
+| Growth (mais popular) | $49 ($33 anual) | 600→1.200 | + brand kit customizado, assistente de conteúdo "Viddy AI", analytics social, 75GB storage |
+
+1 crédito ≈ 1 minuto de vídeo processado (clipping, legenda e edição
+consomem do mesmo pool).
+
+### Leitura competitiva
+- Também mantém página própria de "alternativas" (2short AI, CapCut,
+  Descript, Getmunch, InVideo, Opus Clip, Repurpose.io, Veed.io) — quinto
+  concorrente confirmado usando essa tática de SEO comparativo.
+- Modelo de negócio e faixa de preço ($29-$49) ficam entre Klap e Opus
+  Clip — não é o mais barato nem o mais caro do grupo, posição de "meio de
+  tabela" que o InovaShot consegue furar com preço em BRL bem menor.
+- Ponto prático mais importante dessa pesquisa: se alguém mencionar "Vidyo
+  AI" de novo (usuário, post de blog antigo, comparação de terceiro), a
+  marca atual é **quso.ai** — evita perder tempo procurando pricing
+  desatualizado.
+
+---
+
+## Munch (getmunch.com) → agora Munch Studio — pesquisado em 10/08/2026 — **pivotou, não é mais concorrente direto**
+
+**Atenção**: o produto pivotou bastante desde a época em que era
+referenciado como "Getmunch" nas páginas de alternativas de outros
+concorrentes (Klap, Vidyo/quso). Hoje o **Munch Studio** não é mais uma
+ferramenta de "vídeo longo → clipes" — é uma plataforma completa de
+**gestão de social media por IA**: você manda o site, fotos, vídeos ou
+gravação de Zoom da empresa, e a IA gera estratégia de conteúdo completa
+(não só clipes) + calendário + posts prontos pra aprovar e publicar.
+
+### Pricing
+**Não há tabela de preço pública/self-serve.** A página de "pricing"
+redireciona pro conteúdo institucional — planos pra agência exigem
+"agendar uma call de 10 minutos" com um humano. Sinaliza posicionamento
+B2B/agência mais caro, vendido por venda consultiva, não self-serve.
+
+### Leitura competitiva
+- Não é mais comparável ao InovaShot em escopo nem em modelo de
+  distribuição — é concorrente de ferramentas tipo Hootsuite/Buffer com
+  geração de conteúdo por IA embutida, não de clipagem de vídeo.
+- Um depoimento ainda menciona "turned long-form content into a scalable
+  social media operation" — sugere que a capacidade de repurposing de
+  vídeo longo sobrevive dentro do produto, mas não é mais a proposta de
+  valor central anunciada.
+- Manter essa entrada só como registro histórico ("era considerado
+  concorrente, pivotou") — não vale gastar mais tempo de pesquisa aqui a
+  menos que a Luiza queira investigar o ângulo B2B/agência especificamente.
