@@ -50,12 +50,85 @@ Modelo de créditos: 1 crédito = 10 min de vídeo fonte = US$0,20. Vídeo de
 
 ---
 
-## Opus Clip — pendente de pesquisa
-Mencionado como concorrente de referência (fase 2, expansão EN) em
-`.claude/skills/inovashot/SKILL.md`. Sem dados de pricing/features
-levantados ainda.
+## Opus Clip (opus.pro) — pesquisado em 09/08/2026
 
-## Klap — pendente de pesquisa
-Mencionado como concorrente de referência (fase 2, expansão EN) em
-`.claude/skills/inovashot/SKILL.md`. Sem dados de pricing/features
-levantados ainda.
+**O que é**: líder de mercado em clipping por IA, posicionado como estúdio
+de vídeo completo (não só corte) — B-Roll por IA, dublagem, reframe,
+agendador social, editor completo, API/MCP pra agentes de IA. Usado por
+Univision, HubSpot, LinkedIn.
+
+### Pricing (USD)
+| Plano | Preço/mês | Créditos | Pra quê |
+|---|---|---|---|
+| Free | $0 | 60/mês | 1080p, com marca d'água, sem edição, clipe expira em 3 dias |
+| Starter | $15 | 150/mês | Individual: Virality Score, legendas animadas 20+ idiomas, auto-post YT Shorts/TikTok/IG Reels, editor, 1 template de marca, remoção de silêncio, sem marca d'água |
+| Pro (mais popular) | $29 ($14,50/mês no anual) | 3.600/ano | Tudo do Starter + AI B-Roll, 10+ fontes de importação, export p/ Premiere/DaVinci, múltiplos aspect ratios, agendador social, dublagem, API limitada, 2 assentos de equipe |
+| Business | sob consulta | customizado | Tudo do Pro + fila prioritária, storage dedicado, API/integrações custom, MSA, suporte com Slack dedicado |
+
+### Features de destaque
+- **Virality Score** — nome oficial da métrica de potencial viral (mesmo
+  termo usado pelo Panda Video)
+- ClipAnything: reprompt pra refinar o corte, seleção de timeframe/duração
+- AI B-Roll, dublagem por IA, upscaling — vai muito além de corte simples
+- API e **MCP** (Model Context Protocol) — permite que agentes de IA chamem
+  o produto como ferramenta, não só usuário final
+- Calculadora de ROI na própria página de pricing (clipes gerados, horas
+  economizadas, views extras estimadas) — ferramenta de conversão forte
+
+### Leitura competitiva
+- É o concorrente mais robusto tecnicamente — feature set de estúdio
+  completo (B-roll, dublagem, upscaling, export pra editor profissional)
+  bem além do que o InovaShot oferece hoje. Não compete em preço de
+  entrada, compete em profundidade.
+- Preço do Starter ($15 ≈ R$83) é quase 2x o Starter do InovaShot (R$49,90)
+  em termos nominais — mas entrega muito mais escopo. Confirma que o
+  InovaShot está posicionado como opção mais acessível/enxuta, não como
+  concorrente feature-a-feature.
+- Confirma de novo o uso de **"Virality Score"** como termo padrão do
+  mercado (2º concorrente a usar essa nomenclatura, depois do Panda Video)
+  — reforça a hipótese de que o relato de bug "hook_score vs
+  virality_score" citado em `learnings.md` venha de usuário comparando com
+  a nomenclatura desses concorrentes, não de um bug real do InovaShot.
+- Tem API/MCP pra agentes de IA — sinaliza que "virar ferramenta que outros
+  agentes chamam" é uma direção que concorrentes grandes já estão
+  perseguindo; não é prioridade agora pro InovaShot, mas vale monitorar.
+
+---
+
+## Klap (klap.app) — pesquisado em 09/08/2026
+
+**O que é**: clipping por IA com modelo simples baseado em nº de clipes
+(não crédito/minuto). 8,5M clipes gerados, 3,5M criadores. Produto pequeno
+(fundado por 2 pessoas, @theo e @victor, via ZIGG SAS), mas com estratégia
+de SEO/conteúdo muito agressiva — página de "alternativas" comparando
+contra ~20 concorrentes (Opus Clip, Submagic, Veed.io, Vizard AI, etc).
+
+### Pricing (USD, cobrança anual — mensal disponível mas não capturado)
+| Plano | Preço/mês (anual) | Clipes/mês | Pra quê |
+|---|---|---|---|
+| Basic | $14 | 100 | Individual |
+| Pro (mais popular) | $39 | 300 | Profissional |
+| Pro+ | $94 | 1.000 | Equipes |
+
+Todos os planos incluem: AI Clipping, contas sociais ilimitadas (TikTok,
+Instagram, LinkedIn), Analytics.
+
+### Leitura competitiva
+- Modelo de preço por **número de clipes** (não minutos/créditos) é mais
+  simples de entender pro usuário final do que o modelo do Opus Clip ou do
+  Panda Video — vale considerar se o InovaShot quer testar essa
+  simplicidade de comunicação, mesmo mantendo o modelo de tiers atual.
+- Entrada mais barata que o Starter do InovaShot em termos nominais ($14 ≈
+  R$77 vs R$49,90), mas isso é enganoso: câmbio e paridade de poder de
+  compra tornam o InovaShot proporcionalmente muito mais barato pro
+  criador brasileiro — vale usar isso na copy ("mesma tecnologia, preço
+  pensado pro Brasil").
+- **Estratégia de conteúdo a copiar**: Klap tem página dedicada de
+  "alternativa a X" pra cada concorrente relevante (`/alternatives/opus-clip`,
+  `/alternatives/veed-io`, etc.) — é uma tática de SEO/AEO barata e escalável.
+  O InovaShot já tem conteúdo otimizado pra GEO/AEO (guias numerados); vale
+  considerar páginas "InovaShot vs Opus Clip", "InovaShot vs Panda Video"
+  como próximo passo de conteúdo, já que o próprio Klap valida que esse
+  formato funciona.
+- Sem feature de B-roll/dublagem/upscaling — mais parecido em escopo com o
+  InovaShot do que o Opus Clip é.
