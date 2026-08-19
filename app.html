@@ -9,6 +9,19 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid #38bdf8;
+            outline-offset: 3px;
+            border-radius: 8px;
+        }
+
+        #agente-chat a:focus-visible,
+        #agente-chat button:focus-visible {
+            outline: 2px solid #38bdf8;
+            outline-offset: -2px;
+        }
+
         :root {
             --neon1: #f472b6;
             --neon2: #a855f7;
@@ -75,7 +88,7 @@
         .landing-logo { font-size: 48px; margin-bottom: 15px; }
         .landing-content h1 { font-size: 36px; margin-bottom: 8px; color: #FFFFFF; }
         .landing-tagline { font-size: 16px; color: #a855f7; margin-bottom: 15px; font-weight: 500; }
-        .landing-desc { font-size: 14px; color: #B0B0B0; margin-bottom: 20px; line-height: 1.5; }
+        .landing-desc { font-size: 14px; color: #a0a0c0; margin-bottom: 20px; line-height: 1.5; }
 
         .btn-start {
             padding: 14px 40px;
@@ -100,7 +113,8 @@
         }
 
         .trust-card {
-            background: rgba(26, 45, 58, 0.5);
+            background: #1e1650;
+            border: 1px solid #3b2f6e;
             padding: 15px;
             border-radius: 10px;
             text-align: center;
@@ -108,7 +122,7 @@
 
         .trust-icon { font-size: 28px; margin-bottom: 8px; }
         .trust-title { font-size: 14px; font-weight: 600; color: #FFFFFF; margin-bottom: 4px; }
-        .trust-text { font-size: 10px; color: #B0B0B0; }
+        .trust-text { font-size: 10px; color: #a0a0c0; }
 
         .pricing-grid {
             display: grid;
@@ -119,8 +133,8 @@
         }
 
         .plan-card {
-            background: rgba(13, 27, 42, 0.95);
-            border: 1px solid #16103a;
+            background: #1e1650;
+            border: 1px solid #3b2f6e;
             padding: 12px;
             border-radius: 8px;
             text-align: center;
@@ -128,7 +142,7 @@
 
         .plan-name { font-size: 14px; font-weight: 600; color: #a855f7; margin-bottom: 6px; }
         .plan-price { font-size: 16px; font-weight: bold; color: #FFFFFF; margin-bottom: 4px; }
-        .plan-feature { font-size: 10px; color: #B0B0B0; }
+        .plan-feature { font-size: 10px; color: #a0a0c0; }
 
         /* ========== LOGIN PAGE ========== */
         #login {
@@ -139,8 +153,8 @@
         }
 
         .login-box {
-            background: rgba(13, 27, 42, 0.95);
-            border: 1px solid #16103a;
+            background: #1e1650;
+            border: 1px solid #3b2f6e;
             border-radius: 12px;
             padding: 40px;
             width: 100%;
@@ -157,7 +171,7 @@
         .form-group label {
             display: block;
             font-size: 14px;
-            color: #B0B0B0;
+            color: #a0a0c0;
             margin-bottom: 6px;
         }
 
@@ -223,7 +237,7 @@
             align-items: center;
             gap: 10px;
             margin: 20px 0;
-            color: #B0B0B0;
+            color: #a0a0c0;
             font-size: 14px;
         }
 
@@ -246,7 +260,7 @@
             padding: 10px;
             background: transparent;
             border: 1px solid #16103a;
-            color: #B0B0B0;
+            color: #a0a0c0;
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
@@ -279,7 +293,7 @@
             text-align: center;
             margin-top: 15px;
             font-size: 14px;
-            color: #B0B0B0;
+            color: #a0a0c0;
         }
 
         .signup-link a {
@@ -332,7 +346,7 @@
         }
 
         .sidebar-menu-item {
-            color: #B0B0B0;
+            color: #a0a0c0;
             padding: 12px;
             border-radius: 6px;
             cursor: pointer;
@@ -454,7 +468,8 @@
 
         /* PROGRESS BAR */
         .progress-card {
-            background: rgba(26, 45, 58, 0.5);
+            background: #1e1650;
+            border: 1px solid #3b2f6e;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
@@ -508,13 +523,13 @@
 
         .progress-text {
             font-size: 11px;
-            color: #B0B0B0;
+            color: #a0a0c0;
             text-align: right;
         }
 
         /* UPLOAD BOX */
         .upload-box {
-            background: rgba(13, 27, 42, 0.95);
+            background: #1e1650;
             border: 2px dashed #a855f7;
             border-radius: 12px;
             padding: 50px 40px;
@@ -526,7 +541,7 @@
 
         .upload-box:hover {
             border-color: #c084fc;
-            background: rgba(13, 27, 42, 0.98);
+            background: #2d2458;
         }
 
         .upload-box.drag-over {
@@ -536,7 +551,7 @@
 
         .upload-icon { font-size: 48px; margin-bottom: 15px; }
         .upload-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-        .upload-subtitle { font-size: 14px; color: #B0B0B0; margin-bottom: 15px; }
+        .upload-subtitle { font-size: 14px; color: #a0a0c0; margin-bottom: 15px; }
         .upload-status { font-size: 11px; color: #a855f7; margin-top: 15px; font-style: italic; display: none; }
         .upload-status.active { display: block; }
 
@@ -681,8 +696,8 @@
 
         /* CLIPS TABLE */
         .clips-section {
-            background: rgba(13, 27, 42, 0.95);
-            border: 1px solid #16103a;
+            background: #1e1650;
+            border: 1px solid #3b2f6e;
             border-radius: 10px;
             padding: 25px;
         }
@@ -810,16 +825,16 @@
         }
 
         .metric-card {
-            background: rgba(26, 45, 58, 0.5);
+            background: #1e1650;
             padding: 25px;
             border-radius: 10px;
             text-align: center;
-            border: 1px solid #16103a;
+            border: 1px solid #3b2f6e;
         }
 
         .metric-label {
             font-size: 13px;
-            color: #B0B0B0;
+            color: #a0a0c0;
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -1144,11 +1159,11 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
                     </div>
                     <button class="btn-start" id="processButton" style="margin-top: 10px;" onclick="appState.startProcessing()">🤖 Gerar Clips do Link</button>
 
-                    <div style="margin: 18px 0; color: #B0B0B0; font-size: 14px;">— OU —</div>
+                    <div style="margin: 18px 0; color: #a0a0c0; font-size: 14px;">— OU —</div>
 
                     <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime" style="display: none;" onchange="appState.handleVideoFileSelect(event)">
                     <button class="btn-start" id="uploadFileButton" style="background: transparent; border: 1px solid #a855f7; color: #a855f7;" onclick="document.getElementById('videoFileInput').click();">📁 Buscar Vídeo da Galeria</button>
-                    <div id="selectedFileName" style="color: #B0B0B0; font-size: 14px; margin-top: 8px;"></div>
+                    <div id="selectedFileName" style="color: #a0a0c0; font-size: 14px; margin-top: 8px;"></div>
 
                     <div class="upload-status" id="uploadStatus">🤖 A InovaShot está processando seu vídeo: isso pode levar alguns minutos...</div>
                 </div>
@@ -1375,7 +1390,7 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
             <!-- VIEW: CONFIG -->
             <div id="view-config" class="view-content">
                 <h2 style="color: #a855f7; margin-bottom: 20px;">⚙️ Configurações</h2>
-                <p style="color: #B0B0B0; line-height: 1.8;">
+                <p style="color: #a0a0c0; line-height: 1.8;">
                     <strong>Email:</strong> <span id="configEmail">...</span><br>
                     <strong>Plano:</strong> <span id="configPlan">...</span><br>
                     <strong>Clips restantes:</strong> <span id="configCreditsLeft">...</span>
@@ -1388,7 +1403,7 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
         <div style="background:#0e0820; border:1px solid #a855f7; border-radius:12px; padding:24px; max-width:300px; text-align:center;">
             <h3 style="color:#a855f7; margin-bottom:12px;">📲 Escaneie pra postar</h3>
             <img id="qrModalImage" src="" alt="QR Code" style="width:200px; height:200px; background:#fff; border-radius:8px; margin-bottom:12px;">
-            <div style="word-break:break-all; font-size:11px; color:#B0B0B0; margin-bottom:12px;" id="qrModalLink"></div>
+            <div style="word-break:break-all; font-size:11px; color:#a0a0c0; margin-bottom:12px;" id="qrModalLink"></div>
             <button class="btn-action" onclick="navigator.clipboard.writeText(document.getElementById('qrModalLink').textContent); alert('Link copiado!')">Copiar Link</button>
             <button class="btn-action" onclick="document.getElementById('qrModal').style.display='none';">Fechar</button>
         </div>
