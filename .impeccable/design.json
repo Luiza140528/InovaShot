@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-19T12:50:00Z",
+  "title": "Design System: InovaShot",
+  "extensions": {
+    "colorMeta": {
+      "rosa-sinal": {
+        "role": "primary",
+        "displayName": "Rosa Sinal",
+        "canonical": "#f472b6",
+        "tonalRamp": ["#3d0f26", "#661c40", "#93295c", "#c23a78", "#e85a97", "#f288b3", "#f7add0", "#fcd8e8"]
+      },
+      "roxo-sinal": {
+        "role": "primary",
+        "displayName": "Roxo Sinal",
+        "canonical": "#a855f7",
+        "tonalRamp": ["#210a3f", "#3c1470", "#5b1fa3", "#7c2fce", "#a855f7", "#c087fa", "#d6b3fc", "#ecdcfe"]
+      },
+      "azul-sinal": {
+        "role": "primary",
+        "displayName": "Azul Sinal",
+        "canonical": "#38bdf8",
+        "tonalRamp": ["#052c3d", "#0a4d69", "#0f6f96", "#1594c3", "#38bdf8", "#74d1fa", "#a9e4fc", "#dcf4fe"]
+      },
+      "bg": {
+        "role": "neutral",
+        "displayName": "Roxo Profundo",
+        "canonical": "#0e0820",
+        "tonalRamp": ["#000000", "#06031090", "#0e0820", "#1a1235", "#291f4d", "#3d3168", "#584f85", "#8a83ab"]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Roxo Cartão",
+        "canonical": "#1e1650",
+        "tonalRamp": ["#0a0620", "#140d38", "#1e1650", "#2d2458", "#443a78", "#61549e", "#8a80bd", "#c3bcde"]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Borda Violeta",
+        "canonical": "#3b2f6e",
+        "tonalRamp": ["#120e22", "#221b3f", "#3b2f6e", "#544595", "#7263b3", "#9686c9", "#bcaddb", "#e1d9ef"]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Lilás Apagado",
+        "canonical": "#a0a0c0",
+        "tonalRamp": ["#26263a", "#3f3f5c", "#5a5a7d", "#78789e", "#a0a0c0", "#bebed6", "#dcdcea", "#f2f2f8"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "H1 de hero, sempre parcial em .gradient-text." },
+      "title": { "displayName": "Title", "purpose": "Títulos de seção (.section-title), centralizados." },
+      "body": { "displayName": "Body", "purpose": "Parágrafos e subtítulos." },
+      "label": { "displayName": "Label", "purpose": "Badges, nome de plano, stat-label." }
+    },
+    "shadows": [
+      { "name": "glow-primary-rest", "value": "0 0 20px rgba(168, 85, 247, 0.5)", "purpose": "Glow de repouso do botão primário." },
+      { "name": "glow-primary-hover", "value": "0 0 40px rgba(168, 85, 247, 0.8), 0 0 80px rgba(244, 114, 182, 0.4)", "purpose": "Glow intensificado no hover do botão primário, com halo rosa somado." },
+      { "name": "glow-card-hover", "value": "0 10px 40px rgba(168, 85, 247, 0.2)", "purpose": "Elevação de feature-card e pricing-card no hover." },
+      { "name": "glow-featured-card", "value": "0 0 40px rgba(168, 85, 247, 0.2)", "purpose": "Glow permanente do pricing-card em destaque (plano featured)." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "all 0.3s", "purpose": "Transição padrão de hover em botões, cards e bordas." },
+      { "name": "ease-fast", "value": "color 0.3s / border-color 0.2s", "purpose": "Transições rápidas de cor em links e foco de input." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "CTA principal — gradiente de marca, glow neon, eleva no hover.",
+      "html": "<a href=\"#\" class=\"ds-btn-primary\">🚀 Começar Grátis</a>",
+      "css": ".ds-btn-primary { display: inline-block; background: linear-gradient(135deg, #f472b6, #a855f7, #38bdf8); color: #ffffff; font-weight: 700; font-size: 16px; border: none; border-radius: 10px; padding: 14px 36px; text-decoration: none; cursor: pointer; transition: all 0.3s; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); } .ds-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 40px rgba(168, 85, 247, 0.8), 0 0 80px rgba(244, 114, 182, 0.4); } .ds-btn-primary:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "CTA secundário — transparente com borda roxo-sinal, preenche no hover.",
+      "html": "<a href=\"#\" class=\"ds-btn-outline\">Ver Planos</a>",
+      "css": ".ds-btn-outline { display: inline-block; background: transparent; color: #a855f7; border: 2px solid #a855f7; border-radius: 10px; padding: 14px 36px; font-size: 16px; text-decoration: none; cursor: pointer; transition: all 0.3s; } .ds-btn-outline:hover { background: rgba(168, 85, 247, 0.15); border-color: #f472b6; color: #f472b6; box-shadow: 0 0 20px rgba(244, 114, 182, 0.3); } .ds-btn-outline:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Feature Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Card padrão de conteúdo — plano em repouso, glow e elevação no hover.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-icon\">⚡</div><div class=\"ds-card-title\">Corte automático</div><p class=\"ds-card-text\">O InovaShot identifica os melhores momentos e corta em 9:16.</p></div>",
+      "css": ".ds-card { background: #1e1650; border: 1px solid #3b2f6e; border-radius: 16px; padding: 30px; transition: all 0.3s; } .ds-card:hover { border-color: #a855f7; transform: translateY(-4px); box-shadow: 0 10px 40px rgba(168, 85, 247, 0.2); } .ds-card-icon { font-size: 36px; margin-bottom: 16px; } .ds-card-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-card-text { font-size: 14px; color: #a0a0c0; line-height: 1.7; margin: 0; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de texto/senha/email padrão do app — fundo escuro, foco muda só a borda.",
+      "html": "<input type=\"email\" class=\"ds-input\" placeholder=\"seu@email.com\">",
+      "css": ".ds-input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; background: #0e0820; color: #e0e0ff; border: 1px solid #3b2f6e; border-radius: 10px; padding: 12px 14px; outline: none; transition: border-color 0.2s; width: 100%; box-sizing: border-box; } .ds-input:focus { border-color: #a855f7; } .ds-input::placeholder { color: #8a8aaa; }"
+    },
+    {
+      "name": "Pricing Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Card de plano — variante featured com gradiente interno e badge suspenso.",
+      "html": "<div class=\"ds-pricing-card ds-pricing-card--featured\"><div class=\"ds-pricing-badge\">Mais popular</div><div class=\"ds-plan-name\">Pro</div><div class=\"ds-plan-price\">R$97,90</div><div class=\"ds-plan-period\">/mês</div><button class=\"ds-plan-cta\">Assinar</button></div>",
+      "css": ".ds-pricing-card { position: relative; background: #1e1650; border: 1px solid #3b2f6e; border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s; } .ds-pricing-card:hover { border-color: #a855f7; transform: translateY(-4px); box-shadow: 0 10px 40px rgba(168, 85, 247, 0.2); } .ds-pricing-card--featured { border-color: #a855f7; background: linear-gradient(180deg, rgba(168,85,247,0.1) 0%, #1e1650 100%); box-shadow: 0 0 40px rgba(168, 85, 247, 0.2); } .ds-pricing-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f472b6, #a855f7); color: #fff; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; } .ds-plan-name { font-size: 18px; font-weight: 700; color: #a0a0c0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; } .ds-plan-price { font-size: 42px; font-weight: 900; color: #fff; margin-bottom: 6px; } .ds-plan-period { font-size: 13px; color: #a0a0c0; margin-bottom: 24px; } .ds-plan-cta { width: 100%; padding: 13px; background: transparent; color: #a855f7; border: 2px solid #a855f7; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 15px; transition: all 0.3s; } .ds-plan-cta:hover, .ds-pricing-card--featured .ds-plan-cta { background: linear-gradient(135deg, #f472b6, #a855f7); border-color: transparent; color: #fff; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); } .ds-plan-cta:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }"
+    },
+    {
+      "name": "FAQ Accordion Item",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Item de acordeão — expande via max-height, toggle gira 180° quando ativo.",
+      "html": "<div class=\"ds-faq-item ds-faq-item--active\"><div class=\"ds-faq-question\">Posso testar de graça?<span class=\"ds-faq-toggle\">⌄</span></div><div class=\"ds-faq-answer\">Sim, o plano gratuito permite até 3 clips por mês.</div></div>",
+      "css": ".ds-faq-item { background: #1e1650; border: 1px solid #3b2f6e; border-radius: 12px; margin-bottom: 12px; overflow: hidden; transition: border-color 0.3s; } .ds-faq-item:hover { border-color: #a855f7; } .ds-faq-question { padding: 20px; cursor: pointer; font-weight: 600; font-size: 15px; color: #fff; display: flex; justify-content: space-between; align-items: center; } .ds-faq-toggle { color: #a855f7; transition: transform 0.3s; } .ds-faq-item--active .ds-faq-toggle { transform: rotate(180deg); } .ds-faq-answer { color: #a0a0c0; font-size: 14px; line-height: 1.8; padding: 0 20px 20px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Sinal Viral",
+    "overview": "InovaShot vive na metáfora de um sinal de transmissão elétrico cortando o escuro — a energia de um clipe que está prestes a viralizar, capturada no instante do corte. O fundo é sempre roxo quase-preto (#0e0820), como um estúdio às 2h da manhã; contra esse breu, um gradiente neon de rosa a azul carrega toda a informação que importa (título, CTA, número, ícone) como se fosse o próprio sinal passando pela tela. Nada aqui aspira a \"SaaS profissional\" — a estética é deliberadamente elétrica, cyberpunk-pop, feita pra quem corta vídeo de madrugada no celular e quer que o produto pareça tão rápido e vivo quanto o conteúdo que ele gera. A interface não tenta se acalmar pra parecer \"séria\". Ela é confiante o bastante pra brilhar. Cards e inputs ficam quietos e escuros em repouso; cada interação (hover, foco, CTA) acende o gradiente neon como resposta — tátil e elétrico, nunca decorativo por decoração.",
+    "keyCharacteristics": [
+      "Fundo roxo quase-preto único em toda a superfície (marketing e app usam o mesmo :root)",
+      "Um único gradiente de marca (rosa → roxo → azul) carrega toda ênfase; cores sólidas (branco, cinza-lilás) fazem o resto do trabalho",
+      "Cards e superfícies ficam neutros em repouso; o neon aparece como reação a estado (hover, foco, destaque de plano)",
+      "Cantos generosamente arredondados (8–20px) em tudo — nenhuma superfície reta ou cortante",
+      "Tipografia do sistema (system-ui stack), pesos pesados (700–900) pra títulos e números, deixando o peso visual pro gradiente, não pra fonte display"
+    ],
+    "rules": [
+      { "name": "The One Gradient Rule", "body": "Existe um único gradiente de marca (rosa → roxo → azul, 135deg pra botões/CTAs, 90deg pra texto/divisores). Ele nunca se fragmenta em gradientes alternativos por seção — é a assinatura visual, não um efeito reaproveitável à vontade.", "section": "colors" },
+      { "name": "The Never-Corporate Rule", "body": "Confirmado pela usuária: o visual nunca deve suavizar em direção a um SaaS B2B genérico (fundo branco, sombras suaves, paleta neutra \"profissional\"). O roxo-escuro com neon é proposital e permanece mesmo sob pressão de parecer \"mais sério\".", "section": "colors" },
+      { "name": "The Gradient-Carries-Weight Rule", "body": "Nunca introduzir uma segunda família tipográfica pra criar hierarquia — hierarquia vem de tamanho, peso (700–900) e aplicação seletiva de .gradient-text, mantendo a pilha de fontes única em toda a superfície.", "section": "typography" },
+      { "name": "The Glow-Not-Shadow Rule", "body": "Toda sombra do sistema é colorida (rosa/roxo), nunca cinza/preta. Se algo precisa de profundidade, ela vem como glow de marca, não como sombra neutra de UI genérica.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do manter um único gradiente de marca (rosa → roxo → azul) como toda a linguagem de ênfase — não introduzir gradientes alternativos por seção ou feature.",
+      "Do manter o fundo roxo quase-preto (#0e0820) como base em toda superfície nova, marketing ou app.",
+      "Do usar glow colorido (nunca sombra cinza) como único vocabulário de profundidade.",
+      "Do arredondar generosamente (mínimo 8px) — nenhum elemento com cantos retos."
+    ],
+    "donts": [
+      "Don't suavizar pra estética de SaaS corporativo genérico (fundo claro, sombras neutras, paleta \"profissional\") — confirmado como anti-referência permanente pela usuária.",
+      "Don't introduzir uma segunda família tipográfica; hierarquia vem de peso e cor, não de fonte.",
+      "Don't aplicar o glow neon a superfícies em repouso — ele é reservado pra resposta de interação (hover/foco/destaque), não decoração estática."
+    ]
+  }
+}

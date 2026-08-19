@@ -1,0 +1,10 @@
+{
+  "buildPath": "comp",
+  "detector": {
+    "ignoreRules": [
+      "dark-glow"
+    ],
+    "ignoreFiles": [],
+    "ignoreValues": []
+  }
+}
