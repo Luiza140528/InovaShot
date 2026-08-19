@@ -4,14 +4,24 @@ Checklist fixo para todo artigo novo (blog + Medium). Seguir na ordem — nenhum
 
 ---
 
+## 0. Antes de escrever — título e tags
+
+- [ ] Título inclui o problema que o leitor busca resolver, sem clickbait vazio
+- [ ] Título com no máx. ~60-70 caracteres (não corta em buscas)
+- [ ] Tags do Medium definidas (3 a 5): 1 de nicho específica (ex: `content-automation`, `short-form-video`, `creator-economy`), 1 de audiência (ex: `solo-founder`, `indie-hacker`), 1-2 do tema central
+- [ ] Evitar 2+ mega-tags saturadas juntas (ex: `ai` + `artificial-intelligence` é redundante)
+
 ## 1. Blog (inovashot.com.br) — fonte oficial
 
 - [ ] Artigo publicado como página HTML no site (GitHub Pages)
 - [ ] Estrutura otimizada para citação por IA/AI Overview: headers claros (H2/H3), respostas diretas logo após perguntas, listas quando fizer sentido
 - [ ] Schema FAQPage (JSON-LD) adicionado no `<head>`, com as mesmas perguntas/respostas que aparecem na seção FAQ visível do artigo
 - [ ] Regra de marca aplicada: "O InovaShot" como sujeito, nunca "a IA"
+- [ ] "IA" / "Inteligência Artificial" banido como sujeito e como hashtag
 - [ ] URL final confirmada (ex: `inovashot.com.br/nome-do-artigo.html`)
 - [ ] Link adicionado ao sitemap (se não for automático)
+- [ ] Interlinking com outras páginas do blog conferido
+- [ ] Texto passado pela skill humanizer antes de publicar
 
 ### Como subir o arquivo no GitHub (mobile)
 
@@ -57,4 +67,4 @@ Checklist fixo para todo artigo novo (blog + Medium). Seguir na ordem — nenhum
 ---
 
 ## Ordem resumida
-**Blog publicado → Search Console (solicitar indexação) → Medium publicado (canonical pro blog) → compartilhar em 1 rede social**
+**Título + tags definidos → Blog publicado (humanizer + interlinking conferidos) → Search Console (solicitar indexação) → Medium publicado (canonical pro blog) → compartilhar em 1 rede social**
