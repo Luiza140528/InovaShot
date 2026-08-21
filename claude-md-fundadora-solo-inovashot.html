@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAUDE.md: o Arquivo Que Fez Minha SaaS Solo Dar Certo</title>
+    <meta name="description" content="Como um único arquivo de texto mudou a forma como toco o InovaShot sozinha, pelo celular — e por que ele precisa ser curto pra funcionar, segundo a própria Anthropic.">
+    <meta name="keywords" content="claude.md, claude code, fundadora solo, indie hacker, inovashot bastidores">
+    <link rel="canonical" href="https://inovashot.com.br/claude-md-fundadora-solo-inovashot.html">
+    <meta property="og:title" content="CLAUDE.md: o Arquivo Que Fez Minha SaaS Solo Dar Certo">
+    <meta property="og:description" content="Como um único arquivo de texto mudou a forma como toco o InovaShot sozinha, pelo celular — e por que ele precisa ser curto pra funcionar.">
+    <meta property="og:url" content="https://inovashot.com.br/claude-md-fundadora-solo-inovashot.html">
+    <meta property="og:type" content="article">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "O que é o CLAUDE.md?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "É um arquivo markdown na raiz do projeto que o Claude lê automaticamente no início de cada sessão. Ele guarda contexto persistente — comandos, convenções, decisões de arquitetura — que o Claude não conseguiria adivinhar só lendo o código."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Qual o tamanho ideal de um CLAUDE.md?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A recomendação oficial da Anthropic é mantê-lo curto e legível. A regra prática: para cada linha, pergunte se removê-la faria o Claude errar por falta dela. Se não, corte. Arquivos longos demais fazem regras importantes se perderem no meio do ruído."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Qual a diferença entre CLAUDE.md e Skills?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O CLAUDE.md carrega em toda sessão, então deve conter só o que se aplica sempre. Skills são pacotes de instruções especializados que o Claude carrega apenas quando aquele tipo específico de tarefa aparece — SEO, design, revisão de texto, por exemplo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Dá pra tocar uma SaaS sozinha usando só o celular?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. O InovaShot é construído e mantido inteiramente pelo celular, com SSH, GitHub e Claude — sem equipe técnica e sem computador de mesa para a maior parte do trabalho."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg:#070412; --card:#16103a; --text:#ffffff; --muted:#a0a0c0; --border:rgba(168,85,247,0.25); }
+        @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .gradient-text { background:linear-gradient(90deg,#f472b6,#a855f7,#38bdf8,#f472b6); background-size:300% 300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:gradientShift 3s ease infinite; display:inline-block; }
+        body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; font-size:16px; }
+        header { padding:18px 40px; border-bottom:1px solid var(--border); background:rgba(7,4,18,0.95); backdrop-filter:blur(10px); position:sticky; top:0; z-index:100; }
+        nav { max-width:760px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:22px; font-weight:900; text-decoration:none; }
+        .nav-cta { background:linear-gradient(135deg,#f472b6,#a855f7,#38bdf8); color:#070412; padding:8px 20px; border-radius:8px; text-decoration:none; font-size:14px; font-weight:700; }
+        .container { max-width:760px; margin:0 auto; padding:60px 40px; }
+        .breadcrumb { font-size:13px; color:var(--muted); margin-bottom:24px; }
+        .breadcrumb a { color:#a855f7; text-decoration:none; }
+        .post-tag { display:inline-block; font-size:12px; font-weight:700; color:#c084fc; background:rgba(168,85,247,0.12); padding:4px 12px; border-radius:20px; margin-bottom:18px; }
+        h1 { font-size:34px; font-weight:900; line-height:1.25; margin-bottom:14px; letter-spacing:-0.5px; }
+        .subtitle { color:var(--muted); font-size:17px; margin-bottom:16px; }
+        .post-meta { font-size:13px; color:var(--muted); margin-bottom:44px; }
+        article h2 { font-size:23px; font-weight:800; margin:40px 0 16px; letter-spacing:-0.3px; }
+        article p { color:#d8d8ec; margin-bottom:20px; font-size:16px; }
+        article code { background:rgba(168,85,247,0.15); color:#e0c3ff; padding:2px 7px; border-radius:5px; font-size:14px; }
+        article a { color:#a855f7; }
+        .faq-box { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:32px; margin:48px 0; }
+        .faq-box h2 { margin-top:0; font-size:22px; }
+        .faq-item { margin-bottom:22px; }
+        .faq-item:last-child { margin-bottom:0; }
+        .faq-item h3 { font-size:16px; font-weight:700; margin-bottom:6px; color:#fff; }
+        .faq-item p { color:#c0c0dc; font-size:14.5px; margin-bottom:0; }
+        .cta-box { background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(56,189,248,0.1)); border:1px solid rgba(168,85,247,0.4); border-radius:16px; padding:40px; text-align:center; margin:56px 0 0; }
+        .cta-box h2 { font-size:24px; margin-bottom:12px; }
+        .cta-box p { color:var(--muted); margin-bottom:24px; }
+        .btn-cta { display:inline-block; background:linear-gradient(135deg,#f472b6,#a855f7,#38bdf8); color:#070412; font-weight:700; border-radius:10px; padding:14px 36px; font-size:16px; text-decoration:none; box-shadow:0 0 20px rgba(168,85,247,0.4); }
+        .related { margin-top:56px; }
+        .related h2 { font-size:20px; margin-bottom:16px; }
+        .related a { display:block; color:#c084fc; text-decoration:none; padding:12px 0; border-bottom:1px solid var(--border); font-size:15px; }
+        footer { border-top:1px solid var(--border); padding:40px; text-align:center; }
+        footer p { color:var(--muted); font-size:14px; margin:8px 0; }
+        footer a { color:#a855f7; text-decoration:none; }
+        @media(max-width:768px) { header{padding:15px 20px} .container{padding:40px 20px} h1{font-size:26px} .cta-box{padding:24px} .faq-box{padding:22px} }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="/" class="logo"><span class="gradient-text">⚡ InovaShot</span></a>
+        <a href="/app.html#login" class="nav-cta">Começar Grátis</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <div class="breadcrumb">
+        <a href="/">InovaShot</a> › <a href="/blog.html">Blog</a> › CLAUDE.md
+    </div>
+
+    <span class="post-tag">Bastidores</span>
+    <h1>CLAUDE.md: o Arquivo Que Fez Minha SaaS Solo Dar Certo</h1>
+    <p class="subtitle">Como parei de reexplicar meu negócio toda vez que abria o Claude — e por que isso é menos sobre memória e mais sobre disciplina.</p>
+    <p class="post-meta">21 de agosto de 2026 · 7 min de leitura</p>
+
+    <article>
+        <p>Toda vez que eu abria uma conversa nova com o Claude pra resolver algo do InovaShot, fazia a mesma coisa: parava, respirava, e começava digitando um parágrafo de contexto. "Minha empresa faz isso, o backend está montado assim, ontem eu tentei resolver de tal jeito e não deu certo." Recebia uma resposta boa, fechava a conversa, e no dia seguinte fazia tudo de novo. Como se fosse a primeira vez que a gente se falava.</p>
+
+        <p>Levei um tempo pra perceber que o problema não era o Claude. Era eu, recomeçando do zero toda santa vez.</p>
+
+        <p>A solução que encontrei não tem nada de sofisticado. É um arquivo de texto.</p>
+
+        <h2>O arquivo que a Anthropic recomenda pra qualquer pessoa que usa Claude Code</h2>
+
+        <p>Chama-se <code>CLAUDE.md</code>. É um arquivo markdown simples, que fica na raiz do projeto, e que o Claude lê automaticamente no início de cada sessão. A própria Anthropic documenta isso oficialmente: o arquivo existe pra guardar contexto persistente que o Claude não consegue simplesmente adivinhar lendo o código — comandos de terminal que você usa sempre, convenções de estilo que fogem do padrão, como rodar os testes, decisões de arquitetura que só fazem sentido se alguém contar a história por trás.</p>
+
+        <p>A parte que eu ignorei durante meses: a documentação oficial é enfática sobre manter esse arquivo curto. A regra que a Anthropic sugere é simples de aplicar — pra cada linha do seu CLAUDE.md, pergunte: "se eu tirar essa linha, o Claude vai errar por falta dela?" Se a resposta for não, corta.</p>
+
+        <p>Isso contraria a intuição de quem, como eu, começou tratando o arquivo como um diário técnico. Fui empilhando contexto até virar um documento gigante — e foi exatamente aí que as coisas pioraram, não melhoraram.</p>
+
+        <h2>Quando o arquivo é grande demais, ele para de funcionar</h2>
+
+        <p>Existe um sintoma bem específico disso: você escreve uma regra clara — "nunca faça X sem eu confirmar" — e mesmo assim o Claude faz X. A explicação mais provável não é que o modelo esteja ignorando você de propósito. É que o arquivo ficou tão longo que aquela regra específica se perdeu no meio do ruído.</p>
+
+        <p>Um relato que li recentemente descreve exatamente essa dor, só que em código: antes de qualquer disciplina de contexto, o Claude Code tomava liberdades sozinho — reescrevia testes que já funcionavam, adicionava abstrações que ninguém pediu, ignorava o padrão que o resto do projeto seguia havia meses. O autor cita um dado que me fez parar pra pensar: segundo um levantamento da GitClear, times gastam cerca de 2,74 vezes mais tempo revisando código gerado por inteligência artificial em busca de falhas de segurança do que revisando código escrito por um humano. Cada hora "economizada" deixando o modelo codar sozinho pode virar quase três horas de revisão depois. Isso não é ganho de produtividade — é dívida técnica com roupa nova.</p>
+
+        <h2>Não é só o código que sai chutado. É a marca inteira.</h2>
+
+        <p>Tem um relato parecido, só que do lado do design, que achei ainda mais impactante. Um designer de produto percebeu que o Claude Code entregava componentes que pareciam certos à primeira vista — cantos arredondados, espaçamento razoável — mas, ao abrir o inspetor do navegador, o azul do botão não era o azul da marca. Era o azul padrão do Tailwind, bem parecido, próximo o suficiente pra ninguém notar em review, longe o suficiente pra o time de marketing notar assim que a página foi ao ar.</p>
+
+        <p>E não parou num botão: cantos de modal errados, cinza que parecia vir do sistema de design de outra empresa, peso de fonte que já tinha sido eliminado da identidade visual há um ano voltando como se nunca tivesse saído. A conclusão do autor foi direta: o Claude não estava sendo descuidado. Estava chutando — porque ninguém tinha dado a ele nada confiável em que se basear. A solução foi transformar o design system em tokens: valores nomeados e centralizados que o Claude consulta como fonte da verdade, em vez de adivinhar a cor certa a partir do que parece familiar.</p>
+
+        <p>É o mesmo problema do CLAUDE.md, só que aplicado à marca em vez do código: sem uma fonte de verdade explícita, o modelo preenche a lacuna com o padrão mais comum que conhece — que raramente é o seu padrão.</p>
+
+        <h2>O que aprendi tocando uma SaaS sozinha, pelo celular</h2>
+
+        <p>Não tenho equipe técnica. Não tenho escritório, nem computador de mesa pra maior parte do trabalho. Construo e mantenho o InovaShot — que transforma vídeo longo em clipe pronto pra postar — inteiramente pelo celular, com SSH, GitHub e Claude como ferramentas.</p>
+
+        <p>Isso só é sustentável porque, hoje, meu <code>CLAUDE.md</code> segue o mesmo princípio que a Anthropic recomenda: regras de comportamento curtas e diretas no topo do arquivo — o que fazer, o que nunca fazer sem eu confirmar, como reportar progresso. O contexto mais profundo — histórico de decisões, bugs já resolvidos e por quê, arquitetura do servidor — mora em outro lugar, numa wiki dedicada que o Claude consulta quando a tarefa exige. Regra curta pra disciplina, documentação longa pra memória. Os dois papéis existem, mas não deveriam brigar por espaço no mesmo bloco de texto.</p>
+
+        <h2>O passo seguinte: Skills</h2>
+
+        <p>Depois que o CLAUDE.md resolve "quem eu sou e o que você nunca pode fazer sem perguntar", sobra outro problema: mesmo com o contexto certo, uma tarefa específica ainda pode sair genérica. Um relatório esqueleto. Um design que entrega de cara que foi feito no automático.</p>
+
+        <p>A própria documentação da Anthropic é clara sobre isso: conhecimento que só é relevante às vezes não deveria estar no CLAUDE.md, porque ele carrega esse arquivo em toda sessão — inclusive nas que não têm nada a ver com aquele assunto. O lugar certo pra isso são as Skills: pacotes de instruções especializados que o Claude carrega só quando aquele tipo específico de tarefa aparece. Hoje, no InovaShot, tenho Skills dedicadas a SEO, a revisão de tom de texto, a automação de design — cada uma treinada no jeito certo de fazer aquele trabalho, não no genérico.</p>
+
+        <p>Se o CLAUDE.md é a fundação, as Skills são as ferramentas especializadas que uso em cima dela.</p>
+
+        <h2>Comece pequeno</h2>
+
+        <p>Não é preciso nascer com duzentas linhas de regras — e, pelo visto até nas recomendações oficiais, provavelmente nem deveria. O primeiro CLAUDE.md pode ter cinco seções: o que o projeto faz, comandos que você usa sempre, o que já foi tentado e não funcionou, convenções que fogem do padrão, e o que nunca deve ser feito sem sua confirmação explícita.</p>
+
+        <p>Depois disso, resista ao impulso de fazer o arquivo crescer sem parar. A cada linha nova, pergunte se ela realmente evita um erro — ou se está ali só porque parecia importante escrever.</p>
+
+        <p>Foi assim que uma fundadora solo, sem time técnico, sem escritório, com só um celular na mão, conseguiu manter uma SaaS no ar. Não foi mágica. Foi um arquivo de texto pequeno o suficiente pra ser lembrado de verdade.</p>
+    </article>
+
+    <div class="faq-box">
+        <h2>Perguntas frequentes</h2>
+        <div class="faq-item">
+            <h3>O que é o CLAUDE.md?</h3>
+            <p>É um arquivo markdown na raiz do projeto que o Claude lê automaticamente no início de cada sessão. Ele guarda contexto persistente — comandos, convenções, decisões de arquitetura — que o Claude não conseguiria adivinhar só lendo o código.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Qual o tamanho ideal de um CLAUDE.md?</h3>
+            <p>A recomendação oficial da Anthropic é mantê-lo curto e legível. A regra prática: para cada linha, pergunte se removê-la faria o Claude errar por falta dela. Se não, corte. Arquivos longos demais fazem regras importantes se perderem no meio do ruído.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Qual a diferença entre CLAUDE.md e Skills?</h3>
+            <p>O CLAUDE.md carrega em toda sessão, então deve conter só o que se aplica sempre. Skills são pacotes de instruções especializados que o Claude carrega apenas quando aquele tipo específico de tarefa aparece — SEO, design, revisão de texto, por exemplo.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Dá pra tocar uma SaaS sozinha usando só o celular?</h3>
+            <p>Sim. O InovaShot é construído e mantido inteiramente pelo celular, com SSH, GitHub e Claude — sem equipe técnica e sem computador de mesa para a maior parte do trabalho.</p>
+        </div>
+    </div>
+
+    <div class="related">
+        <h2>Leia também</h2>
+        <a href="/ecossistema-mobile-inovashot.html">Meu Ecossistema Mobile: Como Edito Vídeos 100% pelo Celular →</a>
+        <a href="/inovashot-infraestrutura-digitalocean.html">Como o InovaShot Roda no DigitalOcean →</a>
+    </div>
+
+    <div class="cta-box">
+        <h2>Teste o InovaShot gratuitamente</h2>
+        <p>Cole o link do seu vídeo e receba clipes prontos com legenda em minutos. Sem cartão de crédito.</p>
+        <a href="/app.html#login" class="btn-cta">🚀 Começar Grátis</a>
+    </div>
+
+</main>
+
+<footer>
+    <p><span class="gradient-text" style="font-size:18px; font-weight:800;">⚡ InovaShot</span></p>
+    <p style="margin-top:10px;">High-Retention Short-Form Video com IA</p>
+    <p style="margin-top:16px;">
+        <a href="/">Início</a> · <a href="/blog.html">Blog</a> · <a href="/app.html#login">Entrar</a> · <a href="mailto:contato@inovashot.pro">contato@inovashot.pro</a>
+    </p>
+    <p style="margin-top:12px; font-size:12px; color:#4a4060;">© 2026 InovaShot — Todos os direitos reservados</p>
+</footer>
+
+</body>
+</html>
