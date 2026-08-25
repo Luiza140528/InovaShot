@@ -90,6 +90,67 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // ============================================
+// FORGOT PASSWORD
+// ============================================
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://inovashot.com.br/app.html?reset=true',
+    });
+
+    if (error) {
+      logger(`Erro ao enviar reset de senha: ${error.message}`);
+      // não vaza se o email existe ou não, por segurança
+    }
+
+    res.json({ message: 'Se o email existir, um link de recuperação foi enviado.' });
+  } catch (error) {
+    logger(`Erro forgot-password: ${error.message}`);
+    res.status(500).json({ error: 'Erro ao processar solicitação' });
+  }
+});
+
+// ============================================
+// RESET PASSWORD
+// ============================================
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { access_token, new_password } = req.body;
+    if (!access_token || !new_password) {
+      return res.status(400).json({ error: 'Token e nova senha são obrigatórios' });
+    }
+    if (new_password.length < 6) {
+      return res.status(400).json({ error: 'A senha precisa ter no mínimo 6 caracteres' });
+    }
+
+    // Valida o token do link de recuperação e descobre o usuário dono dele
+    const { data: userData, error: userError } = await supabase.auth.getUser(access_token);
+    if (userError || !userData?.user) {
+      return res.status(401).json({ error: 'Link inválido ou expirado. Solicite um novo.' });
+    }
+
+    // Atualiza a senha usando privilégio de admin (service role)
+    const { error: updateError } = await supabase.auth.admin.updateUserById(
+      userData.user.id,
+      { password: new_password }
+    );
+
+    if (updateError) {
+      logger(`Erro ao atualizar senha: ${updateError.message}`);
+      return res.status(400).json({ error: updateError.message });
+    }
+
+    res.json({ message: 'Senha atualizada com sucesso.' });
+  } catch (error) {
+    logger(`Erro reset-password: ${error.message}`);
+    res.status(500).json({ error: 'Erro ao processar solicitação' });
+  }
+});
+
+// ============================================
 // USER ME
 // ============================================
 
