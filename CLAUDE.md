@@ -23,7 +23,7 @@ você decide o que vale a pena publicar."
 - Download de vídeo: YouTube via proxy residencial Webshare (resolve bloqueio
   de IP datacenter)
 - Frontend: GitHub Pages, branch `main-/-frontend`, repo `Luiza140528/InovaShot`
-- SMTP: noreply.inovashot@gmail.com
+- SMTP: noreply@inovashot.com.br
 
 ## Configurações importantes já ajustadas
 - Nginx `client_body_timeout` em 300s (resolveu falha de upload em galeria)
@@ -93,3 +93,14 @@ correto" não é critério de aceitação.
 Referências:
 - @verification-standard.md
 - @learnings.md
+
+## Gestão de tokens (economia de contexto)
+
+- /clear ao trocar de assunto — zera contexto, evita releitura cara do histórico velho.
+- /compact quando a sessão fica longa — resume sem apagar, corta ~28k pra ~4k tokens.
+- Escolher modelo pela tarefa, não usar o mais caro por padrão:
+  - Haiku -> tarefa simples/rapida (parsing, checagem de status)
+  - Sonnet -> dia a dia, melhor custo-beneficio (grosso da manutencao do InovaShot)
+  - Opus -> raciocinio complexo/decisao dificil (arquitetura, debug pesado)
+  - Fable 5 -> trabalho pesado, mais caro
+- Juntar pedidos numa mensagem so em vez de mandar em pedacos — evita releitura multipla do mesmo historico.
