@@ -975,13 +975,58 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
             </div>
 
             <div class="login-links">
-                <a href="#">Esqueceu sua senha?</a>
+                <a href="#" onclick="event.preventDefault(); appState.setPage('forgotPassword')">Esqueceu sua senha?</a>
                 <button style="background: none; border: none; cursor: pointer;" onclick="appState.setPage('landing')">← Voltar</button>
             </div>
 
             <div class="signup-link">
                 Ainda não tem uma conta? <a href="#" onclick="event.preventDefault(); appState.setPage('signup')">Cadastre-se</a>
             </div>
+        </div>
+    </div>
+
+    <!-- FORGOT PASSWORD PAGE -->
+    <div id="forgotPassword" class="page" style="position: fixed; z-index: 200;">
+        <div class="login-box">
+            <div class="login-logo"><span class="gradient-text">⚡ InovaShot</span></div>
+            <h2 class="login-title">Recuperar senha</h2>
+            <p style="color: #aaa; font-size: 14px; margin-bottom: 20px;">Digite seu email e enviaremos um link para você criar uma nova senha.</p>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="forgotEmail" placeholder="Seu email" autocomplete="off">
+            </div>
+
+            <div id="forgotError" style="color: #FF6B6B; font-size: 14px; margin-bottom: 10px; display: none;"></div>
+            <div id="forgotSuccess" style="color: #6BFF9E; font-size: 14px; margin-bottom: 10px; display: none;"></div>
+
+            <button class="btn-login" id="forgotButton" onclick="appState.forgotPassword()">Enviar link de recuperação</button>
+
+            <div class="login-links">
+                <button style="background: none; border: none; cursor: pointer;" onclick="appState.setPage('login')">← Voltar para o login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESET PASSWORD PAGE -->
+    <div id="resetPassword" class="page" style="position: fixed; z-index: 200;">
+        <div class="login-box">
+            <div class="login-logo"><span class="gradient-text">⚡ InovaShot</span></div>
+            <h2 class="login-title">Nova senha</h2>
+            <p style="color: #aaa; font-size: 14px; margin-bottom: 20px;">Escolha uma nova senha para sua conta.</p>
+
+            <div class="form-group">
+                <label>Nova senha</label>
+                <div class="password-group">
+                    <input type="password" id="newPassword" placeholder="Mínimo 6 caracteres">
+                    <button class="eye-toggle" onclick="appState.toggleNewPassword()">👀</button>
+                </div>
+            </div>
+
+            <div id="resetError" style="color: #FF6B6B; font-size: 14px; margin-bottom: 10px; display: none;"></div>
+            <div id="resetSuccess" style="color: #6BFF9E; font-size: 14px; margin-bottom: 10px; display: none;"></div>
+
+            <button class="btn-login" id="resetButton" onclick="appState.resetPassword()">Salvar nova senha</button>
         </div>
     </div>
 
@@ -1467,6 +1512,109 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
             togglePassword() {
                 const input = document.getElementById('password');
                 input.type = input.type === 'password' ? 'text' : 'password';
+            },
+
+            // ---------- ESQUECI MINHA SENHA ----------
+            async forgotPassword() {
+                const email = document.getElementById('forgotEmail').value.trim();
+                const errorBox = document.getElementById('forgotError');
+                const successBox = document.getElementById('forgotSuccess');
+                const button = document.getElementById('forgotButton');
+
+                errorBox.style.display = 'none';
+                successBox.style.display = 'none';
+
+                if (!email) {
+                    errorBox.textContent = 'Digite seu email.';
+                    errorBox.style.display = 'block';
+                    return;
+                }
+
+                button.disabled = true;
+                button.textContent = 'Enviando...';
+
+                try {
+                    const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email }),
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        errorBox.textContent = data.error || 'Erro ao enviar o link de recuperação.';
+                        errorBox.style.display = 'block';
+                        return;
+                    }
+
+                    successBox.textContent = 'Se o email existir, um link de recuperação foi enviado. Confira sua caixa de entrada.';
+                    successBox.style.display = 'block';
+                } catch (err) {
+                    errorBox.textContent = 'Não foi possível conectar ao servidor. Tente novamente.';
+                    errorBox.style.display = 'block';
+                } finally {
+                    button.disabled = false;
+                    button.textContent = 'Enviar link de recuperação';
+                }
+            },
+
+            // ---------- NOVA SENHA (a partir do link do email) ----------
+            toggleNewPassword() {
+                const input = document.getElementById('newPassword');
+                input.type = input.type === 'password' ? 'text' : 'password';
+            },
+
+            async resetPassword() {
+                const newPassword = document.getElementById('newPassword').value;
+                const errorBox = document.getElementById('resetError');
+                const successBox = document.getElementById('resetSuccess');
+                const button = document.getElementById('resetButton');
+
+                errorBox.style.display = 'none';
+                successBox.style.display = 'none';
+
+                if (!newPassword || newPassword.length < 6) {
+                    errorBox.textContent = 'A senha precisa ter no mínimo 6 caracteres.';
+                    errorBox.style.display = 'block';
+                    return;
+                }
+
+                const params = new URLSearchParams(window.location.hash.replace('#', '?'));
+                const access_token = params.get('access_token') || this._resetAccessToken;
+
+                if (!access_token) {
+                    errorBox.textContent = 'Link inválido ou expirado. Solicite um novo link de recuperação.';
+                    errorBox.style.display = 'block';
+                    return;
+                }
+
+                button.disabled = true;
+                button.textContent = 'Salvando...';
+
+                try {
+                    const res = await fetch(`${API_URL}/api/auth/reset-password`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ access_token, new_password: newPassword }),
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        errorBox.textContent = data.error || 'Erro ao salvar a nova senha.';
+                        errorBox.style.display = 'block';
+                        return;
+                    }
+
+                    successBox.textContent = 'Senha atualizada com sucesso! Redirecionando para o login...';
+                    successBox.style.display = 'block';
+                    setTimeout(() => this.setPage('login'), 2000);
+                } catch (err) {
+                    errorBox.textContent = 'Não foi possível conectar ao servidor. Tente novamente.';
+                    errorBox.style.display = 'block';
+                } finally {
+                    button.disabled = false;
+                    button.textContent = 'Salvar nova senha';
+                }
             },
 
             // ---------- LOGIN REAL ----------
@@ -2311,10 +2459,18 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
         };
 
         window.addEventListener('load', async () => {
-            // Verificar se voltou do OAuth do Google
+            // Verificar se voltou do email de recuperação de senha
             const hashParams = new URLSearchParams(window.location.hash.replace('#', '?'));
             const accessToken = hashParams.get('access_token');
-            
+            const linkType = hashParams.get('type');
+
+            if (linkType === 'recovery' && accessToken) {
+                appState._resetAccessToken = accessToken;
+                appState.setPage('resetPassword');
+                return;
+            }
+
+            // Verificar se voltou do OAuth do Google
             if (accessToken) {
                 localStorage.setItem('inovashot_token', accessToken);
                 window.location.hash = '';
