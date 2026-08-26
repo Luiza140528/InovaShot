@@ -352,6 +352,7 @@ async function processVideoAsync(job_id, user_id, youtube_url, existingVideoPath
     const transcription = await transcribeVideo(videoPath);
     const transcript = transcription.text;
     const words = transcription.words || [];
+    logger(`DEBUG transcript: length=${transcript ? transcript.length : 0} chars | preview="${(transcript || '').slice(0, 150)}"`);
 
     try {
       const { transcriptionQueue } = require('./orchestrator/transcription-step');
