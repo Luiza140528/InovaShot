@@ -383,7 +383,7 @@ async function processVideoAsync(job_id, user_id, youtube_url, existingVideoPath
     }
 
     const finalMoments = validMoments.length > 0 ? validMoments : [
-      { index: 1, start: 0, end: videoDuration - 0.5, reason: 'Clip completo', appeal: 'promessa', score: 5 }
+      { index: 1, start: 0, end: videoDuration - 0.5, reason: 'Clip completo', appeal: 'promessa', score: 5, score_reason: 'vídeo curto — clip único do conteúdo completo' }
     ];
 
     const clipIds = [];
@@ -413,6 +413,7 @@ async function processVideoAsync(job_id, user_id, youtube_url, existingVideoPath
         hook_a: moment.hook_a || null,
         hook_b: moment.hook_b || null,
         virality_score: moment.score || null,
+        score_reason: moment.score_reason || null,
         start_time: moment.start || 0,
         end_time: moment.end || 30,
         seo_caption: moment.seo_caption || null,
@@ -625,10 +626,12 @@ ${transcript}
 
 Identifique os 5-7 melhores momentos para cortar em clipes de 15-60 segundos.
 
+Para cada momento, atribua um score de viralidade de 0 a 10 E explique esse score com um motivo técnico específico, escolhido dentre estas categorias (use a que melhor se aplica, adaptando a descrição ao conteúdo real do trecho): "pico de retenção" (ritmo/tensão que prende a atenção), "gancho emocional forte" (reação, virada emocional, vulnerabilidade), "dado ou fato surpreendente" (estatística, revelação, contraintuitivo), "virada de expectativa" (o trecho contraria o que parecia óbvio), "alta densidade de informação" (muito valor entregue em pouco tempo), "prova social" (resultado, validação externa, número concreto), "punchline" (fechamento certeiro, piada, frase de efeito). Esse motivo do score é diferente do "reason" do momento: "reason" é o tema/assunto do clipe; "score_reason" é a justificativa técnica de por que ele tem potencial de viralizar.
+
 Para cada momento, além do gancho, gere também material de SEO para a busca interna do Instagram/TikTok: 10 palavras-chave prováveis que alguém buscaria sobre esse assunto, uma legenda reescrita (até 150 caracteres) incorporando 3-4 dessas palavras-chave de forma natural (nunca robótica), e 5 hashtags de cauda longa específicas do tema (nunca genéricas como #viral ou #fyp).
 
 Retorne SOMENTE o JSON abaixo, sem nenhum texto antes ou depois, sem markdown:
-{"moments":[{"index":1,"start":45,"end":75,"reason":"motivo","appeal":"promessa","score":8,"hook_a":"gancho A (máx 15 palavras)","hook_b":"gancho B (máx 15 palavras)","seo_keywords":["palavra1","palavra2"],"seo_caption":"legenda otimizada com SEO (máx 150 caracteres)","seo_hashtags":["#hashtag1","#hashtag2","#hashtag3","#hashtag4","#hashtag5"]}]}`;
+{"moments":[{"index":1,"start":45,"end":75,"reason":"motivo","appeal":"promessa","score":8,"score_reason":"motivo técnico específico do score, ex: pico de retenção pela virada emocional na fala do entrevistado","hook_a":"gancho A (máx 15 palavras)","hook_b":"gancho B (máx 15 palavras)","seo_keywords":["palavra1","palavra2"],"seo_caption":"legenda otimizada com SEO (máx 150 caracteres)","seo_hashtags":["#hashtag1","#hashtag2","#hashtag3","#hashtag4","#hashtag5"]}]}`;
 
   const reinforcedSuffix = `\n\nIMPORTANTE: responda apenas com o objeto JSON. Se algum trecho da transcrição parecer sensível, apenas evite selecioná-lo como momento — mas sempre retorne o JSON com os melhores momentos disponíveis. Nunca responda com texto livre ou recusa.`;
 
@@ -672,7 +675,8 @@ async function analyzeWithClaude(transcript, config = {}) {
       end: 999,
       reason: 'ATENÇÃO: análise da IA falhou — revisão manual necessária',
       appeal: 'promessa',
-      score: 0
+      score: 0,
+      score_reason: 'análise automática indisponível'
     }];
   }
 }
