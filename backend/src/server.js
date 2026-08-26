@@ -646,7 +646,25 @@ Retorne SOMENTE o JSON abaixo, sem nenhum texto antes ou depois, sem markdown:
 
   let text = message.content[0].text.trim();
   if (text.startsWith('```')) text = text.replace(/^```json\n?/, '').replace(/\n?```$/, '');
-  return JSON.parse(text).moments || [];
+
+  // Blindagem: extrai só o trecho {...} da resposta, ignorando qualquer texto
+  // antes ou depois que o modelo eventualmente adicione (preâmbulo, explicação, etc).
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (jsonMatch) text = jsonMatch[0];
+
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (parseError) {
+    logger(`Falha ao parsear JSON do Haiku (reinforced=${reinforced}). Trecho da resposta: ${text.slice(0, 300)}`);
+    throw parseError;
+  }
+
+  const moments = parsed.moments || [];
+  if (moments.length === 0) {
+    logger(`Haiku retornou 0 momentos (reinforced=${reinforced}). Resposta bruta (300 chars): ${text.slice(0, 300)}`);
+  }
+  return moments;
 }
 
 async function analyzeWithClaude(transcript, config = {}) {
