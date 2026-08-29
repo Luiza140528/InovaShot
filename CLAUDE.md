@@ -104,3 +104,12 @@ Referências:
   - Opus -> raciocinio complexo/decisao dificil (arquitetura, debug pesado)
   - Fable 5 -> trabalho pesado, mais caro
 - Juntar pedidos numa mensagem so em vez de mandar em pedacos — evita releitura multipla do mesmo historico.
+
+## Simplicidade e Impacto Mínimo
+- Preferir sempre a solução mais simples que resolve o problema — evitar over-engineering.
+- Mexer apenas no que é necessário para a tarefa pedida; não refatorar código não solicitado.
+- Nunca aplicar fix temporário/gambiarra sem avisar explicitamente que é temporário e qual é a solução definitiva pendente.
+- Antes de entregar mudança não-trivial, perguntar: "essa é a forma mais elegante e simples de resolver isso?"
+
+## Início de sessão
+- No início de cada sessão nova, revisar `learnings.md` antes de começar qualquer tarefa — o problema pode já ter sido resolvido ou documentado antes.
