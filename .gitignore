@@ -11,3 +11,7 @@ node_modules/
 *.backup*
 outputs/
 test-simplify.js
+.claude/skills/impeccable/
+mcp-server.mjs
+package-lock.json
+*.com-remocao-silencio
