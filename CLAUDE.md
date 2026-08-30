@@ -44,6 +44,27 @@ você decide o que vale a pena publicar."
 - Relatos de bug "hook_score vs virality_score" de outro agente NÃO foram
   reproduzidos em teste ao vivo — tratar relatos assim com cautela, sempre
   reproduzir antes de assumir como verdade
+- ~~Script gerador do carrossel claro (template "Radar Claude") vivia só num
+  scratchpad de sessão temporário, fora do repo~~ — **RESOLVIDO** (30/08/2026).
+  Movido pra `scripts/gen-carousel-light.py` + `scripts/fonts/`, com paths
+  relativos ao próprio arquivo (antes apontavam pra diretório de sessão).
+  Reexecução verificada byte-a-byte idêntica ao output anterior.
+- ~~Linha do rodapé do carrossel claro saía 100% opaca em vez de
+  translúcida~~ — **RESOLVIDO** (30/08/2026). `img.convert("RGB")` no save
+  descartava o canal alfa sem compor contra o fundo; corrigido compondo a
+  linha numa camada RGBA separada antes de salvar. Confirmado por leitura
+  de pixel (antes `(26,26,24)` puro, depois blend correto ~27% opacidade).
+- ~~Frase-gradiente do headline podia vazar pra fora da margem em textos
+  longos~~ — **RESOLVIDO** (30/08/2026). `fit_headline()` só checava altura
+  e número de linhas, nunca a largura do token individual; agora também
+  exige que o token mais largo caiba em `max_width`, encolhendo a fonte
+  além do mínimo normal só nesse cenário de emergência. Testado com frase
+  artificial de ~70 caracteres que antes vazava.
+- ~~Conteúdo dos slides do carrossel claro hardcoded dentro do motor de
+  renderização~~ — **RESOLVIDO** (30/08/2026). Copy movida pra
+  `scripts/carousel-content/radar-claude.json`; script aceita
+  `[content.json] [out_dir]` opcionais e mantém os defaults atuais. Sem
+  regressão nos 6 slides já publicados.
 
 **Regra de manutenção desta seção:** sempre que um bug for corrigido e
 confirmado por teste, mover para "resolvido" com a data. Sempre que um bug
@@ -113,3 +134,26 @@ Referências:
 
 ## Início de sessão
 - No início de cada sessão nova, revisar `learnings.md` antes de começar qualquer tarefa — o problema pode já ter sido resolvido ou documentado antes.
+
+## Início de tarefa: ler contexto antes de executar
+
+Antes de implementar qualquer tarefa nova (código, copy, design, conteúdo
+de marketing), sempre:
+
+1. Ler completamente os arquivos de contexto relevantes antes de escrever
+   qualquer linha — não apenas escanear:
+   - CLAUDE.md (este arquivo)
+   - DESIGN.md (paleta, tipografia, tom visual)
+   - learnings.md (erros já resolvidos, não repetir)
+   - verification-standard.md (critério de "pronto")
+   - Se for conteúdo/copy: regras de copy do projeto (nunca usar "IA",
+     sempre "InovaShot")
+
+2. NÃO começar a implementar ainda. Se algo estiver ambíguo — estilo,
+   escopo, prioridade, decisão de design — perguntar antes de executar.
+   Preferir uma pergunta objetiva a uma suposição errada.
+
+3. Só depois de alinhado (ou se não houver ambiguidade), implementar.
+
+Isso evita retrabalho por assumir cor/tom/estilo errado e só descobrir
+depois de pronto.
