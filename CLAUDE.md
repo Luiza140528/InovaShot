@@ -65,6 +65,12 @@ você decide o que vale a pena publicar."
   `scripts/carousel-content/radar-claude.json`; script aceita
   `[content.json] [out_dir]` opcionais e mantém os defaults atuais. Sem
   regressão nos 6 slides já publicados.
+- ~~Gradiente diagonal do carrossel claro recalculado pixel a pixel~~ —
+  **RESOLVIDO** (30/08/2026). `diag_gradient()` recalculava a interpolação
+  de cor a cada pixel mesmo dependendo só de `x+y`; agora usa uma tabela
+  (LUT) com uma entrada por diagonal, ~8.4x mais rápido no gradiente de
+  fundo (sem numpy nem dependência nova). Slides regenerados; diferença
+  máxima de 2/255 por canal, imperceptível.
 
 **Regra de manutenção desta seção:** sempre que um bug for corrigido e
 confirmado por teste, mover para "resolvido" com a data. Sempre que um bug
