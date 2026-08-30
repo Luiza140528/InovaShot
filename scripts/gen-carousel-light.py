@@ -182,7 +182,12 @@ def draw_logo(img, draw, x, y):
 
 def draw_footer(img, draw):
     line_y = 946
-    draw.line([(MARGIN, line_y), (W - MARGIN, line_y)], fill=(26, 26, 24, 70), width=2)
+    # img.convert("RGB") at save time discards alpha without compositing, so a
+    # translucent fill drawn straight on img would render fully opaque. Blend
+    # it against the actual background on a separate layer first.
+    overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(overlay).line([(MARGIN, line_y), (W - MARGIN, line_y)], fill=(26, 26, 24, 70), width=2)
+    img.paste(Image.alpha_composite(img.convert("RGBA"), overlay), (0, 0))
 
     text_y = line_y + 26
     mono_fnt = font(F_MONO_BOLD, 20)
