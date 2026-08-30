@@ -2,11 +2,15 @@
 """Gera o carrossel Instagram/Facebook no template claro (creme->lilas).
 Spec: .claude/skills/inovashot/SKILL.md, secao "Carrossel - template claro".
 """
+import json
 import os
+import sys
 from PIL import Image, ImageDraw, ImageFont
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 FONT_DIR = os.path.join(SCRIPT_DIR, "fonts")
+CONTENT_DIR = os.path.join(SCRIPT_DIR, "carousel-content")
+DEFAULT_CONTENT_PATH = os.path.join(CONTENT_DIR, "radar-claude.json")
 OUT_DIR = os.path.join(SCRIPT_DIR, "..", "marketing", "carrossel-radar-claude")
 
 W = H = 1080
@@ -302,47 +306,16 @@ def render_slide(path, eyebrow, headline, grad_phrase, body, cover=False):
     print("saved", path)
 
 
-slides = [
-    dict(
-        eyebrow="RADAR CLAUDE",
-        headline="O criador do Claude Code gravou 28 minutos que valem mais que curso pago",
-        grad_phrase="curso pago",
-        body=None,
-        cover=True,
-    ),
-    dict(
-        eyebrow="PONTO 1",
-        headline="Cada erro vira regra permanente",
-        grad_phrase="regra permanente",
-        body="Toda vez que o Claude erra numa tarefa, ele escreve a correção no arquivo CLAUDE.md. Da próxima vez, o Claude já sabe não repetir aquele erro.",
-    ),
-    dict(
-        eyebrow="PONTO 2",
-        headline="Várias sessões rodando ao mesmo tempo",
-        grad_phrase="ao mesmo tempo",
-        body="Em vez de esperar uma tarefa terminar pra começar a próxima, ele mantém várias sessões do Claude abertas em paralelo, cada uma com seu próprio contexto.",
-    ),
-    dict(
-        eyebrow="PONTO 3",
-        headline="Dar ao Claude um jeito de conferir o próprio trabalho",
-        grad_phrase="próprio trabalho",
-        body="Essa é a regra que ele mais repete: quando o Claude consegue testar o que fez sozinho, o resultado melhora muito.",
-    ),
-    dict(
-        eyebrow="PONTO 4",
-        headline="Tarefa repetida vira atalho automático",
-        grad_phrase="atalho automático",
-        body="Toda ação que ele faz mais de uma vez por dia, ele transforma em comando pronto — economiza tempo todos os dias depois.",
-    ),
-    dict(
-        eyebrow="RESUMO",
-        headline="Não é sobre prompt mágico. É sobre montar um sistema",
-        grad_phrase="montar um sistema",
-        body="Siga @inovashot.cortes pra mais achados reais sobre Claude.",
-    ),
-]
+def load_slides(content_path):
+    with open(content_path, encoding="utf-8") as f:
+        return json.load(f)
+
 
 if __name__ == "__main__":
-    os.makedirs(OUT_DIR, exist_ok=True)
+    # usage: gen-carousel-light.py [content.json] [out_dir]
+    content_path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_CONTENT_PATH
+    out_dir = sys.argv[2] if len(sys.argv) > 2 else OUT_DIR
+    slides = load_slides(content_path)
+    os.makedirs(out_dir, exist_ok=True)
     for i, s in enumerate(slides, start=1):
-        render_slide(os.path.join(OUT_DIR, f"slide-{i}.png"), s["eyebrow"], s["headline"], s["grad_phrase"], s["body"], cover=s.get("cover", False))
+        render_slide(os.path.join(out_dir, f"slide-{i}.png"), s["eyebrow"], s["headline"], s["grad_phrase"], s["body"], cover=s.get("cover", False))
