@@ -75,13 +75,6 @@ def draw_spaced_text(draw, xy, text, fnt, fill, tracking):
     return x - xy[0]
 
 
-def spaced_text_width(draw, text, fnt, tracking):
-    total = 0
-    for ch in text:
-        total += draw.textlength(ch, font=fnt) + tracking
-    return total - tracking if text else 0
-
-
 def paste_gradient_text(img, draw, xy, text, fnt, colors):
     bbox = draw.textbbox((0, 0), text, font=fnt)
     tw = bbox[2] - bbox[0]

@@ -144,7 +144,7 @@ Segunda variante de carrossel, usada em conteúdo tipo "achados/insights" (ex.: 
 2. Eyebrow: Space Mono Bold uppercase, cor roxa `#a855f7`, letter-spacing manual (Pillow não suporta tracking nativo — desenhar char a char)
 3. Headline: Poppins ExtraBold (800), cor escura `#1A1A18`, com 1 trecho em gradiente rosa→roxo→azul (a frase-chave nunca pode quebrar entre linhas — tratar como token atômico no wrap)
 4. Corpo (quando houver): dentro de chip fundo `#1A1A18`, cantos arredondados 24px, texto branco Poppins Regular
-5. Rodapé fixo: linha fina + "Siga @inovashot.cortes" (Space Mono, roxo) à esquerda + pill gradiente "O INOVASHOT" à direita (texto sempre escuro `#1A1A18` sobre o gradiente, nunca branco — mesma regra do botão primário)
+5. Rodapé fixo: linha fina + "SIGA @INOVASHOT.CORTES" em caixa alta (Space Mono Bold, roxo, tracking manual char a char) à esquerda + pill gradiente "O INOVASHOT" à direita (texto sempre escuro `#1A1A18` sobre o gradiente, nunca branco — mesma regra do botão primário)
 
 **Layout**: bloco (logo+eyebrow+headline+chip) medido e centralizado verticalmente entre o topo e a linha do rodapé — evita slide com muito espaço vazio embaixo quando o corpo de texto é curto ou inexistente (capa).
 
