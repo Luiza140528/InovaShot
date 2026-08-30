@@ -42,23 +42,22 @@ def diag_gradient(w, h, colors):
     w = max(1, w)
     h = max(1, h)
     n = len(colors) - 1
-    base = Image.new("RGB", (w, h))
-    px = base.load()
     diag = w + h
-    for y in range(h):
-        for x in range(0, w, 2):  # step 2 for speed, fill neighbor
-            t = (x + y) / diag
-            t = min(max(t, 0.0), 1.0)
-            seg = min(int(t * n), n - 1)
-            local_t = t * n - seg
-            c0 = colors[seg]
-            c1 = colors[seg + 1]
-            r = int(c0[0] + (c1[0] - c0[0]) * local_t)
-            g = int(c0[1] + (c1[1] - c0[1]) * local_t)
-            b = int(c0[2] + (c1[2] - c0[2]) * local_t)
-            px[x, y] = (r, g, b)
-            if x + 1 < w:
-                px[x + 1, y] = (r, g, b)
+    # t depends only on x+y, so precompute the color for each of the ~w+h
+    # possible diagonal values once instead of re-interpolating per pixel.
+    lut = []
+    for s in range(diag):
+        t = min(max(s / diag, 0.0), 1.0)
+        seg = min(int(t * n), n - 1)
+        local_t = t * n - seg
+        c0 = colors[seg]
+        c1 = colors[seg + 1]
+        r = int(c0[0] + (c1[0] - c0[0]) * local_t)
+        g = int(c0[1] + (c1[1] - c0[1]) * local_t)
+        b = int(c0[2] + (c1[2] - c0[2]) * local_t)
+        lut.append((r, g, b))
+    base = Image.new("RGB", (w, h))
+    base.putdata([lut[x + y] for y in range(h) for x in range(w)])
     return base.convert("RGBA")
 
 
