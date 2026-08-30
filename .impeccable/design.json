@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-19T12:50:00Z",
+  "generatedAt": "2026-08-30T20:00:00Z",
   "title": "Design System: InovaShot",
   "extensions": {
     "colorMeta": {
@@ -22,127 +22,132 @@
         "canonical": "#38bdf8",
         "tonalRamp": ["#052c3d", "#0a4d69", "#0f6f96", "#1594c3", "#38bdf8", "#74d1fa", "#a9e4fc", "#dcf4fe"]
       },
-      "bg": {
+      "creme-fundo": {
         "role": "neutral",
-        "displayName": "Roxo Profundo",
-        "canonical": "#0e0820",
-        "tonalRamp": ["#000000", "#06031090", "#0e0820", "#1a1235", "#291f4d", "#3d3168", "#584f85", "#8a83ab"]
+        "displayName": "Creme Fundo",
+        "canonical": "#faf3e8",
+        "tonalRamp": ["#e8d9bc", "#eee0c9", "#f2e7d5", "#f6edde", "#faf3e8", "#fcf7ef", "#fdfaf5", "#fffcfa"]
       },
-      "card": {
+      "lilas-fundo": {
         "role": "neutral",
-        "displayName": "Roxo Cartão",
-        "canonical": "#1e1650",
-        "tonalRamp": ["#0a0620", "#140d38", "#1e1650", "#2d2458", "#443a78", "#61549e", "#8a80bd", "#c3bcde"]
+        "displayName": "Lilás Fundo",
+        "canonical": "#d8c9ec",
+        "tonalRamp": ["#3c2f5c", "#5d4b83", "#8069a9", "#a68fc6", "#d8c9ec", "#e3d8f1", "#ede6f6", "#f6f2fa"]
       },
-      "border": {
+      "chip-escuro": {
         "role": "neutral",
-        "displayName": "Borda Violeta",
-        "canonical": "#3b2f6e",
-        "tonalRamp": ["#120e22", "#221b3f", "#3b2f6e", "#544595", "#7263b3", "#9686c9", "#bcaddb", "#e1d9ef"]
+        "displayName": "Chip Escuro",
+        "canonical": "#1a1a18",
+        "tonalRamp": ["#000000", "#0a0a09", "#1a1a18", "#2e2e2a", "#48483f", "#66665a", "#8a8a78", "#b8b8a0"]
       },
-      "muted": {
+      "texto-corpo": {
         "role": "neutral",
-        "displayName": "Lilás Apagado",
-        "canonical": "#a0a0c0",
-        "tonalRamp": ["#26263a", "#3f3f5c", "#5a5a7d", "#78789e", "#a0a0c0", "#bebed6", "#dcdcea", "#f2f2f8"]
+        "displayName": "Texto sobre chip",
+        "canonical": "#f2f2f0",
+        "tonalRamp": ["#a0a098", "#b8b8b0", "#cfcfc8", "#e0e0da", "#f2f2f0", "#f6f6f4", "#fafaf8", "#ffffff"]
+      },
+      "headline-escura": {
+        "role": "neutral",
+        "displayName": "Texto de headline sobre creme",
+        "canonical": "#241f2e",
+        "tonalRamp": ["#000000", "#120f16", "#241f2e", "#3a3346", "#544a63", "#726887", "#9690ac", "#c2bdd0"]
       }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "H1 de hero, sempre parcial em .gradient-text." },
-      "title": { "displayName": "Title", "purpose": "Títulos de seção (.section-title), centralizados." },
-      "body": { "displayName": "Body", "purpose": "Parágrafos e subtítulos." },
-      "label": { "displayName": "Label", "purpose": "Badges, nome de plano, stat-label." }
+      "eyebrow": { "displayName": "Eyebrow", "purpose": "Selo de categoria acima do headline (ex: SEM FRESCURA), fonte Space Mono, cor roxo-sinal, letter-spacing largo." },
+      "headline": { "displayName": "Headline", "purpose": "Título principal do slide, Poppins peso 800, palavra-chave em .gradient-text (rosa->roxo->azul)." },
+      "subtitle": { "displayName": "Subtitle", "purpose": "Linha de apoio abaixo do headline, peso regular, cor headline-escura em opacidade reduzida." },
+      "body-chip": { "displayName": "Body (chip escuro)", "purpose": "Texto de corpo dentro do chip escuro #1A1A18, cor texto-corpo (branco/quase-branco)." },
+      "footer": { "displayName": "Footer", "purpose": "Siga @inovashot.cortes + pill O INOVASHOT no rodapé." }
     },
-    "shadows": [
-      { "name": "glow-primary-rest", "value": "0 0 20px rgba(168, 85, 247, 0.5)", "purpose": "Glow de repouso do botão primário." },
-      { "name": "glow-primary-hover", "value": "0 0 40px rgba(168, 85, 247, 0.8), 0 0 80px rgba(244, 114, 182, 0.4)", "purpose": "Glow intensificado no hover do botão primário, com halo rosa somado." },
-      { "name": "glow-card-hover", "value": "0 10px 40px rgba(168, 85, 247, 0.2)", "purpose": "Elevação de feature-card e pricing-card no hover." },
-      { "name": "glow-featured-card", "value": "0 0 40px rgba(168, 85, 247, 0.2)", "purpose": "Glow permanente do pricing-card em destaque (plano featured)." }
+    "gradients": [
+      { "name": "gradiente-fundo", "value": "linear-gradient(135deg, #FAF3E8 0%, #D8C9EC 100%)", "purpose": "Fundo de todo slide de carrossel — único gradiente de fundo em toda a superfície." },
+      { "name": "gradiente-marca", "value": "linear-gradient(90deg, #f472b6 0%, #a855f7 50%, #38bdf8 100%)", "purpose": "Gradiente de marca — aplicado na palavra-chave do headline (.gradient-text), na pill 'O INOVASHOT', no ícone/logo e em CTAs. Nunca usado como fundo de página inteira." }
     ],
-    "motion": [
-      { "name": "ease-standard", "value": "all 0.3s", "purpose": "Transição padrão de hover em botões, cards e bordas." },
-      { "name": "ease-fast", "value": "color 0.3s / border-color 0.2s", "purpose": "Transições rápidas de cor em links e foco de input." }
+    "shadows": [
+      { "name": "chip-shadow", "value": "0 8px 24px rgba(26, 26, 24, 0.15)", "purpose": "Sombra suave do chip escuro sobre o fundo claro, para dar profundidade sem quebrar o clima leve do slide." }
     ],
     "breakpoints": [
-      { "name": "mobile", "value": "768px" }
+      { "name": "carousel-square", "value": "1080x1080" }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
-      "kind": "button",
-      "refersTo": "button-primary",
-      "description": "CTA principal — gradiente de marca, glow neon, eleva no hover.",
-      "html": "<a href=\"#\" class=\"ds-btn-primary\">🚀 Começar Grátis</a>",
-      "css": ".ds-btn-primary { display: inline-block; background: linear-gradient(135deg, #f472b6, #a855f7, #38bdf8); color: #ffffff; font-weight: 700; font-size: 16px; border: none; border-radius: 10px; padding: 14px 36px; text-decoration: none; cursor: pointer; transition: all 0.3s; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); } .ds-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 40px rgba(168, 85, 247, 0.8), 0 0 80px rgba(244, 114, 182, 0.4); } .ds-btn-primary:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }"
-    },
-    {
-      "name": "Outline Button",
-      "kind": "button",
-      "refersTo": "button-outline",
-      "description": "CTA secundário — transparente com borda roxo-sinal, preenche no hover.",
-      "html": "<a href=\"#\" class=\"ds-btn-outline\">Ver Planos</a>",
-      "css": ".ds-btn-outline { display: inline-block; background: transparent; color: #a855f7; border: 2px solid #a855f7; border-radius: 10px; padding: 14px 36px; font-size: 16px; text-decoration: none; cursor: pointer; transition: all 0.3s; } .ds-btn-outline:hover { background: rgba(168, 85, 247, 0.15); border-color: #f472b6; color: #f472b6; box-shadow: 0 0 20px rgba(244, 114, 182, 0.3); } .ds-btn-outline:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }"
-    },
-    {
-      "name": "Feature Card",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "Card padrão de conteúdo — plano em repouso, glow e elevação no hover.",
-      "html": "<div class=\"ds-card\"><div class=\"ds-card-icon\">⚡</div><div class=\"ds-card-title\">Corte automático</div><p class=\"ds-card-text\">O InovaShot identifica os melhores momentos e corta em 9:16.</p></div>",
-      "css": ".ds-card { background: #1e1650; border: 1px solid #3b2f6e; border-radius: 16px; padding: 30px; transition: all 0.3s; } .ds-card:hover { border-color: #a855f7; transform: translateY(-4px); box-shadow: 0 10px 40px rgba(168, 85, 247, 0.2); } .ds-card-icon { font-size: 36px; margin-bottom: 16px; } .ds-card-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; } .ds-card-text { font-size: 14px; color: #a0a0c0; line-height: 1.7; margin: 0; }"
-    },
-    {
-      "name": "Text Input",
-      "kind": "input",
-      "refersTo": "input",
-      "description": "Campo de texto/senha/email padrão do app — fundo escuro, foco muda só a borda.",
-      "html": "<input type=\"email\" class=\"ds-input\" placeholder=\"seu@email.com\">",
-      "css": ".ds-input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; background: #0e0820; color: #e0e0ff; border: 1px solid #3b2f6e; border-radius: 10px; padding: 12px 14px; outline: none; transition: border-color 0.2s; width: 100%; box-sizing: border-box; } .ds-input:focus { border-color: #a855f7; } .ds-input::placeholder { color: #8a8aaa; }"
-    },
-    {
-      "name": "Pricing Card",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "Card de plano — variante featured com gradiente interno e badge suspenso.",
-      "html": "<div class=\"ds-pricing-card ds-pricing-card--featured\"><div class=\"ds-pricing-badge\">Mais popular</div><div class=\"ds-plan-name\">Pro</div><div class=\"ds-plan-price\">R$97,90</div><div class=\"ds-plan-period\">/mês</div><button class=\"ds-plan-cta\">Assinar</button></div>",
-      "css": ".ds-pricing-card { position: relative; background: #1e1650; border: 1px solid #3b2f6e; border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s; } .ds-pricing-card:hover { border-color: #a855f7; transform: translateY(-4px); box-shadow: 0 10px 40px rgba(168, 85, 247, 0.2); } .ds-pricing-card--featured { border-color: #a855f7; background: linear-gradient(180deg, rgba(168,85,247,0.1) 0%, #1e1650 100%); box-shadow: 0 0 40px rgba(168, 85, 247, 0.2); } .ds-pricing-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f472b6, #a855f7); color: #fff; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; } .ds-plan-name { font-size: 18px; font-weight: 700; color: #a0a0c0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; } .ds-plan-price { font-size: 42px; font-weight: 900; color: #fff; margin-bottom: 6px; } .ds-plan-period { font-size: 13px; color: #a0a0c0; margin-bottom: 24px; } .ds-plan-cta { width: 100%; padding: 13px; background: transparent; color: #a855f7; border: 2px solid #a855f7; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 15px; transition: all 0.3s; } .ds-plan-cta:hover, .ds-pricing-card--featured .ds-plan-cta { background: linear-gradient(135deg, #f472b6, #a855f7); border-color: transparent; color: #fff; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); } .ds-plan-cta:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }"
-    },
-    {
-      "name": "FAQ Accordion Item",
+      "name": "Slide Background",
       "kind": "custom",
+      "refersTo": "background",
+      "description": "Fundo padrão de todo slide — gradiente diagonal creme para lilás, sem textura, sem ruído.",
+      "html": "<div class=\"ds-slide-bg\"></div>",
+      "css": ".ds-slide-bg { width: 1080px; height: 1080px; background: linear-gradient(135deg, #FAF3E8 0%, #D8C9EC 100%); }"
+    },
+    {
+      "name": "Eyebrow Badge",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "Selo de categoria acima do headline — Space Mono, roxo-sinal, letter-spacing largo.",
+      "html": "<span class=\"ds-eyebrow\">SEM FRESCURA</span>",
+      "css": ".ds-eyebrow { font-family: 'Space Mono', monospace; font-size: 15px; letter-spacing: 3px; color: #a855f7; text-transform: uppercase; }"
+    },
+    {
+      "name": "Headline com gradiente",
+      "kind": "custom",
+      "refersTo": "headline",
+      "description": "Título principal Poppins 800, com a palavra-chave em gradiente de marca via .gradient-text.",
+      "html": "<h1 class=\"ds-headline\">Seu vídeo não <span class=\"gradient-text\">viraliza</span> assim</h1>",
+      "css": ".ds-headline { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 52px; color: #241f2e; line-height: 1.15; margin: 0; } .gradient-text { background: linear-gradient(90deg, #f472b6, #a855f7, #38bdf8); -webkit-background-clip: text; background-clip: text; color: transparent; }"
+    },
+    {
+      "name": "Chip Escuro (corpo de texto)",
+      "kind": "card",
       "refersTo": "card",
-      "description": "Item de acordeão — expande via max-height, toggle gira 180° quando ativo.",
-      "html": "<div class=\"ds-faq-item ds-faq-item--active\"><div class=\"ds-faq-question\">Posso testar de graça?<span class=\"ds-faq-toggle\">⌄</span></div><div class=\"ds-faq-answer\">Sim, o plano gratuito permite até 3 clips por mês.</div></div>",
-      "css": ".ds-faq-item { background: #1e1650; border: 1px solid #3b2f6e; border-radius: 12px; margin-bottom: 12px; overflow: hidden; transition: border-color 0.3s; } .ds-faq-item:hover { border-color: #a855f7; } .ds-faq-question { padding: 20px; cursor: pointer; font-weight: 600; font-size: 15px; color: #fff; display: flex; justify-content: space-between; align-items: center; } .ds-faq-toggle { color: #a855f7; transition: transform 0.3s; } .ds-faq-item--active .ds-faq-toggle { transform: rotate(180deg); } .ds-faq-answer { color: #a0a0c0; font-size: 14px; line-height: 1.8; padding: 0 20px 20px; }"
+      "description": "Bloco escuro que carrega o corpo de texto / lista numerada do slide, contraste alto sobre o fundo claro.",
+      "html": "<div class=\"ds-chip\"><p class=\"ds-chip-item\"><strong>01</strong> Transcrição identifica cada fala</p></div>",
+      "css": ".ds-chip { background: #1a1a18; border-radius: 24px; padding: 40px; box-shadow: 0 8px 24px rgba(26,26,24,0.15); } .ds-chip-item { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 22px; color: #f2f2f0; line-height: 1.6; margin: 0 0 16px; } .ds-chip-item strong { color: #f5c16c; margin-right: 12px; }"
+    },
+    {
+      "name": "Footer com pill de marca",
+      "kind": "custom",
+      "refersTo": "footer",
+      "description": "Rodapé do slide — divisor fino, handle do Instagram, e pill com gradiente de marca.",
+      "html": "<div class=\"ds-footer\"><span class=\"ds-footer-handle\">Siga @inovashot.cortes</span><span class=\"ds-footer-pill\">O INOVASHOT</span></div>",
+      "css": ".ds-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(36,31,46,0.15); padding-top: 20px; } .ds-footer-handle { font-family: sans-serif; font-size: 16px; color: #4a4458; } .ds-footer-pill { font-family: sans-serif; font-size: 14px; font-weight: 700; color: #ffffff; background: linear-gradient(90deg, #f472b6, #a855f7, #38bdf8); padding: 8px 20px; border-radius: 999px; }"
+    },
+    {
+      "name": "Ícone/Logo InovaShot",
+      "kind": "custom",
+      "refersTo": "logo",
+      "description": "Íris de câmera de 6 pás — gradiente de marca aplicado com sombreado dramático (luz forte no topo, sombra profunda embaixo). Usado como avatar, favicon e selo visual da marca.",
+      "html": "<img src=\"/assets/inovashot-icon.png\" class=\"ds-logo-icon\" alt=\"InovaShot\">",
+      "css": ".ds-logo-icon { width: 96px; height: 96px; }"
     }
   ],
   "narrative": {
-    "northStar": "Sinal Viral",
-    "overview": "InovaShot vive na metáfora de um sinal de transmissão elétrico cortando o escuro — a energia de um clipe que está prestes a viralizar, capturada no instante do corte. O fundo é sempre roxo quase-preto (#0e0820), como um estúdio às 2h da manhã; contra esse breu, um gradiente neon de rosa a azul carrega toda a informação que importa (título, CTA, número, ícone) como se fosse o próprio sinal passando pela tela. Nada aqui aspira a \"SaaS profissional\" — a estética é deliberadamente elétrica, cyberpunk-pop, feita pra quem corta vídeo de madrugada no celular e quer que o produto pareça tão rápido e vivo quanto o conteúdo que ele gera. A interface não tenta se acalmar pra parecer \"séria\". Ela é confiante o bastante pra brilhar. Cards e inputs ficam quietos e escuros em repouso; cada interação (hover, foco, CTA) acende o gradiente neon como resposta — tátil e elétrico, nunca decorativo por decoração.",
+    "northStar": "Sinal Viral — versão clara",
+    "overview": "InovaShot migrou do tema escuro/neon original para uma identidade clara: fundo em gradiente diagonal suave de creme (#FAF3E8) a lilás (#D8C9EC), sem textura, transmitindo leveza e acessibilidade. Toda a energia visual da marca — o 'sinal' de transmissão elétrica rosa-roxo-azul — permanece, mas agora concentrada em pontos específicos de ênfase: a palavra-chave do headline, a pill do rodapé, o ícone/logo e os CTAs. O corpo de texto vive dentro de um chip escuro (#1A1A18) que funciona como uma 'janela' de alto contraste sobre o fundo claro, preservando legibilidade sem escurecer o slide inteiro. O resultado é um visual editorial e confiante, mais aberto e convidativo que a versão anterior, mantendo a mesma assinatura de gradiente de marca como elemento de reconhecimento.",
     "keyCharacteristics": [
-      "Fundo roxo quase-preto único em toda a superfície (marketing e app usam o mesmo :root)",
-      "Um único gradiente de marca (rosa → roxo → azul) carrega toda ênfase; cores sólidas (branco, cinza-lilás) fazem o resto do trabalho",
-      "Cards e superfícies ficam neutros em repouso; o neon aparece como reação a estado (hover, foco, destaque de plano)",
-      "Cantos generosamente arredondados (8–20px) em tudo — nenhuma superfície reta ou cortante",
-      "Tipografia do sistema (system-ui stack), pesos pesados (700–900) pra títulos e números, deixando o peso visual pro gradiente, não pra fonte display"
+      "Fundo é sempre o gradiente diagonal creme -> lilás (135deg), único em toda a superfície de carrosséis",
+      "O gradiente de marca (rosa -> roxo -> azul, 90deg) nunca é usado como fundo de página — só em texto (.gradient-text), pill do rodapé, ícone/logo e CTAs",
+      "Corpo de texto sempre dentro do chip escuro #1A1A18 com texto quase-branco — nunca texto de corpo direto sobre o fundo claro em blocos longos",
+      "Headline em Poppins 800, eyebrow em Space Mono com letter-spacing largo — duas famílias tipográficas deliberadas (display + mono), não uma só",
+      "Cantos generosamente arredondados no chip (24px) e na pill (pill completa) — consistente com a suavidade do fundo claro"
     ],
     "rules": [
-      { "name": "The One Gradient Rule", "body": "Existe um único gradiente de marca (rosa → roxo → azul, 135deg pra botões/CTAs, 90deg pra texto/divisores). Ele nunca se fragmenta em gradientes alternativos por seção — é a assinatura visual, não um efeito reaproveitável à vontade.", "section": "colors" },
-      { "name": "The Never-Corporate Rule", "body": "Confirmado pela usuária: o visual nunca deve suavizar em direção a um SaaS B2B genérico (fundo branco, sombras suaves, paleta neutra \"profissional\"). O roxo-escuro com neon é proposital e permanece mesmo sob pressão de parecer \"mais sério\".", "section": "colors" },
-      { "name": "The Gradient-Carries-Weight Rule", "body": "Nunca introduzir uma segunda família tipográfica pra criar hierarquia — hierarquia vem de tamanho, peso (700–900) e aplicação seletiva de .gradient-text, mantendo a pilha de fontes única em toda a superfície.", "section": "typography" },
-      { "name": "The Glow-Not-Shadow Rule", "body": "Toda sombra do sistema é colorida (rosa/roxo), nunca cinza/preta. Se algo precisa de profundidade, ela vem como glow de marca, não como sombra neutra de UI genérica.", "section": "elevation" }
+      { "name": "The Background-Is-Neutral Rule", "body": "O fundo do slide é sempre o gradiente creme->lilás. O gradiente de marca (rosa->roxo->azul) nunca pinta o fundo inteiro — isso reverteria para a estética antiga descartada.", "section": "colors" },
+      { "name": "The Chip-Carries-Contrast Rule", "body": "Todo corpo de texto extenso (listas, parágrafos) vive dentro do chip escuro #1A1A18. Nunca colocar texto de corpo longo diretamente sobre o fundo claro — a leitura piora e quebra a hierarquia visual.", "section": "elevation" },
+      { "name": "The One Brand Gradient Rule", "body": "Existe um único gradiente de marca (rosa -> roxo -> azul). Ele aparece em: palavra-chave do headline, pill do rodapé, ícone/logo, CTAs. Nunca se fragmenta em gradientes alternativos por seção.", "section": "colors" },
+      { "name": "The Two-Typeface Rule", "body": "Duas famílias tipográficas deliberadas: Poppins 800 para headline/display, Space Mono para eyebrow/labels. Corpo de texto usa a stack padrão do sistema. Não introduzir uma terceira família.", "section": "typography" }
     ],
     "dos": [
-      "Do manter um único gradiente de marca (rosa → roxo → azul) como toda a linguagem de ênfase — não introduzir gradientes alternativos por seção ou feature.",
-      "Do manter o fundo roxo quase-preto (#0e0820) como base em toda superfície nova, marketing ou app.",
-      "Do usar glow colorido (nunca sombra cinza) como único vocabulário de profundidade.",
-      "Do arredondar generosamente (mínimo 8px) — nenhum elemento com cantos retos."
+      "Do manter o fundo sempre no gradiente creme->lilás (135deg), sem textura ou ruído.",
+      "Do aplicar o gradiente de marca (rosa->roxo->azul) apenas em elementos de ênfase pontual: headline keyword, pill, ícone, CTA.",
+      "Do colocar todo corpo de texto extenso dentro do chip escuro #1A1A18 para garantir contraste.",
+      "Do usar Poppins 800 para headlines e Space Mono para eyebrows/labels, sem misturar outras famílias."
     ],
     "donts": [
-      "Don't suavizar pra estética de SaaS corporativo genérico (fundo claro, sombras neutras, paleta \"profissional\") — confirmado como anti-referência permanente pela usuária.",
-      "Don't introduzir uma segunda família tipográfica; hierarquia vem de peso e cor, não de fonte.",
-      "Don't aplicar o glow neon a superfícies em repouso — ele é reservado pra resposta de interação (hover/foco/destaque), não decoração estática."
+      "Don't usar o gradiente de marca como fundo de página inteira — essa é a estética antiga (dark/neon) já descartada permanentemente.",
+      "Don't colocar blocos longos de texto de corpo diretamente sobre o fundo claro sem o chip escuro por trás.",
+      "Don't introduzir uma terceira família tipográfica ou um segundo gradiente de marca concorrente.",
+      "Don't aplicar sombras cinzas genéricas — a única sombra do sistema é a sombra suave do chip (rgba(26,26,24,0.15))."
     ]
   }
 }
