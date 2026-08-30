@@ -122,21 +122,33 @@ def headline_tokens(text, grad_phrase):
 
 
 def fit_headline(draw, text, grad_phrase, max_width, max_height, start_size=64, min_size=38):
-    size = start_size
-    while size >= min_size:
+    def layout(size):
         fnt = font(F_EXTRABOLD, size)
         tokens = headline_tokens(text, grad_phrase)
         lines = wrap_tokens(draw, tokens, fnt, max_width)
         line_h = int(size * 1.22)
         total_h = line_h * len(lines)
-        if total_h <= max_height and len(lines) <= 4:
+        widest = max((tw for line in lines for (_, _, tw) in line), default=0)
+        return fnt, lines, line_h, total_h, widest
+
+    size = start_size
+    while size >= min_size:
+        fnt, lines, line_h, total_h, widest = layout(size)
+        if total_h <= max_height and len(lines) <= 4 and widest <= max_width:
             return fnt, lines, line_h, total_h
         size -= 2
-    fnt = font(F_EXTRABOLD, min_size)
-    tokens = headline_tokens(text, grad_phrase)
-    lines = wrap_tokens(draw, tokens, fnt, max_width)
-    line_h = int(min_size * 1.22)
-    return fnt, lines, line_h, line_h * len(lines)
+
+    # Below min_size the height/line-count budget no longer matters — the
+    # only thing that must never happen is a token (the atomic grad_phrase,
+    # in practice) wider than max_width, which would bleed off the canvas
+    # with no wrap to catch it. Keep shrinking until it fits, or hit a floor.
+    while size > 10:
+        fnt, lines, line_h, total_h, widest = layout(size)
+        if widest <= max_width:
+            return fnt, lines, line_h, total_h
+        size -= 2
+    fnt, lines, line_h, total_h, _ = layout(size)
+    return fnt, lines, line_h, total_h
 
 
 def wrap_plain(draw, text, fnt, max_width):
