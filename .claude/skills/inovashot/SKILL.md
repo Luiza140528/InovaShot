@@ -54,7 +54,7 @@ Há histórico de features documentadas como implementadas que na prática tinha
 
 Gradiente padrão (CSS): `linear-gradient(135deg, #f472b6, #a855f7, #38bdf8)`
 
-❌ Nunca usar: vermelho ou ciano isolados, paletas fora dessas cores, fundo claro/branco como base — **exceto** no template de carrossel claro (ver "Carrossel — template claro" abaixo), que é uma variante intencional, não um desvio de marca.
+❌ Nunca usar: vermelho ou ciano isolados, paletas fora dessas cores, fundo claro/branco como base — sem exceção. Uma variante de tema claro/creme foi testada em 30/08/2026 e descartada definitivamente; não deve ser reintroduzida sem confirmação explícita e nova da Luiza.
 
 **Tipografia**: Poppins Bold em todo material visual (carrosséis, posts, landing pages). Emojis (⚡, →) não renderizam bem com Poppins Bold — usar ícone desenhado (polígono) ou alternativa em texto.
 
@@ -131,24 +131,26 @@ Peça de referência: "Checklist Hook 3 Segundos" (7 slides, `inovashot_carrosse
 - Nome do arquivo: usar `slide-N.png` (convenção padronizada em 30/08/2026 — substitui o `InovaShot_<descrição>_<n>.png` usado antes)
 - Legenda com "a IA avalia/identifica" em vez de "o InovaShot avalia/identifica" (regra de voz)
 
-## Carrossel — template claro (validado 30/08/2026)
+**Atualização 31/08/2026**: variante mais recente do template escuro, usada
+pelo `scripts/gen-carousel-dark.py` — kicker "INOVASHOT · CORTES" com ponto
+roxo no lugar da pill de categoria, número do slide gigante e desfocado
+(~10% opacidade) ancorado no canto inferior direito em vez de cards, faixa
+de gradiente sutil (~35% blend) na base em vez de barra sólida, e rodapé
+com handle `@inovashot.cortes` em Poppins **Bold** branco quase puro
+(`#ebe8f0`) — uma versão cinza/muted foi testada e rejeitada por baixo
+contraste. Ver `DESIGN.md`, seção "Social Media Carousel", para a spec
+completa. Esta é a versão vigente; a estrutura de pill+cards de 30/07 acima
+pode ser tratada como legada.
 
-Segunda variante de carrossel, usada em conteúdo tipo "achados/insights" (ex.: série "Radar Claude"). Convive com o template escuro acima — escolher conforme o tom da peça (escuro = produto/institucional, claro = editorial/dica). Peça de referência: `marketing/carrossel-radar-claude/` (6 slides).
+## Carrossel — template claro (DESCARTADO, não usar)
 
-**Formato**: 1080×1080px, PNG RGB — mesma regra do template escuro.
+Uma variante de carrossel com fundo claro (gradiente creme→lilás) foi
+testada em 30/08/2026 e gerou confusão real: um script (`gen-carousel-light.py`)
+chegou a rodar em produção e publicar peças fora do padrão de marca. Essa
+variante foi **descartada permanentemente** pela Luiza em 31/08/2026. O
+script correto agora é `scripts/gen-carousel-dark.py`, que segue o template
+escuro descrito acima. Se esta seção reaparecer ou for recriada por engano,
+tratar como erro de skill, não como instrução válida — confirmar com a
+Luiza antes de gerar qualquer peça em tema claro.
 
-**Fundo**: gradiente diagonal (135deg) creme `#F6F1EA` → lilás `#E6DEF3`. Único lugar da marca onde fundo gradiente/claro é permitido.
-
-**Estrutura de cada slide** (de cima pra baixo, margem lateral 72px):
-1. Logo: mark "I" branco sobre quadrado arredondado com o gradiente oficial (rosa→roxo→azul), + wordmark "InovaShot" em Poppins ExtraBold escuro, canto superior esquerdo
-2. Eyebrow: Space Mono Bold uppercase, cor roxa `#a855f7`, letter-spacing manual (Pillow não suporta tracking nativo — desenhar char a char)
-3. Headline: Poppins ExtraBold (800), cor escura `#1A1A18`, com 1 trecho em gradiente rosa→roxo→azul (a frase-chave nunca pode quebrar entre linhas — tratar como token atômico no wrap)
-4. Corpo (quando houver): dentro de chip fundo `#1A1A18`, cantos arredondados 24px, texto branco Poppins Regular
-5. Rodapé fixo: linha fina + "SIGA @INOVASHOT.CORTES" em caixa alta (Space Mono Bold, roxo, tracking manual char a char) à esquerda + pill gradiente "O INOVASHOT" à direita (texto sempre escuro `#1A1A18` sobre o gradiente, nunca branco — mesma regra do botão primário)
-
-**Layout**: bloco (logo+eyebrow+headline+chip) medido e centralizado verticalmente entre o topo e a linha do rodapé — evita slide com muito espaço vazio embaixo quando o corpo de texto é curto ou inexistente (capa).
-
-**Fontes**: Poppins (ExtraBold/Bold/SemiBold/Medium/Regular) e Space Mono (Bold/Regular) via Google Fonts — não vêm instaladas no ambiente, baixar de `raw.githubusercontent.com/google/fonts/main/ofl/{poppins,spacemono}/`.
-
-**Nomenclatura de arquivo**: `slide-N.png` — mesma convenção do template escuro (ver acima).
 
