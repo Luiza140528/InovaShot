@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-30T20:00:00Z",
-  "title": "Design System: InovaShot",
+  "generatedAt": "2026-08-31T00:00:00Z",
+  "title": "Design System: InovaShot — Carrossel Instagram",
   "extensions": {
     "colorMeta": {
       "rosa-sinal": {
@@ -22,51 +22,36 @@
         "canonical": "#38bdf8",
         "tonalRamp": ["#052c3d", "#0a4d69", "#0f6f96", "#1594c3", "#38bdf8", "#74d1fa", "#a9e4fc", "#dcf4fe"]
       },
-      "creme-fundo": {
+      "fundo-slide": {
         "role": "neutral",
-        "displayName": "Creme Fundo",
-        "canonical": "#faf3e8",
-        "tonalRamp": ["#e8d9bc", "#eee0c9", "#f2e7d5", "#f6edde", "#faf3e8", "#fcf7ef", "#fdfaf5", "#fffcfa"]
-      },
-      "lilas-fundo": {
-        "role": "neutral",
-        "displayName": "Lilás Fundo",
-        "canonical": "#d8c9ec",
-        "tonalRamp": ["#3c2f5c", "#5d4b83", "#8069a9", "#a68fc6", "#d8c9ec", "#e3d8f1", "#ede6f6", "#f6f2fa"]
-      },
-      "chip-escuro": {
-        "role": "neutral",
-        "displayName": "Chip Escuro",
-        "canonical": "#1a1a18",
-        "tonalRamp": ["#000000", "#0a0a09", "#1a1a18", "#2e2e2a", "#48483f", "#66665a", "#8a8a78", "#b8b8a0"]
+        "displayName": "Fundo do Slide (roxo quase-preto)",
+        "canonical": "#070412",
+        "tonalRamp": ["#000000", "#020102", "#070412", "#0e0820", "#16103a", "#1e1650", "#2d2458", "#3b2f6e"]
       },
       "texto-corpo": {
         "role": "neutral",
-        "displayName": "Texto sobre chip",
-        "canonical": "#f2f2f0",
-        "tonalRamp": ["#a0a098", "#b8b8b0", "#cfcfc8", "#e0e0da", "#f2f2f0", "#f6f6f4", "#fafaf8", "#ffffff"]
+        "displayName": "Texto de corpo sobre fundo escuro",
+        "canonical": "#dcd7e6",
+        "tonalRamp": ["#8a8496", "#a49dae", "#bdb7c6", "#dcd7e6", "#e8e4ee", "#f0edf4", "#f7f5fa", "#ffffff"]
       },
-      "headline-escura": {
+      "rodape-texto": {
         "role": "neutral",
-        "displayName": "Texto de headline sobre creme",
-        "canonical": "#241f2e",
-        "tonalRamp": ["#000000", "#120f16", "#241f2e", "#3a3346", "#544a63", "#726887", "#9690ac", "#c2bdd0"]
+        "displayName": "Texto de rodapé (handle @inovashot.cortes)",
+        "canonical": "#ebe8f0",
+        "tonalRamp": ["#8a8496", "#a49dae", "#c4bfcd", "#ebe8f0", "#f2f0f6", "#f8f7fa", "#fbfafc", "#ffffff"]
       }
     },
     "typographyMeta": {
-      "eyebrow": { "displayName": "Eyebrow", "purpose": "Selo de categoria acima do headline (ex: SEM FRESCURA), fonte Space Mono, cor roxo-sinal, letter-spacing largo." },
-      "headline": { "displayName": "Headline", "purpose": "Título principal do slide, Poppins peso 800, palavra-chave em .gradient-text (rosa->roxo->azul)." },
-      "subtitle": { "displayName": "Subtitle", "purpose": "Linha de apoio abaixo do headline, peso regular, cor headline-escura em opacidade reduzida." },
-      "body-chip": { "displayName": "Body (chip escuro)", "purpose": "Texto de corpo dentro do chip escuro #1A1A18, cor texto-corpo (branco/quase-branco)." },
-      "footer": { "displayName": "Footer", "purpose": "Siga @inovashot.cortes + pill O INOVASHOT no rodapé." }
+      "kicker": { "displayName": "Kicker", "purpose": "Selo de categoria acima do título (ex: INOVASHOT · CORTES), Poppins Medium, ponto colorido em roxo-sinal, letter-spacing leve." },
+      "title": { "displayName": "Title", "purpose": "Título principal do slide, Poppins Bold, branco puro, sem gradiente aplicado ao texto." },
+      "body": { "displayName": "Body", "purpose": "Frase de apoio abaixo do título, Poppins Medium, cor texto-corpo (lilás-apagado)." },
+      "footer-handle": { "displayName": "Footer Handle", "purpose": "@inovashot.cortes no rodapé — Poppins Bold, branco quase puro (nunca cinza/muted, testado e rejeitado por baixo contraste)." },
+      "footer-page": { "displayName": "Footer Page", "purpose": "Paginação '0X/05' alinhada à direita no rodapé, Poppins Medium." }
     },
     "gradients": [
-      { "name": "gradiente-fundo", "value": "linear-gradient(135deg, #FAF3E8 0%, #D8C9EC 100%)", "purpose": "Fundo de todo slide de carrossel — único gradiente de fundo em toda a superfície." },
-      { "name": "gradiente-marca", "value": "linear-gradient(90deg, #f472b6 0%, #a855f7 50%, #38bdf8 100%)", "purpose": "Gradiente de marca — aplicado na palavra-chave do headline (.gradient-text), na pill 'O INOVASHOT', no ícone/logo e em CTAs. Nunca usado como fundo de página inteira." }
+      { "name": "gradiente-marca", "value": "linear-gradient(90deg, #f472b6 0%, #a855f7 50%, #38bdf8 100%)", "purpose": "Único gradiente de marca — usado na barra fina abaixo do kicker e na faixa sutil (~35% blend) na base do slide. Nunca pinta o slide inteiro." }
     ],
-    "shadows": [
-      { "name": "chip-shadow", "value": "0 8px 24px rgba(26, 26, 24, 0.15)", "purpose": "Sombra suave do chip escuro sobre o fundo claro, para dar profundidade sem quebrar o clima leve do slide." }
-    ],
+    "shadows": [],
     "breakpoints": [
       { "name": "carousel-square", "value": "1080x1080" }
     ]
@@ -76,78 +61,103 @@
       "name": "Slide Background",
       "kind": "custom",
       "refersTo": "background",
-      "description": "Fundo padrão de todo slide — gradiente diagonal creme para lilás, sem textura, sem ruído.",
+      "description": "Fundo padrão de todo slide de carrossel — roxo quase-preto sólido, sem textura, sem ruído.",
       "html": "<div class=\"ds-slide-bg\"></div>",
-      "css": ".ds-slide-bg { width: 1080px; height: 1080px; background: linear-gradient(135deg, #FAF3E8 0%, #D8C9EC 100%); }"
+      "css": ".ds-slide-bg { width: 1080px; height: 1080px; background: #070412; }"
     },
     {
-      "name": "Eyebrow Badge",
+      "name": "Kicker",
       "kind": "custom",
       "refersTo": "label",
-      "description": "Selo de categoria acima do headline — Space Mono, roxo-sinal, letter-spacing largo.",
-      "html": "<span class=\"ds-eyebrow\">SEM FRESCURA</span>",
-      "css": ".ds-eyebrow { font-family: 'Space Mono', monospace; font-size: 15px; letter-spacing: 3px; color: #a855f7; text-transform: uppercase; }"
+      "description": "Selo de categoria acima do título — Poppins Medium, ponto colorido em roxo-sinal.",
+      "html": "<span class=\"ds-kicker\">&#8226; INOVASHOT &middot; CORTES</span>",
+      "css": ".ds-kicker { font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 30px; color: #c8bedc; }"
     },
     {
-      "name": "Headline com gradiente",
+      "name": "Barra de gradiente",
+      "kind": "custom",
+      "refersTo": "divider",
+      "description": "Linha curta de gradiente de marca logo abaixo do kicker.",
+      "html": "<div class=\"ds-gradient-bar\"></div>",
+      "css": ".ds-gradient-bar { width: 90px; height: 8px; background: linear-gradient(90deg, #f472b6, #a855f7, #38bdf8); }"
+    },
+    {
+      "name": "Número de fundo",
+      "kind": "custom",
+      "refersTo": "decoration",
+      "description": "Número do slide em branco puro a baixa opacidade, ancorado no canto inferior direito. Omitido no slide final de CTA.",
+      "html": "<span class=\"ds-bg-number\">2</span>",
+      "css": ".ds-bg-number { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 780px; color: rgba(255,255,255,0.10); position: absolute; bottom: 0; right: 60px; }"
+    },
+    {
+      "name": "Título",
       "kind": "custom",
       "refersTo": "headline",
-      "description": "Título principal Poppins 800, com a palavra-chave em gradiente de marca via .gradient-text.",
-      "html": "<h1 class=\"ds-headline\">Seu vídeo não <span class=\"gradient-text\">viraliza</span> assim</h1>",
-      "css": ".ds-headline { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 52px; color: #241f2e; line-height: 1.15; margin: 0; } .gradient-text { background: linear-gradient(90deg, #f472b6, #a855f7, #38bdf8); -webkit-background-clip: text; background-clip: text; color: transparent; }"
+      "description": "Título principal do slide — Poppins Bold, branco puro, sem gradiente no texto.",
+      "html": "<h1 class=\"ds-title\">O problema n&atilde;o &eacute; falta de ideia.</h1>",
+      "css": ".ds-title { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 68px; color: #ffffff; line-height: 1.15; margin: 0; }"
     },
     {
-      "name": "Chip Escuro (corpo de texto)",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "Bloco escuro que carrega o corpo de texto / lista numerada do slide, contraste alto sobre o fundo claro.",
-      "html": "<div class=\"ds-chip\"><p class=\"ds-chip-item\"><strong>01</strong> Transcrição identifica cada fala</p></div>",
-      "css": ".ds-chip { background: #1a1a18; border-radius: 24px; padding: 40px; box-shadow: 0 8px 24px rgba(26,26,24,0.15); } .ds-chip-item { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 22px; color: #f2f2f0; line-height: 1.6; margin: 0 0 16px; } .ds-chip-item strong { color: #f5c16c; margin-right: 12px; }"
+      "name": "Corpo de apoio",
+      "kind": "custom",
+      "refersTo": "body",
+      "description": "Frase de apoio de um slide — Poppins Medium, lilás-apagado, direto sobre o fundo escuro (sem chip/card).",
+      "html": "<p class=\"ds-body\">&Eacute; que a produ&ccedil;&atilde;o de v&iacute;deo curto depende s&oacute; da sua energia.</p>",
+      "css": ".ds-body { font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 44px; color: #dcd7e6; line-height: 1.3; }"
     },
     {
-      "name": "Footer com pill de marca",
+      "name": "Faixa de gradiente na base",
+      "kind": "custom",
+      "refersTo": "background",
+      "description": "Banda horizontal na parte inferior do slide, gradiente de marca misturado a ~35% sobre o fundo escuro.",
+      "html": "<div class=\"ds-base-band\"></div>",
+      "css": ".ds-base-band { width: 1080px; height: 220px; position: absolute; bottom: 0; background: linear-gradient(90deg, rgba(244,114,182,0.35), rgba(168,85,247,0.35), rgba(56,189,248,0.35)); }"
+    },
+    {
+      "name": "Rodapé",
       "kind": "custom",
       "refersTo": "footer",
-      "description": "Rodapé do slide — divisor fino, handle do Instagram, e pill com gradiente de marca.",
-      "html": "<div class=\"ds-footer\"><span class=\"ds-footer-handle\">Siga @inovashot.cortes</span><span class=\"ds-footer-pill\">O INOVASHOT</span></div>",
-      "css": ".ds-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(36,31,46,0.15); padding-top: 20px; } .ds-footer-handle { font-family: sans-serif; font-size: 16px; color: #4a4458; } .ds-footer-pill { font-family: sans-serif; font-size: 14px; font-weight: 700; color: #ffffff; background: linear-gradient(90deg, #f472b6, #a855f7, #38bdf8); padding: 8px 20px; border-radius: 999px; }"
+      "description": "Handle do Instagram + paginação, sobre a faixa de gradiente da base. Handle sempre em branco quase puro para garantir contraste.",
+      "html": "<div class=\"ds-footer\"><span class=\"ds-footer-handle\">@inovashot.cortes</span><span class=\"ds-footer-page\">02/05</span></div>",
+      "css": ".ds-footer { display: flex; align-items: center; justify-content: space-between; } .ds-footer-handle { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 30px; color: #ebe8f0; } .ds-footer-page { font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 28px; color: #dcd7e6; }"
     },
     {
-      "name": "Ícone/Logo InovaShot",
+      "name": "Slide de CTA (fechamento)",
       "kind": "custom",
-      "refersTo": "logo",
-      "description": "Íris de câmera de 6 pás — gradiente de marca aplicado com sombreado dramático (luz forte no topo, sombra profunda embaixo). Usado como avatar, favicon e selo visual da marca.",
-      "html": "<img src=\"/assets/inovashot-icon.png\" class=\"ds-logo-icon\" alt=\"InovaShot\">",
-      "css": ".ds-logo-icon { width: 96px; height: 96px; }"
+      "refersTo": "cta",
+      "description": "Slide final sem número de fundo — pede comentário de palavra-chave, nunca expõe link direto. Seta poligonal aponta pro 'Link na bio'.",
+      "html": "<h1 class=\"ds-title\">Comenta &ldquo;CORTE&rdquo; que eu te mando o link.</h1><div class=\"ds-cta-row\"><span class=\"ds-arrow\">&#9654;</span><span class=\"ds-cta-text\">Link na bio</span></div>",
+      "css": ".ds-arrow { color: #a855f7; } .ds-cta-text { font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 34px; color: #ffffff; }"
     }
   ],
   "narrative": {
-    "northStar": "Sinal Viral — versão clara",
-    "overview": "InovaShot migrou do tema escuro/neon original para uma identidade clara: fundo em gradiente diagonal suave de creme (#FAF3E8) a lilás (#D8C9EC), sem textura, transmitindo leveza e acessibilidade. Toda a energia visual da marca — o 'sinal' de transmissão elétrica rosa-roxo-azul — permanece, mas agora concentrada em pontos específicos de ênfase: a palavra-chave do headline, a pill do rodapé, o ícone/logo e os CTAs. O corpo de texto vive dentro de um chip escuro (#1A1A18) que funciona como uma 'janela' de alto contraste sobre o fundo claro, preservando legibilidade sem escurecer o slide inteiro. O resultado é um visual editorial e confiante, mais aberto e convidativo que a versão anterior, mantendo a mesma assinatura de gradiente de marca como elemento de reconhecimento.",
+    "northStar": "Sinal Viral — versão carrossel (fiel ao DESIGN.md do site)",
+    "overview": "O carrossel de Instagram do InovaShot segue fielmente a mesma identidade do site: fundo roxo quase-preto (#070412), com o gradiente de marca (rosa -> roxo -> azul) reservado como acento pontual — nunca como fundo de página inteira. Diferente do site (que usa system-ui), os slides usam Poppins (Bold para títulos, Medium para corpo e rodapé) por serem gerados como imagem via Python/Pillow. Cada slide carrega um número de fundo gigante e sutil (10% de opacidade) como elemento de orientação visual, e uma faixa de gradiente suave na base ancora o rodapé. O slide final de CTA nunca expõe o link diretamente — sempre pede um comentário de palavra-chave, reforçando o mecanismo de alcance por engajamento. Esta é a especificação definitiva, confirmada pela usuária em 31/08/2026; qualquer variante de tema claro/creme gerada anteriormente foi um teste descartado e não deve ser reaplicada sem nova confirmação explícita.",
     "keyCharacteristics": [
-      "Fundo é sempre o gradiente diagonal creme -> lilás (135deg), único em toda a superfície de carrosséis",
-      "O gradiente de marca (rosa -> roxo -> azul, 90deg) nunca é usado como fundo de página — só em texto (.gradient-text), pill do rodapé, ícone/logo e CTAs",
-      "Corpo de texto sempre dentro do chip escuro #1A1A18 com texto quase-branco — nunca texto de corpo direto sobre o fundo claro em blocos longos",
-      "Headline em Poppins 800, eyebrow em Space Mono com letter-spacing largo — duas famílias tipográficas deliberadas (display + mono), não uma só",
-      "Cantos generosamente arredondados no chip (24px) e na pill (pill completa) — consistente com a suavidade do fundo claro"
+      "Fundo é sempre #070412 (roxo quase-preto), único em toda a superfície de carrosséis — nunca gradiente de fundo, nunca tema claro",
+      "O gradiente de marca (rosa -> roxo -> azul) aparece só como acento: barra fina abaixo do kicker e faixa sutil (~35% blend) na base do slide",
+      "Texto de corpo vive direto sobre o fundo escuro, sem chip/card — o próprio fundo já garante contraste alto o suficiente com texto branco/lilás-apagado",
+      "Uma única família tipográfica (Poppins), variando peso (Bold para título, Medium para corpo/rodapé) — sem segunda fonte decorativa",
+      "Número de fundo gigante e sutil por slide como elemento de orientação, omitido apenas no slide final de CTA"
     ],
     "rules": [
-      { "name": "The Background-Is-Neutral Rule", "body": "O fundo do slide é sempre o gradiente creme->lilás. O gradiente de marca (rosa->roxo->azul) nunca pinta o fundo inteiro — isso reverteria para a estética antiga descartada.", "section": "colors" },
-      { "name": "The Chip-Carries-Contrast Rule", "body": "Todo corpo de texto extenso (listas, parágrafos) vive dentro do chip escuro #1A1A18. Nunca colocar texto de corpo longo diretamente sobre o fundo claro — a leitura piora e quebra a hierarquia visual.", "section": "elevation" },
-      { "name": "The One Brand Gradient Rule", "body": "Existe um único gradiente de marca (rosa -> roxo -> azul). Ele aparece em: palavra-chave do headline, pill do rodapé, ícone/logo, CTAs. Nunca se fragmenta em gradientes alternativos por seção.", "section": "colors" },
-      { "name": "The Two-Typeface Rule", "body": "Duas famílias tipográficas deliberadas: Poppins 800 para headline/display, Space Mono para eyebrow/labels. Corpo de texto usa a stack padrão do sistema. Não introduzir uma terceira família.", "section": "typography" }
+      { "name": "The Dark-Background-Is-Permanent Rule", "body": "O fundo do slide é sempre #070412. Nenhuma variante clara/creme deve ser aplicada sem confirmação explícita e nova da usuária — a versão clara testada em 30/08/2026 foi descartada.", "section": "colors" },
+      { "name": "The One Brand Gradient Rule", "body": "Existe um único gradiente de marca (rosa -> roxo -> azul). Ele aparece em: barra abaixo do kicker, faixa da base do slide, e elementos de destaque pontual. Nunca se fragmenta em gradientes alternativos por seção.", "section": "colors" },
+      { "name": "The Legible-Footer Rule", "body": "O handle @inovashot.cortes no rodapé é sempre Poppins Bold em branco quase puro (#ebe8f0). Uma versão cinza/muted foi testada e rejeitada por baixo contraste — nunca reverter para essa cor.", "section": "typography" },
+      { "name": "The Comment-Gate CTA Rule", "body": "O slide final nunca expõe o link diretamente. O CTA sempre pede um comentário de palavra-chave específica, alinhado à mecânica de alcance por comentário usada no restante da estratégia social do InovaShot.", "section": "components" },
+      { "name": "The Single-Typeface Rule", "body": "Apenas Poppins é usada nos slides (Bold e Medium), refletindo a mesma filosofia do site de não introduzir uma segunda família tipográfica para criar hierarquia.", "section": "typography" }
     ],
     "dos": [
-      "Do manter o fundo sempre no gradiente creme->lilás (135deg), sem textura ou ruído.",
-      "Do aplicar o gradiente de marca (rosa->roxo->azul) apenas em elementos de ênfase pontual: headline keyword, pill, ícone, CTA.",
-      "Do colocar todo corpo de texto extenso dentro do chip escuro #1A1A18 para garantir contraste.",
-      "Do usar Poppins 800 para headlines e Space Mono para eyebrows/labels, sem misturar outras famílias."
+      "Do manter o fundo sempre em #070412, sem gradiente de fundo, sem textura.",
+      "Do aplicar o gradiente de marca apenas como acento pontual: barra sob o kicker e faixa sutil na base.",
+      "Do usar Poppins Bold em branco quase puro no rodapé para garantir legibilidade.",
+      "Do omitir o número de fundo apenas no slide final de CTA, mantendo-o em todos os outros."
     ],
     "donts": [
-      "Don't usar o gradiente de marca como fundo de página inteira — essa é a estética antiga (dark/neon) já descartada permanentemente.",
-      "Don't colocar blocos longos de texto de corpo diretamente sobre o fundo claro sem o chip escuro por trás.",
-      "Don't introduzir uma terceira família tipográfica ou um segundo gradiente de marca concorrente.",
-      "Don't aplicar sombras cinzas genéricas — a única sombra do sistema é a sombra suave do chip (rgba(26,26,24,0.15))."
+      "Don't usar fundo claro/creme — essa variante foi testada em 30/08/2026 e descartada permanentemente.",
+      "Don't colocar o handle do rodapé em cinza/muted — baixo contraste já foi testado e rejeitado.",
+      "Don't expor o link diretamente no slide de CTA — o mecanismo é sempre comentário de palavra-chave.",
+      "Don't introduzir uma segunda família tipográfica além de Poppins."
     ]
   }
 }
