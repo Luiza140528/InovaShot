@@ -333,6 +333,54 @@ o ícone de toggle (⚡/seta) gira 180° e muda pra roxo-sinal quando ativo. A
 resposta usa texto muted (14px) com padding assimétrico (0 20px 20px) só
 quando aberta.
 
+## Social Media Carousel (Instagram @inovashot.cortes)
+
+Especificação separada do site: os slides de carrossel são gerados como
+imagem (Python/Pillow), não HTML, então usam uma pilha tipográfica própria
+(Poppins) em vez do system-ui stack do site — mas herdam as mesmas cores de
+marca acima. **Aprovado pela usuária como padrão definitivo** após revisão
+de slide em 31/08/2026; qualquer novo carrossel deve seguir esta estrutura.
+
+### Format
+- Canvas: 1080×1080px (quadrado) — nunca 1080×1350 (retrato corta no feed e
+  no grid do perfil).
+- Fundo: `colors.footer-bg` (#070412), o roxo mais escuro da paleta.
+- Fonte: Poppins Bold (títulos), Poppins Medium (corpo). Nenhum emoji
+  Unicode — ícones/setas são sempre polígonos desenhados (`ImageDraw.polygon`),
+  por conflito visual de emoji com Poppins Bold.
+
+### Slide Anatomy
+- **Kicker** (topo): "INOVASHOT · CORTES" em Poppins Medium, com um ponto
+  colorido (`roxo-sinal`) antes do texto.
+- **Barra de gradiente**: linha curta (90×8px) logo abaixo do kicker, usando
+  `The One Gradient Rule` (rosa → roxo → azul).
+- **Número de fundo**: número do slide em branco puro a ~10% de opacidade,
+  tamanho ~780px, ancorado no canto inferior direito — decorativo, nunca
+  cobre o texto principal. Omitido no slide final de CTA.
+- **Título**: Poppins Bold, maior corpo de texto do slide.
+- **Corpo** (opcional): Poppins Medium, cor lilás-apagado (`colors.muted`),
+  usado pra 1 frase de apoio por slide — nunca mais de uma ideia por card.
+- **Faixa de gradiente na base**: banda horizontal (~220px de altura) na
+  parte inferior do slide, gradiente de marca misturado a ~35% sobre o
+  fundo escuro — sutil, não um bloco sólido de cor.
+- **Rodapé**: `@inovashot.cortes` em Poppins **Bold** branco quase puro
+  (#ebe8f0) — nunca cinza/muted aqui, pois testado e rejeitado por baixo
+  contraste. Paginação "0X/05" alinhada à direita, Poppins Medium.
+
+### Slide final (CTA)
+- Sem número de fundo.
+- Título = pedido de comentário de palavra-chave (ex: "Comenta 'CORTE' que
+  eu te mando o link"), nunca link direto no corpo do slide.
+- Corpo = reforço do posicionamento de marca ("O InovaShot corta o vídeo,
+  você decide o que vale publicar").
+- Seta poligonal + "Link na bio" como fechamento visual.
+
+### Named Rule
+**The Comment-Gate CTA Rule.** O carrossel nunca expõe o link diretamente
+no slide de fechamento — o CTA sempre pede um comentário de palavra-chave
+específica, alinhado à mecânica de alcance por comentário (igual ao restante
+da estratégia de Reels/social do InovaShot).
+
 ## Do's and Don'ts
 
 ### Do:
