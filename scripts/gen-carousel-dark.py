@@ -186,7 +186,7 @@ def draw_polygon_arrow(draw, x, y, size=32):
     draw.polygon(points, fill=color)
 
 
-def render_slide(path, kicker, headline, body, page_label, number=None, is_cta=False):
+def render_slide(path, kicker, headline, body, page_label, number=None, is_cta=False, is_cover=False):
     img = Image.new("RGBA", (W, H), BG + (255,))
     draw = ImageDraw.Draw(img)
 
@@ -209,7 +209,8 @@ def render_slide(path, kicker, headline, body, page_label, number=None, is_cta=F
 
     headline_top = bar_y + 55
     max_headline_h = 420 if is_cta else 340
-    hfnt, hlines, line_h, headline_h = fit_headline(draw, headline, CONTENT_W, max_headline_h)
+    start_size = 68 if is_cover else 58
+    hfnt, hlines, line_h, headline_h = fit_headline(draw, headline, CONTENT_W, max_headline_h, start_size=start_size)
 
     yy = headline_top
     for line in hlines:
@@ -253,14 +254,15 @@ if __name__ == "__main__":
     total = len(slides)
     os.makedirs(out_dir, exist_ok=True)
     for i, s in enumerate(slides, start=1):
-        is_cta = s.get("cover", False) or i == total
+        is_last = i == total
         page_label = f"{i:02d}/{total:02d}"
         render_slide(
             os.path.join(out_dir, f"slide-{i}.png"),
             kicker=s.get("eyebrow", "INOVASHOT \u00b7 CORTES"),
             headline=s["headline"],
-            body=s.get("body", ""),
+            body=s.get("body") or "",
             page_label=page_label,
             number=str(i),
-            is_cta=is_cta,
+            is_cta=is_last,
+            is_cover=s.get("cover", False),
         )
