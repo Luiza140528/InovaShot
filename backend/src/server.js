@@ -701,6 +701,95 @@ async function analyzeWithClaude(transcript, config = {}) {
 }
 
 // ============================================
+// SCORE SOCIAL
+// ============================================
+
+async function callHaikuForSocialScore(client, headline, subtitulo, tipo, reinforced = false) {
+  const basePrompt = `Você é o motor de scoring de viralidade do InovaShot para conteúdo do Instagram (@inovashot.cortes).
+
+Analise o conteúdo enviado (headline, subtítulo/hook, tipo: reel ou carrossel) e retorne um score de 0-100, calibrado nos dados reais de performance abaixo. Views é o proxy de alcance orgânico nesta conta.
+
+EXEMPLOS REAIS DE CALIBRAÇÃO (headline → views → score correspondente):
+
+Lista numerada + benefício específico (categoria mais estável e confiável):
+- "10 apps que pagam por tarefas do celular / Sem precisar de experiência" → 312 views → score 78
+- "3 erros de edição que fazem seu vídeo parecer amador" → 379 views → score 82
+- "Toda apresentação da McKinsey segue essa estrutura de 3 partes" → 314 views → score 78
+
+Provocação/verdade nua (alta variância — pode performar muito bem ou só ok):
+- "Curtida não paga boleto / Alcance orgânico é a maior armadilha de ego do criador" → 409 views → score 85
+- "Feed bonito não vende nada / Estética sem oferta clara é só decoração" → 281 views → score 62
+- "Você viu que o Instagram vai cortar o alcance de quem usa IA?" → 263 views → score 58
+
+Tutorial/organização (sólido mas menos viral):
+- "Como organizar contexto de projeto pra IA não esquecer nada / Salva pra aplicar" → 306 views → score 65
+- "Existe uma ferramenta que expõe o rastro digital de qualquer site" → 247 views → score 48
+
+Lista + CTA de comentário (depende muito da execução do CTA):
+- "10 termos de IA que estão bombando / Comenta TERMOS" → 284 views → score 60
+
+Bastidores/emocional (mais fraco quando genérico, mais forte quando específico):
+- "Como é minha rotina real construindo o InovaShot sozinha?" → 275 views → score 55
+
+CRITÉRIOS DE AVALIAÇÃO (em ordem de peso):
+1. Clareza da promessa/número específico no headline (peso alto) — "3 erros", "10 apps" bate mais forte que promessa vaga
+2. Especificidade do benefício no subtítulo — "sem precisar de experiência" > genérico
+3. Fator provocação/confronto — soma pontos, mas não é o principal driver sozinho
+4. Se é REEL: força do hook nos primeiros 2-3s importa mais que o resto
+5. Se é CARROSSEL: segue a fórmula SEM FRESCURA (desqualificar técnica → mas → promessa)? Isso é bônus
+6. Alinhamento com a marca (nunca usar #IA, sempre "O InovaShot" como sujeito ativo)
+
+CONTEÚDO A AVALIAR:
+Headline: "${headline}"
+Subtítulo/hook: "${subtitulo}"
+Tipo: ${tipo}
+
+RETORNE APENAS JSON, sem texto antes ou depois:
+{
+  "score": <0-100>,
+  "categoria": "<lista_numerada | provocacao | tutorial | lista_cta | bastidores | outro>",
+  "motivo": "<uma frase curta explicando o score, no estilo score_reason do Supabase>",
+  "hook_sugerido": "<frase de 3-6 palavras pro topo do slide/vídeo>",
+  "melhor_horario": "<horário sugerido baseado no tipo de conteúdo>",
+  "legenda": "<legenda completa seguindo as regras de marca, com Comenta EU QUERO na primeira linha>",
+  "hashtags": "#InovaShot #Claude #Automação #Criadores"
+}`;
+
+  const reinforcedSuffix = `\n\nIMPORTANTE: responda apenas com o objeto JSON acima, sem nenhum texto antes ou depois, sem markdown.`;
+
+  const message = await client.messages.create({
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 1000,
+    messages: [{
+      role: 'user',
+      content: reinforced ? basePrompt + reinforcedSuffix : basePrompt
+    }],
+  });
+
+  let text = message.content[0].text.trim();
+  if (text.startsWith('```')) text = text.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (jsonMatch) text = jsonMatch[0];
+
+  return JSON.parse(text);
+}
+
+async function scoreSocialWithClaude(headline, subtitulo, tipo) {
+  const Anthropic = require('@anthropic-ai/sdk');
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+  try {
+    return await callHaikuForSocialScore(client, headline, subtitulo, tipo, false);
+  } catch (firstError) {
+    logger(`Score social — Claude error (1ª tentativa): ${firstError.message}`);
+    const retryResult = await callHaikuForSocialScore(client, headline, subtitulo, tipo, true);
+    logger('Score social — retry OK após reforço de prompt');
+    return retryResult;
+  }
+}
+
+// ============================================
 // FFMPEG
 // ============================================
 
@@ -984,6 +1073,23 @@ app.post('/api/tendencias', authenticateUser, async (req, res) => {
   }
 });
 
+
+// Rota: POST /api/score-social
+app.post('/api/score-social', authenticateUser, async (req, res) => {
+  try {
+    const { headline, subtitulo, tipo } = req.body;
+
+    if (!headline || !subtitulo || !['reel', 'carrossel'].includes(tipo)) {
+      return res.status(400).json({ error: 'Campos obrigatórios: headline, subtitulo, tipo ("reel" ou "carrossel")' });
+    }
+
+    const resultado = await scoreSocialWithClaude(headline, subtitulo, tipo);
+    res.json(resultado);
+  } catch (err) {
+    logger(`Erro na rota /api/score-social: ${err.message}`);
+    res.status(502).json({ error: 'Falha ao calcular score social' });
+  }
+});
 
 // Rota: GET /api/trends
 app.get('/api/trends', async (req, res) => {
