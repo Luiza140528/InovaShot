@@ -3,7 +3,7 @@
 InovaShot - Bastidores Generator (1080x1080)
 Specs (aprovadas 05/09/2026, documentadas em DESIGN.md):
 - Canvas 1080x1080
-- Background: preto puro (diferente do #070412 do formato Dark)
+- Background: #070412, igual ao formato Dark
 - Kicker "INOVASHOT · BASTIDORES" com ponto colorido (roxo-sinal)
 - Frase em destaque estilo citação, Poppins Bold ~72px, alinhada à esquerda,
   centralizada verticalmente acima da faixa de rodapé
@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 W, H = 1080, 1080
 
-BG = (0, 0, 0)  # preto puro
+BG = (7, 4, 18)  # #070412, igual ao formato Dark
 ROSA = (244, 114, 182)  # #f472b6
 ROXO = (168, 85, 247)   # #a855f7
 AZUL = (56, 189, 248)   # #38bdf8
