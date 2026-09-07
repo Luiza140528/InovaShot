@@ -1098,6 +1098,11 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
                         🗳️ Módulo Político
                     </button>
                 </li>
+                <li>
+                    <button class="sidebar-menu-item" id="menu-scoresocial" onclick="appState.setActiveView('scoresocial')">
+                        🎯 Score Social
+                    </button>
+                </li>
                 <li id="menu-admin-li" style="display:none;">
                     <button class="sidebar-menu-item" id="menu-admin" onclick="appState.setActiveView('admin')">
                         📊 Painel Admin
@@ -1430,6 +1435,33 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
                     </div>
                 </div>
 
+            </div>
+
+            <!-- VIEW: SCORE SOCIAL -->
+            <div id="view-scoresocial" class="view-content">
+                <h2 style="color: #a855f7; margin-bottom: 6px;">🎯 Score Social</h2>
+                <p style="color: #a0a0c0; font-size: 13px; margin-bottom: 20px;">Cole a headline e o subtítulo/hook do post antes de publicar e veja o score de viralidade, calibrado com o histórico real da sua conta.</p>
+
+                <div style="background:rgba(168,85,247,0.08); border:1px solid #3b2f6e; border-radius:12px; padding:20px; margin-bottom:20px;">
+                    <div style="margin-bottom: 14px;">
+                        <label style="color: #a0a0c0; font-size: 14px; display: block; margin-bottom: 6px;">Headline</label>
+                        <input type="text" id="scoreHeadline" placeholder="Ex: 3 erros que fazem seu reel parecer amador">
+                    </div>
+                    <div style="margin-bottom: 14px;">
+                        <label style="color: #a0a0c0; font-size: 14px; display: block; margin-bottom: 6px;">Subtítulo / hook</label>
+                        <input type="text" id="scoreSubtitulo" placeholder="Ex: O segundo ninguém percebe">
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <label style="color: #a0a0c0; font-size: 14px; display: block; margin-bottom: 6px;">Tipo de conteúdo</label>
+                        <select id="scoreTipo" style="width: 100%; background: #16103a; color: #fff; border: 1px solid #3b2f6e; border-radius: 8px; padding: 10px; font-size: 14px;">
+                            <option value="reel">📱 Reel</option>
+                            <option value="carrossel">🖼️ Carrossel</option>
+                        </select>
+                    </div>
+                    <button type="button" id="btnScoreSocial" onclick="appState.calcularScoreSocial()" style="width:100%; background:linear-gradient(135deg,#f472b6,#a855f7,#38bdf8); color:#fff; border:none; border-radius:8px; padding:12px; font-weight:700; cursor:pointer; font-size:14px;">🎯 Calcular Score</button>
+                </div>
+
+                <div id="scoreSocialResult" style="display:none;"></div>
             </div>
 
             <!-- VIEW: CONFIG -->
@@ -2123,6 +2155,66 @@ src="https://www.facebook.com/tr?id=3341539666027318&ev=PageView&noscript=1"
                 } finally {
                     btn.disabled = false;
                     btn.textContent = '💡 Ver recomendação de estratégia';
+                }
+            },
+
+            async calcularScoreSocial() {
+                const btn = document.getElementById('btnScoreSocial');
+                const box = document.getElementById('scoreSocialResult');
+                const token = this.getToken();
+
+                const headline = document.getElementById('scoreHeadline').value.trim();
+                const subtitulo = document.getElementById('scoreSubtitulo').value.trim();
+                const tipo = document.getElementById('scoreTipo').value;
+
+                if (!headline || !subtitulo) {
+                    alert('Preenche headline e subtítulo antes de calcular.');
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = '🤖 Calculando score...';
+
+                try {
+                    const res = await fetch(`${API_URL}/api/score-social`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ headline, subtitulo, tipo }),
+                    });
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        throw new Error(data.error || 'Não foi possível calcular o score');
+                    }
+
+                    const corScore = data.score >= 70 ? '#38bdf8' : (data.score >= 50 ? '#f472b6' : '#ff6b6b');
+                    box.innerHTML = `
+                        <div style="background:rgba(56,189,248,0.08); border:1px solid #3b2f6e; border-radius:12px; padding:20px;">
+                            <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
+                                <div style="font-size:36px; font-weight:900; color:${corScore};">${data.score}</div>
+                                <div>
+                                    <div style="font-size:13px; font-weight:700; color:#c084fc; text-transform:uppercase; letter-spacing:0.5px;">${data.categoria || '-'}</div>
+                                    <div style="font-size:13px; color:#a0a0c0;">${data.motivo || ''}</div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom:10px;"><strong style="color:#fff;">Hook sugerido:</strong> <span style="color:#e0e0ff;">${data.hook_sugerido || '-'}</span></div>
+                            <div style="margin-bottom:10px;"><strong style="color:#fff;">Melhor horário:</strong> <span style="color:#e0e0ff;">${data.melhor_horario || '-'}</span></div>
+                            <div style="margin-bottom:10px;"><strong style="color:#fff;">Legenda sugerida:</strong>
+                                <div style="white-space:pre-wrap; background:#0e0820; border:1px solid #3b2f6e; border-radius:8px; padding:10px; margin-top:6px; font-size:13px; color:#e0e0ff;">${data.legenda || '-'}</div>
+                            </div>
+                            <div style="font-size:13px; color:#38bdf8;">${data.hashtags || ''}</div>
+                        </div>
+                    `;
+                    box.style.display = 'block';
+                } catch (err) {
+                    box.innerHTML = `<span style="color:#FF6B6B;">${err.message || 'Não foi possível calcular o score agora.'}</span>`;
+                    box.style.display = 'block';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = '🎯 Calcular Score';
                 }
             },
 
