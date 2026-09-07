@@ -27,7 +27,8 @@ DOT_COLOR = ROXO
 TITLE_COLOR = (255, 255, 255)
 FOOTER_HANDLE_COLOR = (235, 232, 240)  # #ebe8f0
 
-FONT_DIR = "/usr/share/fonts/truetype/google-fonts"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+FONT_DIR = os.path.join(SCRIPT_DIR, "fonts")
 F_BOLD = os.path.join(FONT_DIR, "Poppins-Bold.ttf")
 F_MEDIUM = os.path.join(FONT_DIR, "Poppins-Medium.ttf")
 
