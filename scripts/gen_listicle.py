@@ -33,7 +33,8 @@ TITLE_COLOR = (255, 255, 255)
 BODY_COLOR = (220, 215, 230)  # #dcd7e6, texto leve dentro do card
 FOOTER_HANDLE_COLOR = (255, 255, 255)
 
-FONT_DIR = "/usr/share/fonts/truetype/google-fonts"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+FONT_DIR = os.path.join(SCRIPT_DIR, "fonts")
 F_BOLD = os.path.join(FONT_DIR, "Poppins-Bold.ttf")
 F_MEDIUM = os.path.join(FONT_DIR, "Poppins-Medium.ttf")
 

@@ -131,8 +131,9 @@ Formato de cada entrada:
   igual ao padrão de `gen-carousel-dark.py`. Reconfirmado rodando o
   script de ponta a ponta: pixel de fundo gerado = `(7, 4, 18)` =
   `#070412`. Commit `f55b219` (07/09/2026).
-- Pendência: `gen_listicle.py` tem o mesmo `FONT_DIR` absoluto — não
-  corrigido ainda, fora do escopo da tarefa que originou este achado.
+- Atualização (07/09/2026): `gen_listicle.py` corrigido com o mesmo
+  padrão (commit a seguir), reconfirmado rodando de ponta a ponta —
+  pixel de fundo também `(7, 4, 18)`. Pendência fechada.
 - Como evitar de novo: qualquer script gerador de asset visual novo
   deve usar caminho de fonte relativo ao próprio arquivo
   (`os.path.dirname(os.path.abspath(__file__))`), nunca caminho
