@@ -115,6 +115,31 @@ Formato de cada entrada:
   4. "Está no GitHub" não significa "está em produção". Só reportar
      como corrigido depois de teste real no ambiente que o usuário usa.
 
+## [2026-09] FONT_DIR hardcoded quebra gen_bastidores_sample.py fora do servidor original
+- Sintoma: ao tentar reconfirmar visualmente o fundo #070412 do
+  `gen_bastidores_sample.py`, o script quebrou com `OSError: cannot open
+  resource` antes de gerar qualquer imagem.
+- Causa raiz: `FONT_DIR` estava hardcoded em
+  `/usr/share/fonts/truetype/google-fonts`, caminho que não existe neste
+  ambiente (as fontes Poppins reais do projeto ficam em
+  `scripts/fonts/`). `gen-carousel-dark.py` já tinha sido corrigido pra
+  usar caminho relativo ao próprio arquivo; `gen_bastidores_sample.py`
+  (e `gen_listicle.py`, ainda não corrigido) ficaram pra trás com o
+  caminho absoluto antigo.
+- Solução aplicada: `FONT_DIR` de `gen_bastidores_sample.py` trocado pra
+  `os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")`,
+  igual ao padrão de `gen-carousel-dark.py`. Reconfirmado rodando o
+  script de ponta a ponta: pixel de fundo gerado = `(7, 4, 18)` =
+  `#070412`. Commit `f55b219` (07/09/2026).
+- Pendência: `gen_listicle.py` tem o mesmo `FONT_DIR` absoluto — não
+  corrigido ainda, fora do escopo da tarefa que originou este achado.
+- Como evitar de novo: qualquer script gerador de asset visual novo
+  deve usar caminho de fonte relativo ao próprio arquivo
+  (`os.path.dirname(os.path.abspath(__file__))`), nunca caminho
+  absoluto de sistema — ambientes diferentes (servidor de produção vs.
+  sessão local vs. container de verificação) não têm garantia da mesma
+  árvore de fontes do sistema.
+
 ## [2026-07] Nginx client_body_timeout causando falha de upload (InovaShot)
 - Sintoma: uploads de vídeo falhando em produção (DigitalOcean).
 - Causa raiz: timeout do Nginx configurado baixo demais para uploads
