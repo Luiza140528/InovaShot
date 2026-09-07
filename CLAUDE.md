@@ -37,6 +37,35 @@ você decide o que vale a pena publicar."
 - Pro: R$97,90
 - Elite: R$197,90
 
+## Identidade visual — template oficial (ATUALIZADO 03/09/2026)
+- O template oficial de carrossel/post do InovaShot é o **TEMA ESCURO**
+  (`gen-carousel-dark.py`). Ver `DESIGN.md` para paleta, tipografia e
+  estrutura completas.
+- **NUNCA recriar o tema claro/creme→lilás.** Ele foi testado, chegou a ser
+  tratado como padrão por um período, mas foi identificado como desvio não
+  aprovado (ver seção "Governança de agentes automatizados" abaixo) e
+  totalmente revertido em 03/09/2026: `design.json` reescrito para o tema
+  escuro, `gen-carousel-light.py` removido do repo, fontes SpaceMono
+  residuais e slides antigos do tema claro apagados de `marketing/`.
+  `gen-carousel-dark.py` é o gerador válido, testado, com bug de capa/CTA
+  já corrigido.
+- Servidor de produção (`/app/inovashot`, Droplet) sincronizado via
+  `git pull` — não há nenhuma cópia rodando o tema claro em produção.
+
+## Governança de agentes automatizados (Radar e futuros)
+- Agentes automatizados (ex: Radar) **NUNCA podem alterar** `design.json`,
+  templates de carrossel/post, `SKILL.md` ou `DESIGN.md` sem aprovação
+  manual explícita de Luiza — mesmo que a mudança pareça uma melhoria.
+- Qualquer alteração visual/de identidade de marca gerada por um agente
+  deve ser proposta como sugestão (diff, PR, ou mensagem) e só aplicada
+  depois de confirmação humana — nunca commitada/deployada direto.
+- Se um agente identificar necessidade de mudança de design, ele deve
+  registrar a sugestão em `learnings.md` ou avisar Luiza, não executar.
+- **Contexto:** em 03/09/2026 o Radar espalhou um tema claro/creme não
+  aprovado em 5 lugares do repo (design.json, script de geração, SKILL.md,
+  fontes, slides antigos) sem checar com Luiza. Essa regra existe para que
+  isso não se repita.
+
 ## Bugs conhecidos / pendências
 - ~~Módulo Político → aba Trends: erro ao clicar em "Buscar Tendências"~~ —
   **RESOLVIDO** (confirmado em teste em 11/07/2026). Se voltar a falhar,
@@ -45,32 +74,29 @@ você decide o que vale a pena publicar."
   reproduzidos em teste ao vivo — tratar relatos assim com cautela, sempre
   reproduzir antes de assumir como verdade
 - ~~Script gerador do carrossel claro (template "Radar Claude") vivia só num
-  scratchpad de sessão temporário, fora do repo~~ — **RESOLVIDO** (30/08/2026).
-  Movido pra `scripts/gen-carousel-light.py` + `scripts/fonts/`, com paths
-  relativos ao próprio arquivo (antes apontavam pra diretório de sessão).
-  Reexecução verificada byte-a-byte idêntica ao output anterior.
-- ~~Linha do rodapé do carrossel claro saía 100% opaca em vez de
-  translúcida~~ — **RESOLVIDO** (30/08/2026). `img.convert("RGB")` no save
-  descartava o canal alfa sem compor contra o fundo; corrigido compondo a
-  linha numa camada RGBA separada antes de salvar. Confirmado por leitura
-  de pixel (antes `(26,26,24)` puro, depois blend correto ~27% opacidade).
-- ~~Frase-gradiente do headline podia vazar pra fora da margem em textos
-  longos~~ — **RESOLVIDO** (30/08/2026). `fit_headline()` só checava altura
-  e número de linhas, nunca a largura do token individual; agora também
-  exige que o token mais largo caiba em `max_width`, encolhendo a fonte
-  além do mínimo normal só nesse cenário de emergência. Testado com frase
-  artificial de ~70 caracteres que antes vazava.
-- ~~Conteúdo dos slides do carrossel claro hardcoded dentro do motor de
-  renderização~~ — **RESOLVIDO** (30/08/2026). Copy movida pra
-  `scripts/carousel-content/radar-claude.json`; script aceita
-  `[content.json] [out_dir]` opcionais e mantém os defaults atuais. Sem
-  regressão nos 6 slides já publicados.
-- ~~Gradiente diagonal do carrossel claro recalculado pixel a pixel~~ —
-  **RESOLVIDO** (30/08/2026). `diag_gradient()` recalculava a interpolação
-  de cor a cada pixel mesmo dependendo só de `x+y`; agora usa uma tabela
-  (LUT) com uma entrada por diagonal, ~8.4x mais rápido no gradiente de
-  fundo (sem numpy nem dependência nova). Slides regenerados; diferença
-  máxima de 2/255 por canal, imperceptível.
+  scratchpad de sessão temporário, fora do repo~~ — histórico técnico
+  mantido apenas como referência; **o tema claro em si foi revertido e
+  removido do repo em 03/09/2026** (ver seção "Identidade visual" acima).
+  Os fixes abaixo documentam o trabalho técnico feito sobre esse gerador
+  antes da reversão — não implicam que o tema claro volte a ser usado.
+  - Movido pra `scripts/gen-carousel-light.py` + `scripts/fonts/`, com
+    paths relativos ao próprio arquivo (antes apontavam pra diretório de
+    sessão). Reexecução verificada byte-a-byte idêntica ao output anterior
+    (30/08/2026).
+  - Linha do rodapé saía 100% opaca em vez de translúcida — `img.convert
+    ("RGB")` no save descartava o canal alfa sem compor contra o fundo;
+    corrigido compondo a linha numa camada RGBA separada antes de salvar
+    (30/08/2026).
+  - Frase-gradiente do headline podia vazar pra fora da margem em textos
+    longos — `fit_headline()` só checava altura e número de linhas, nunca
+    a largura do token individual; corrigido exigindo que o token mais
+    largo caiba em `max_width` (30/08/2026).
+  - Conteúdo dos slides estava hardcoded dentro do motor de renderização —
+    movido pra `scripts/carousel-content/radar-claude.json`, script aceita
+    `[content.json] [out_dir]` opcionais (30/08/2026).
+  - Gradiente diagonal recalculado pixel a pixel — `diag_gradient()`
+    agora usa uma LUT (tabela por diagonal), ~8.4x mais rápido, sem
+    dependência nova (30/08/2026).
 
 **Regra de manutenção desta seção:** sempre que um bug for corrigido e
 confirmado por teste, mover para "resolvido" com a data. Sempre que um bug
