@@ -381,6 +381,78 @@ no slide de fechamento — o CTA sempre pede um comentário de palavra-chave
 específica, alinhado à mecânica de alcance por comentário (igual ao restante
 da estratégia de Reels/social do InovaShot).
 
+## Reel Format (Instagram @inovashot.cortes) — 1080×1920
+
+Variante vertical do formato Dark acima, usada para slides sobrepostos a
+Reels/TikTok. Aprovado em 05/09/2026. Script: `scripts/gen_reel_carousel.py`
+(commitado). Invocação: `python3 gen_reel_carousel.py [json-path] [output-dir]`.
+
+### Format
+- Canvas: 1080×1920px, fundo sólido `colors.footer-bg` (#070412).
+- Herda tipografia (Poppins Bold/Medium) e cores de marca do formato Dark.
+
+### Slide Anatomy — diferenças do formato quadrado
+- **Kicker**: começa em y=260 (não y=90) — evita colisão com a UI nativa do
+  Instagram no topo (linha de áudio "Amigos" pode cobrir os primeiros ~250px).
+- **Número de fundo**: ~950px (maior que no quadrado, proporcional ao canvas
+  vertical), branco ~10% de opacidade. Omitido no slide de CTA.
+- **Faixa de gradiente na base**: 320px de altura (vs. 220px no carrossel
+  quadrado), mesma mistura de 35% sobre o fundo escuro.
+- **Rodapé**: handle `@inovashot.cortes` Poppins Bold 46px; paginação "0X/0Y"
+  Poppins Medium 38px **empilhada abaixo** do handle, à esquerda — nunca no
+  canto inferior direito, onde o Instagram Reels sobrepõe seus próprios
+  ícones nativos.
+- **Zona de segurança**: 480px inferiores reservados à UI do Reels — nenhum
+  conteúdo de footer customizado deve entrar nessa faixa.
+
+### Named Rule
+**The Reel Safe-Zone Rule.** Todo conteúdo textual do rodapé (handle,
+paginação, CTA) deve ficar fora dos 480px inferiores do canvas — essa área é
+sobreposta pelos controles nativos do Instagram Reels e qualquer texto ali
+fica ilegível ou cortado.
+
+## Bastidores Format (Instagram @inovashot.cortes) — 1080×1080
+
+Variante de "making of" / bastidores, tom mais pessoal que o Dark. Script:
+`scripts/gen_bastidores_sample.py` *(pendente de commit — gerado em
+05/09/2026)*.
+
+### Format
+- Canvas: 1080×1080px, fundo preto puro (diferente do #070412 do Dark).
+- Kicker: "INOVASHOT · BASTIDORES" (mesmo estilo de ponto colorido do Dark).
+
+### Slide Anatomy
+- **Frase em destaque**: estilo citação, Poppins Bold ~72px, alinhada à
+  esquerda, centralizada verticalmente acima da faixa de rodapé.
+- **Número de fundo**: mesmo tratamento do Dark (~10% opacidade), ao fundo.
+- **Rodapé**: faixa de gradiente rosa→roxo→azul + `@inovashot.cortes`.
+
+## Lista Format (Instagram @inovashot.cortes) — 1080×1080
+
+Formato pra conteúdo de valor genérico (listas úteis) **sem citar o
+InovaShot no corpo** — estratégia de alcance orgânico via salvamentos,
+distinta do Dark/Bastidores (que vendem produto). Aprovado em 05/09/2026.
+Script: `scripts/gen_listicle.py` *(pendente de commit)*.
+
+### Format
+- Canvas: 1080×1080px, fundo `colors.footer-bg` (#070412).
+- Kicker: "INOVASHOT · CORTES" + barra de gradiente 100×9px.
+- Subkicker: "SALVA PRA DEPOIS" em lilás-apagado (#c8bedc).
+
+### Slide Anatomy
+- **Card de lista**: fundo #120d20, linhas separadas por divisor #261e37,
+  círculos numerados com cor interpolada do gradiente de marca por item.
+- **Texto**: Poppins Medium, peso leve, dentro do card.
+- **Rodapé**: faixa de gradiente com `@inovashot.cortes` Poppins Bold branco
+  (linha 1) + CTA "Siga pra mais atualizações" com seta poligonal (linha 2,
+  empilhada — nunca sobreposta à linha 1).
+
+### Named Rule
+**The Value-First Lista Rule.** Este é o único formato de carrossel em que
+o corpo do conteúdo não menciona o InovaShot — a marca aparece só no kicker
+e rodapé. Objetivo é alcance/salvamento orgânico, não conversão direta;
+nunca inserir CTA de produto ou link no corpo dos slides deste formato.
+
 ## Do's and Don'ts
 
 ### Do:
