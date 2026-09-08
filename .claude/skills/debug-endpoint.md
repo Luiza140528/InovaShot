@@ -7,7 +7,7 @@ retornar erro, comportamento inesperado, ou lentidão em produção.
 ## Contexto fixo do ambiente
 - Processo PM2: `inovashot` (modo fork)
 - Gerenciador de processo: PM2 + Nginx
-- Repo principal: `/home/claude/inovashot-repo/` (ajustar se o caminho no droplet for diferente)
+- Repo principal: `/app/inovashot`
 - Stack: Node.js, hospedado em droplet DigitalOcean
 - Pipeline de IA: Whisper → Claude Haiku → FFmpeg
 
@@ -31,7 +31,7 @@ retornar erro, comportamento inesperado, ou lentidão em produção.
 
 3. **Ver se algo mudou recentemente no código:**
    ```
-   cd /home/claude/inovashot-repo/
+   cd /app/inovashot
    git log --oneline -10
    git diff HEAD~3 HEAD
    ```
