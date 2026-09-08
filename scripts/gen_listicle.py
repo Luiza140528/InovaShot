@@ -38,6 +38,13 @@ FONT_DIR = os.path.join(SCRIPT_DIR, "fonts")
 F_BOLD = os.path.join(FONT_DIR, "Poppins-Bold.ttf")
 F_MEDIUM = os.path.join(FONT_DIR, "Poppins-Medium.ttf")
 
+# ponytail: teto fixo, calibrado pro caso comum (headline de 1 linha +
+# itens de 1 linha coube até 5; item 6 já cortava no rodapé). Headline
+# longo ou itens multi-linha podem estourar mesmo dentro do limite —
+# upgrade real seria calcular o máximo a partir do espaço disponível
+# depois do headline, não um número fixo. Ver learnings.md.
+MAX_ITEMS = 5
+
 FOOTER_HEIGHT = 220
 KICKER_Y = 90
 
@@ -176,6 +183,9 @@ def lista_slide(data, out_path):
 
     # Card de lista
     items = data["items"]
+    if len(items) > MAX_ITEMS:
+        print(f"Aviso: {len(items)} itens excede o máximo de {MAX_ITEMS}; truncando.")
+        items = items[:MAX_ITEMS]
     card_x0 = 80
     card_x1 = W - 80
     card_y0 = ty

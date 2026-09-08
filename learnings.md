@@ -175,13 +175,20 @@ Formato de cada entrada:
   Reconfirmado rodando os dois edge cases: 1 item (idêntico a antes,
   sem regressão) e 7 itens + headline longo (sobreposição eliminada,
   cada linha legível).
-- Trade-off conhecido (NÃO resolvido, decisão pendente da Luiza): com o
-  clamp, conteúdo que não cabe no card não comprime mais, mas também não
-  aparece — estoura por baixo do rodapé e fica cortado/invisível fora do
-  canvas 1080x1080 (visto no teste de 7 itens: itens 5-7 saem da área
-  visível). Melhor que sobreposição ilegível, mas ainda não ideal pra
-  listas com muitos itens. Opções futuras: reduzir fonte quando não
-  couber, ou limitar quantidade máxima de itens no conteúdo de entrada.
+- Mitigação aplicada (08/09/2026): `MAX_ITEMS = 5` em
+  `scripts/gen_listicle.py` — `lista_slide()` trunca a lista de itens
+  além do teto (com aviso no console). Testado: headline curto (1
+  linha) + 6 itens → trunca pra 5, cabe perfeitamente sem overflow.
+  MAS headline longo (3 linhas) + 5 itens (1 multi-linha) → AINDA
+  estoura no rodapé mesmo truncado pra 5. Ou seja, `MAX_ITEMS` fixo
+  resolve o caso comum mas não é garantia geral — o espaço real
+  disponível pro card depende do tamanho do headline, não só da
+  quantidade de itens. Marcado com comentário `ponytail:` no código.
+- Trade-off conhecido (NÃO resolvido, decisão pendente da Luiza): pra
+  cobrir o caso geral (headline longo, itens multi-linha) seria preciso
+  calcular o máximo de itens dinamicamente a partir do espaço realmente
+  disponível depois do headline, em vez de um número fixo — ou reduzir
+  fonte automaticamente quando não couber.
 - Como evitar de novo: ao implementar layout que escala altura de linha
   proporcionalmente pra caber num espaço fixo, sempre testar com o caso
   de "muito conteúdo" (mais itens do que o "feliz" caminho testado

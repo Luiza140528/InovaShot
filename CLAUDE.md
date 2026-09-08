@@ -83,12 +83,13 @@ você decide o que vale a pena publicar."
   muitos itens (testado com 7) ou headline longo~~ — **RESOLVIDO**
   (08/09/2026): `scale` trocado pra `max(card_height/natural_total,
   1.0)`, nunca comprime abaixo do mínimo. Reconfirmado com os mesmos
-  edge cases (1 item sem regressão, 7 itens sem sobreposição). **Trade-
-  off pendente:** conteúdo que não cabe agora estoura por baixo do
-  rodapé em vez de sobrepor — não é mais ilegível, mas pode cortar
-  itens da área visível em listas muito longas. Decisão futura (reduzir
-  fonte automaticamente ou limitar nº de itens) ainda em aberto. Detalhes
-  em `learnings.md`.
+  edge cases (1 item sem regressão, 7 itens sem sobreposição). Além
+  disso, `MAX_ITEMS = 5` trunca a lista de itens (com aviso no
+  console) — resolve o caso comum (headline curto + itens de 1 linha),
+  mas **não é garantia geral**: headline longo (3 linhas) ainda estoura
+  no rodapé mesmo com só 5 itens, porque o espaço real do card depende
+  do tamanho do headline, não só da quantidade de itens. Upgrade real
+  seria calcular o máximo dinamicamente. Detalhes em `learnings.md`.
 - ~~Módulo Político → aba Trends: erro ao clicar em "Buscar Tendências"~~ —
   **RESOLVIDO** (confirmado em teste em 11/07/2026). Se voltar a falhar,
   reabrir como pendência com detalhes do erro.
