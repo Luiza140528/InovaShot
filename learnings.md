@@ -169,12 +169,19 @@ Formato de cada entrada:
   `card_height` disponível (muitos itens, ou headline longo reduzindo
   o espaço do card), `scale` fica bem menor que 1 e a linha escalada
   fica menor que o conteúdo real, causando sobreposição visual.
-- Status: NÃO CORRIGIDO. Identificado em 08/09/2026 durante teste de
-  edge cases do fix do `FONT_DIR` (fora do escopo daquela tarefa).
-  Registrado aqui e no CLAUDE.md pra não ser esquecido — aguardando
-  decisão da Luiza sobre a correção (ex: circle_r/fonte também
-  escalarem com `scale`, ou limitar quantidade de itens, ou permitir
-  overflow do card em vez de comprimir abaixo do mínimo).
+- Solução aplicada (08/09/2026): `scale` agora usa
+  `max(card_height / natural_total, 1.0)` — nunca comprime abaixo do
+  tamanho natural de cada linha, só estica pra preencher espaço sobrando.
+  Reconfirmado rodando os dois edge cases: 1 item (idêntico a antes,
+  sem regressão) e 7 itens + headline longo (sobreposição eliminada,
+  cada linha legível).
+- Trade-off conhecido (NÃO resolvido, decisão pendente da Luiza): com o
+  clamp, conteúdo que não cabe no card não comprime mais, mas também não
+  aparece — estoura por baixo do rodapé e fica cortado/invisível fora do
+  canvas 1080x1080 (visto no teste de 7 itens: itens 5-7 saem da área
+  visível). Melhor que sobreposição ilegível, mas ainda não ideal pra
+  listas com muitos itens. Opções futuras: reduzir fonte quando não
+  couber, ou limitar quantidade máxima de itens no conteúdo de entrada.
 - Como evitar de novo: ao implementar layout que escala altura de linha
   proporcionalmente pra caber num espaço fixo, sempre testar com o caso
   de "muito conteúdo" (mais itens do que o "feliz" caminho testado

@@ -209,7 +209,10 @@ def lista_slide(data, out_path):
 
     # Scale rows proportionally to fill card_height exactly
     natural_total = sum(r[2] for r in rows_data)
-    scale = card_height / natural_total if natural_total > 0 else 1
+    # Nunca encolhe abaixo do tamanho natural de cada linha (senão o
+    # conteúdo desenhado - círculo + texto - passa a se sobrepor); só
+    # estica pra preencher o card quando sobra espaço.
+    scale = max(card_height / natural_total, 1.0) if natural_total > 0 else 1
 
     y_cursor = card_y0
     for i, (lines, heights, row_h) in enumerate(rows_data):
