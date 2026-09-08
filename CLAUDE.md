@@ -79,6 +79,15 @@ você decide o que vale a pena publicar."
   próprio arquivo) e serviu de referência. Confirmado por
   `grep -rn "/usr/share/fonts"` que não sobra nenhum caso no repo.
   Detalhes da investigação em `learnings.md`.
+- **NOVO (08/09/2026)**: `gen_listicle.py` → `lista_slide()` sobrepõe
+  linhas quando há muitos itens (testado com 7) ou headline longo:
+  `scale = card_height / natural_total` (linha 212) encolhe o
+  espaçamento entre linhas proporcionalmente, mas o conteúdo desenhado
+  dentro de cada linha (círculo de raio fixo 34px + bloco de texto) não
+  encolhe junto — resultado é texto/círculo de uma linha atropelando a
+  linha seguinte. Reproduzido com sample real (7 itens, 1 com texto
+  longo). Não corrigido ainda — fora do escopo da tarefa que originou
+  o achado (fix do `FONT_DIR`). Detalhes em `learnings.md`.
 - ~~Módulo Político → aba Trends: erro ao clicar em "Buscar Tendências"~~ —
   **RESOLVIDO** (confirmado em teste em 11/07/2026). Se voltar a falhar,
   reabrir como pendência com detalhes do erro.

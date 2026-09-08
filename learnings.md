@@ -154,6 +154,34 @@ Formato de cada entrada:
   sessão local vs. container de verificação) não têm garantia da mesma
   árvore de fontes do sistema.
 
+## [2026-09] gen_listicle.py sobrepõe linhas com muitos itens
+- Sintoma: ao testar `lista_slide()` com edge cases (1 item vs. 7 itens
+  + headline longo) depois do fix do `FONT_DIR`, o slide de 7 itens saiu
+  com texto e círculos numerados sobrepostos de forma severa — item 1
+  atropelado pelo texto do item 2, item 2 pelo item 3, etc. Slide de 1
+  item saiu correto (sobra espaço vazio no card).
+- Causa raiz: em `lista_slide()` (scripts/gen_listicle.py:210-212),
+  `scale = card_height / natural_total` encolhe a altura de CADA LINHA
+  proporcionalmente pra caber no card, mas o conteúdo desenhado dentro
+  da linha — círculo de raio fixo (`circle_r = 34`) e bloco de texto
+  (`line_h_total`, dependente do wrap real) — não escala junto. Quando
+  `natural_total` (soma das alturas naturais) é bem maior que
+  `card_height` disponível (muitos itens, ou headline longo reduzindo
+  o espaço do card), `scale` fica bem menor que 1 e a linha escalada
+  fica menor que o conteúdo real, causando sobreposição visual.
+- Status: NÃO CORRIGIDO. Identificado em 08/09/2026 durante teste de
+  edge cases do fix do `FONT_DIR` (fora do escopo daquela tarefa).
+  Registrado aqui e no CLAUDE.md pra não ser esquecido — aguardando
+  decisão da Luiza sobre a correção (ex: circle_r/fonte também
+  escalarem com `scale`, ou limitar quantidade de itens, ou permitir
+  overflow do card em vez de comprimir abaixo do mínimo).
+- Como evitar de novo: ao implementar layout que escala altura de linha
+  proporcionalmente pra caber num espaço fixo, sempre testar com o caso
+  de "muito conteúdo" (mais itens do que o "feliz" caminho testado
+  originalmente) — escalar o espaçamento sem escalar o conteúdo
+  desenhado dentro dele é uma classe de bug fácil de não notar testando
+  só com poucos itens.
+
 ## [2026-07] Nginx client_body_timeout causando falha de upload (InovaShot)
 - Sintoma: uploads de vídeo falhando em produção (DigitalOcean).
 - Causa raiz: timeout do Nginx configurado baixo demais para uploads
