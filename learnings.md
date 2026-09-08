@@ -262,6 +262,41 @@ Formato de cada entrada:
   canvas (`0`, `H`) — do contrário "centralizar" e "sobrepor conteúdo
   fixo" viram a mesma coisa quando o bloco cresce.
 
+## [2026-09] gen_reel_carousel.py: cta_slide() com 2 bugs de overflow
+- Sintoma: ao testar edge cases do `cta_slide()` (mesmo exercício que
+  achou os bugs de `body_slide`/`cover_slide` no mesmo arquivo),
+  reproduzi dois problemas diferentes:
+  1. Headline longo (8 linhas) → a última linha do título é desenhada
+     por cima da linha do CTA ("Link na bio").
+  2. `cta_label` longo → texto vaza pra fora do canvas (lado direito
+     cortado), seta poligonal não aparece mais na área visível.
+- Causa raiz 1: `cta_y = H - FOOTER_HEIGHT - 140` (gen_reel_carousel.py,
+  dentro de `cta_slide()`) é uma posição FIXA no canvas — não depende
+  de onde o título termina (`ty`, calculado dinamicamente a partir do
+  headline). Com headline suficientemente longo, `ty` ultrapassa
+  `cta_y` e as duas coisas se sobrepõem. Verificado numericamente: com
+  o headline de teste original (7 linhas) sobrava 282px de margem; com
+  um headline maior (8 linhas), a margem virou negativa.
+- Causa raiz 2: `cta_label` é desenhado com `draw.text((80, cta_y),
+  cta_label, ...)` direto — nenhuma chamada a `wrap_text()`, diferente
+  de todo o resto do arquivo. `arrow_x` é calculado a partir da largura
+  total do texto (`bbox[2]-bbox[0]`), que pode ultrapassar `W` (1080)
+  sem nenhum aviso.
+- Status: NÃO CORRIGIDO. Identificado em 08/09/2026. Correção provável:
+  (1) usar `ty` real (fim do headline) + margem mínima como base pra
+  `cta_y`, em vez de posição fixa — ou truncar linhas do headline
+  dinamicamente (mesma estratégia já usada nas outras 2 funções do
+  arquivo) garantindo que sempre sobre espaço pro CTA; (2) aplicar
+  `wrap_text()` no `cta_label` também, ou limitar seu tamanho.
+- Como evitar de novo: sempre que uma posição de desenho depende do
+  fim de um bloco de texto variável (título, corpo), ela precisa ser
+  CALCULADA a partir da altura real desse bloco, nunca fixada como
+  constante — constante só funciona enquanto ninguém testa o "texto
+  longo o suficiente". Além disso, qualquer texto vindo de input do
+  usuário/conteúdo (não só itens de lista) precisa passar por
+  `wrap_text()` — um único `draw.text()` sem quebra é sempre um bug de
+  overflow horizontal esperando acontecer.
+
 ## [2026-07] Nginx client_body_timeout causando falha de upload (InovaShot)
 - Sintoma: uploads de vídeo falhando em produção (DigitalOcean).
 - Causa raiz: timeout do Nginx configurado baixo demais para uploads

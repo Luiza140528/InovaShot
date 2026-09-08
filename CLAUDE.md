@@ -108,6 +108,17 @@ você decide o que vale a pena publicar."
   linha por linha quando não cabe — mesma estratégia dos outros dois
   scripts. Reconfirmado: citação curta sem regressão, citação de 10
   linhas trunca pra 7 sem sobrepor o kicker. Detalhes em `learnings.md`.
+- **NOVO (08/09/2026)**: `gen_reel_carousel.py` → `cta_slide()` tem 2
+  bugs de overflow não relacionados ao fix anterior do `body_slide`/
+  `cover_slide`: (1) `cta_y` é uma posição FIXA (`H - FOOTER_HEIGHT -
+  140`), não considera a altura real do headline — com headline longo
+  (8 linhas no teste), a última linha do título atropela literalmente
+  a linha do CTA ("Link na bio"). (2) `cta_label` é desenhado com
+  `draw.text()` direto, sem `wrap_text()` — com label longo, o texto
+  vaza pra fora do canvas horizontalmente (corta na borda direita) e a
+  seta poligonal (calculada a partir da largura do texto) não aparece
+  mais na área visível. Não corrigido ainda. Detalhes em
+  `learnings.md`.
 - ~~Módulo Político → aba Trends: erro ao clicar em "Buscar Tendências"~~ —
   **RESOLVIDO** (confirmado em teste em 11/07/2026). Se voltar a falhar,
   reabrir como pendência com detalhes do erro.
