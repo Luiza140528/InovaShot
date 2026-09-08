@@ -282,12 +282,20 @@ Formato de cada entrada:
   de todo o resto do arquivo. `arrow_x` é calculado a partir da largura
   total do texto (`bbox[2]-bbox[0]`), que pode ultrapassar `W` (1080)
   sem nenhum aviso.
-- Status: NÃO CORRIGIDO. Identificado em 08/09/2026. Correção provável:
-  (1) usar `ty` real (fim do headline) + margem mínima como base pra
-  `cta_y`, em vez de posição fixa — ou truncar linhas do headline
-  dinamicamente (mesma estratégia já usada nas outras 2 funções do
-  arquivo) garantindo que sempre sobre espaço pro CTA; (2) aplicar
-  `wrap_text()` no `cta_label` também, ou limitar seu tamanho.
+- Status: RESOLVIDO (08/09/2026). `cta_label` agora passa por
+  `wrap_text()` (calculado ANTES do headline, pra já saber sua altura
+  real — pode virar mais de 1 linha). `cta_y` deixou de ser 100% fixo:
+  vira `min(cta_y_default, footer_top - cta_total_h - 20)`, então
+  nunca deixa a última linha do CTA invadir o rodapé mesmo com label
+  longo. O headline é truncado dinamicamente com `title_limit = cta_y
+  - 40`, ou seja, sempre relativo à posição REAL do CTA (já ajustada),
+  não a uma constante. Reconfirmado com 3 casos: headline gigante
+  (trunca 11→10 linhas, sem colidir com CTA), CTA normal + headline
+  curto (idêntico a antes, sem regressão), `cta_label` longo (quebra
+  em 3 linhas com a seta ao lado da última, tudo antes do rodapé — na
+  primeira tentativa do fix ainda vazava pro rodapé; corrigido
+  recalculando `cta_y` a partir da altura real do CTA, não só do
+  headline).
 - Como evitar de novo: sempre que uma posição de desenho depende do
   fim de um bloco de texto variável (título, corpo), ela precisa ser
   CALCULADA a partir da altura real desse bloco, nunca fixada como

@@ -267,20 +267,68 @@ def cta_slide(data, out_path, page_num, total_pages, cta_label="Link na bio"):
 
     max_w = W - 160
     title_font = font(F_BOLD, 72)
-    title_lines = wrap_text(draw, data["headline"], title_font, max_w)
-    ty = content_top + 100
-    for line in title_lines:
-        draw.text((80, ty), line, font=title_font, fill=TITLE_COLOR)
+
+    # cta_label passa por wrap_text — sem isso, um label longo vazava
+    # pra fora do canvas em vez de quebrar linha. Calculado ANTES do
+    # headline pra saber a altura real do CTA (pode ser mais de 1
+    # linha) e nunca deixar essa altura invadir o rodapé.
+    cta_font = font(F_BOLD, 50)
+    cta_max_w = W - 160 - 100  # deixa espaço pra seta depois do texto
+    cta_lines = wrap_text(draw, cta_label, cta_font, cta_max_w)
+    cta_line_heights = []
+    for line in cta_lines:
+        bbox = draw.textbbox((0, 0), line, font=cta_font)
+        cta_line_heights.append((bbox[3] - bbox[1]) + 14)
+    cta_total_h = sum(cta_line_heights)
+
+    cta_y_default = H - FOOTER_HEIGHT - 140  # posição-alvo, perto do rodapé
+    footer_top = H - FOOTER_HEIGHT
+    # nunca deixa a última linha do CTA invadir o rodapé, mesmo com
+    # label longo (múltiplas linhas)
+    cta_y = min(cta_y_default, footer_top - cta_total_h - 20)
+
+    # Pré-calcula as linhas do headline e só desenha o que couber antes
+    # do CTA (que agora já reflete a altura real dele) — sem isso,
+    # headline longo atropela a linha do CTA. Mesma estratégia de
+    # body_slide/cover_slide.
+    all_title_lines = wrap_text(draw, data["headline"], title_font, max_w)
+    title_heights = []
+    for line in all_title_lines:
         bbox = draw.textbbox((0, 0), line, font=title_font)
-        ty += (bbox[3] - bbox[1]) + 28
+        title_heights.append((bbox[3] - bbox[1]) + 28)
+
+    title_start = content_top + 100
+    title_limit = cta_y - 40  # margem mínima antes do CTA
+    kept_lines, kept_heights, total_h = [], [], 0
+    for line, lh in zip(all_title_lines, title_heights):
+        if kept_lines and title_start + total_h + lh > title_limit:
+            break
+        kept_lines.append(line)
+        kept_heights.append(lh)
+        total_h += lh
+
+    if len(kept_lines) < len(all_title_lines):
+        print(
+            f"Aviso: headline do CTA com {len(all_title_lines)} linhas não "
+            f"cabe antes do CTA; truncando pra {len(kept_lines)}."
+        )
+
+    ty = title_start
+    for line, lh in zip(kept_lines, kept_heights):
+        draw.text((80, ty), line, font=title_font, fill=TITLE_COLOR)
+        ty += lh
 
     # CTA row with polygon arrow (drawn above footer, not in safe zone)
-    cta_y = H - FOOTER_HEIGHT - 140
-    cta_font = font(F_BOLD, 50)
-    draw.text((80, cta_y), cta_label, font=cta_font, fill=TITLE_COLOR)
-    bbox = draw.textbbox((0, 0), cta_label, font=cta_font)
-    arrow_x = 80 + (bbox[2] - bbox[0]) + 50
-    arrow_y = cta_y + (bbox[3] - bbox[1]) // 2
+    line_y = cta_y
+    last_bbox = None
+    for line in cta_lines:
+        draw.text((80, line_y), line, font=cta_font, fill=TITLE_COLOR)
+        last_bbox = draw.textbbox((0, 0), line, font=cta_font)
+        last_line_y = line_y
+        line_y += (last_bbox[3] - last_bbox[1]) + 14
+
+    arrow_x = 80 + (last_bbox[2] - last_bbox[0]) + 50
+    arrow_y = last_line_y + (last_bbox[3] - last_bbox[1]) // 2
     draw_polygon_arrow(draw, arrow_x, arrow_y, size=26, color=TITLE_COLOR)
 
     draw_footer(img, draw, page_num, total_pages)
