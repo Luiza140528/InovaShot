@@ -38,13 +38,6 @@ FONT_DIR = os.path.join(SCRIPT_DIR, "fonts")
 F_BOLD = os.path.join(FONT_DIR, "Poppins-Bold.ttf")
 F_MEDIUM = os.path.join(FONT_DIR, "Poppins-Medium.ttf")
 
-# ponytail: teto fixo, calibrado pro caso comum (headline de 1 linha +
-# itens de 1 linha coube até 5; item 6 já cortava no rodapé). Headline
-# longo ou itens multi-linha podem estourar mesmo dentro do limite —
-# upgrade real seria calcular o máximo a partir do espaço disponível
-# depois do headline, não um número fixo. Ver learnings.md.
-MAX_ITEMS = 5
-
 FOOTER_HEIGHT = 220
 KICKER_Y = 90
 
@@ -183,9 +176,6 @@ def lista_slide(data, out_path):
 
     # Card de lista
     items = data["items"]
-    if len(items) > MAX_ITEMS:
-        print(f"Aviso: {len(items)} itens excede o máximo de {MAX_ITEMS}; truncando.")
-        items = items[:MAX_ITEMS]
     card_x0 = 80
     card_x1 = W - 80
     card_y0 = ty
@@ -204,9 +194,10 @@ def lista_slide(data, out_path):
     text_x = card_x0 + 30 + circle_r * 2 + 30
     text_max_w = card_x1 - 30 - text_x
 
-    # First pass: compute wrapped lines and natural row heights
-    rows_data = []
+    # First pass: compute wrapped lines e altura natural de cada linha,
+    # pra TODOS os itens recebidos
     line_gap = 6
+    all_rows = []
     for item in items:
         lines = wrap_text(draw, item, item_font, text_max_w)
         heights = []
@@ -215,7 +206,26 @@ def lista_slide(data, out_path):
             heights.append((bbox[3] - bbox[1]) + line_gap)
         text_block_h = sum(heights)
         row_h = max(circle_r * 2 + row_pad_v, text_block_h + row_pad_v)
-        rows_data.append((lines, heights, row_h))
+        all_rows.append((lines, heights, row_h))
+
+    # Quantidade máxima de itens é calculada dinamicamente a partir do
+    # espaço real que sobra no card (depende do tamanho do headline) —
+    # nunca um número fixo. Mantém pelo menos 1 item mesmo se não couber
+    # inteiro, pra nunca renderizar um card vazio.
+    rows_data = []
+    total_h = 0
+    for row in all_rows:
+        if rows_data and total_h + row[2] > card_height:
+            break
+        rows_data.append(row)
+        total_h += row[2]
+
+    if len(rows_data) < len(items):
+        print(
+            f"Aviso: {len(items)} itens não cabem no espaço disponível "
+            f"(headline ocupa parte do card); truncando pra {len(rows_data)}."
+        )
+        items = items[: len(rows_data)]
 
     # Scale rows proportionally to fill card_height exactly
     natural_total = sum(r[2] for r in rows_data)

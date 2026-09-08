@@ -82,14 +82,14 @@ você decide o que vale a pena publicar."
 - ~~`gen_listicle.py` → `lista_slide()` sobrepõe linhas quando há
   muitos itens (testado com 7) ou headline longo~~ — **RESOLVIDO**
   (08/09/2026): `scale` trocado pra `max(card_height/natural_total,
-  1.0)`, nunca comprime abaixo do mínimo. Reconfirmado com os mesmos
-  edge cases (1 item sem regressão, 7 itens sem sobreposição). Além
-  disso, `MAX_ITEMS = 5` trunca a lista de itens (com aviso no
-  console) — resolve o caso comum (headline curto + itens de 1 linha),
-  mas **não é garantia geral**: headline longo (3 linhas) ainda estoura
-  no rodapé mesmo com só 5 itens, porque o espaço real do card depende
-  do tamanho do headline, não só da quantidade de itens. Upgrade real
-  seria calcular o máximo dinamicamente. Detalhes em `learnings.md`.
+  1.0)`, nunca comprime abaixo do mínimo. Além disso, a quantidade máxima
+  de itens agora é calculada **dinamicamente**: `lista_slide()` só
+  inclui itens enquanto a soma das alturas naturais couber no espaço
+  real que sobra depois do headline (sempre mantém pelo menos 1 item).
+  Substituiu uma versão intermediária com teto fixo (`MAX_ITEMS = 5`)
+  que resolvia só o caso comum. Reconfirmado com 4 casos de teste (1
+  item, headline curto + 6 itens, headline longo + 5 e + 7 itens) —
+  nenhum estoura ou sobrepõe mais. Detalhes em `learnings.md`.
 - ~~Módulo Político → aba Trends: erro ao clicar em "Buscar Tendências"~~ —
   **RESOLVIDO** (confirmado em teste em 11/07/2026). Se voltar a falhar,
   reabrir como pendência com detalhes do erro.

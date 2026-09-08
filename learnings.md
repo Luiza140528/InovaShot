@@ -175,20 +175,24 @@ Formato de cada entrada:
   Reconfirmado rodando os dois edge cases: 1 item (idêntico a antes,
   sem regressão) e 7 itens + headline longo (sobreposição eliminada,
   cada linha legível).
-- Mitigação aplicada (08/09/2026): `MAX_ITEMS = 5` em
-  `scripts/gen_listicle.py` — `lista_slide()` trunca a lista de itens
-  além do teto (com aviso no console). Testado: headline curto (1
-  linha) + 6 itens → trunca pra 5, cabe perfeitamente sem overflow.
-  MAS headline longo (3 linhas) + 5 itens (1 multi-linha) → AINDA
-  estoura no rodapé mesmo truncado pra 5. Ou seja, `MAX_ITEMS` fixo
-  resolve o caso comum mas não é garantia geral — o espaço real
-  disponível pro card depende do tamanho do headline, não só da
-  quantidade de itens. Marcado com comentário `ponytail:` no código.
-- Trade-off conhecido (NÃO resolvido, decisão pendente da Luiza): pra
-  cobrir o caso geral (headline longo, itens multi-linha) seria preciso
-  calcular o máximo de itens dinamicamente a partir do espaço realmente
-  disponível depois do headline, em vez de um número fixo — ou reduzir
-  fonte automaticamente quando não couber.
+- Mitigação intermediária (08/09/2026, substituída no mesmo dia): teto
+  fixo `MAX_ITEMS = 5` resolvia o caso comum mas não o geral (headline
+  longo ainda estourava mesmo com só 5 itens truncados).
+- Solução definitiva aplicada (08/09/2026): teto fixo removido.
+  `lista_slide()` agora calcula a altura natural de TODOS os itens
+  recebidos (`all_rows`), depois monta `rows_data` adicionando item por
+  item só enquanto a soma das alturas naturais couber em `card_height`
+  (que já reflete o espaço real sobrando depois do headline) — sempre
+  mantém pelo menos 1 item mesmo que ele sozinho não caiba, pra nunca
+  renderizar um card vazio. Como `rows_data` final sempre cabe por
+  construção, o `scale` (clamp em `max(..., 1.0)`) só estica pra
+  preencher, nunca comprime.
+- Reconfirmado rodando os 4 casos de teste que expuseram os bugs
+  anteriores: 1 item (sem regressão), headline curto + 6 itens (trunca
+  dinamicamente pra 5, idêntico ao teto fixo — mas agora por cálculo,
+  não coincidência), headline longo + 5 itens (trunca pra 3, cabe sem
+  overflow), headline longo + 7 itens (trunca pra 3, cabe sem overflow
+  nem sobreposição). Nenhum dos 4 casos estoura ou sobrepõe mais.
 - Como evitar de novo: ao implementar layout que escala altura de linha
   proporcionalmente pra caber num espaço fixo, sempre testar com o caso
   de "muito conteúdo" (mais itens do que o "feliz" caminho testado
