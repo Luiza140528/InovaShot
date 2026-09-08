@@ -200,6 +200,36 @@ Formato de cada entrada:
   desenhado dentro dele é uma classe de bug fácil de não notar testando
   só com poucos itens.
 
+## [2026-09] gen_reel_carousel.py: body_slide() sem limite de conteúdo, invade rodapé
+- Sintoma: ao testar edge cases do `gen_reel_carousel.py` (mesmo
+  exercício que achou o bug de overflow do `gen_listicle.py`), rodei
+  `body_slide()` com 5 itens (título + texto cada, 1 com texto longo)
+  e o conteúdo acumulado invadiu visualmente a faixa de rodapé.
+- Causa raiz: em `body_slide()` (gen_reel_carousel.py:189-220), `y`
+  cresce sequencialmente a cada item/linha sem NENHUM check contra
+  `H - FOOTER_HEIGHT` (1600) ou contra `SAFE_ZONE` (480px reservados
+  pra UI do Reels, documentados no próprio docstring do arquivo,
+  linha 11: "Safe zone 480px at bottom - no custom footer content
+  there"). Diferente do `gen_listicle.py`, aqui nem existe uma "área
+  fixa" (tipo o card) pra comparar contra — é desenho sequencial puro.
+- Verificação numérica (script de debug isolado, reimportando as
+  funções reais do arquivo): com o sample de 5 itens, `y` final = 1626.
+  Rodapé começa em 1600 → invade a faixa em 26px. Safe zone começa em
+  1440 → o conteúdo já estava dentro da área reservada da UI do Reels
+  bem antes do rodapé.
+- `cover_slide()` tem a mesma estrutura de risco (headline + body sem
+  limite), mas não foi reproduzido no teste feito (headline de 4 linhas
+  + body de 3 linhas coube com espaço sobrando).
+- Status: NÃO CORRIGIDO. Identificado em 08/09/2026. Correção provável
+  seria replicar a mesma estratégia usada em `gen_listicle.py`: truncar
+  itens dinamicamente com base no espaço real disponível antes do
+  rodapé/safe zone, em vez de desenhar sem limite.
+- Como evitar de novo: qualquer gerador de slide que desenha conteúdo
+  sequencialmente (sem card/área fixa) ainda precisa de uma checagem
+  de limite contra o rodapé e qualquer safe zone documentada — a
+  ausência de um "container" visual não significa ausência do bug de
+  overflow, só significa que ele é mais fácil de esquecer de checar.
+
 ## [2026-07] Nginx client_body_timeout causando falha de upload (InovaShot)
 - Sintoma: uploads de vídeo falhando em produção (DigitalOcean).
 - Causa raiz: timeout do Nginx configurado baixo demais para uploads
