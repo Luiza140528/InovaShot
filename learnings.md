@@ -142,6 +142,11 @@ Formato de cada entrada:
   produção de ponta a ponta (fundo `(7, 4, 18)`). Confirmado por
   `grep` que não sobra nenhum outro `/usr/share/fonts` hardcoded no
   repo.
+- Status: RESOLVIDO (08/09/2026). Os 3 scripts afetados
+  (`gen_bastidores_sample.py`, `gen_listicle.py`,
+  `gen_reel_carousel.py`) corrigidos e testados de ponta a ponta em
+  produção; `gen-carousel-dark.py` já estava correto. Nenhum caso
+  restante no repo.
 - Como evitar de novo: qualquer script gerador de asset visual novo
   deve usar caminho de fonte relativo ao próprio arquivo
   (`os.path.dirname(os.path.abspath(__file__))`), nunca caminho
