@@ -142,28 +142,43 @@ def bastidores_slide(data, out_path, page_num, total_pages):
         draw_ghost_number(img, page_num)
         draw = ImageDraw.Draw(img)
 
-    draw_kicker(draw, img, data.get("eyebrow", "INOVASHOT · BASTIDORES"))
+    content_top = draw_kicker(draw, img, data.get("eyebrow", "INOVASHOT · BASTIDORES"))
 
     # Frase em destaque: alinhada a esquerda, centralizada verticalmente
-    # acima da faixa de rodape
+    # no espaço real entre o kicker e a faixa de rodape
     max_w = W - 160
     quote_font = font(F_BOLD, 72)
     lines = wrap_text(draw, data["quote"], quote_font, max_w)
 
     line_heights = []
-    total_h = 0
     for line in lines:
         bbox = draw.textbbox((0, 0), line, font=quote_font)
-        lh = (bbox[3] - bbox[1]) + 20
-        line_heights.append(lh)
+        line_heights.append((bbox[3] - bbox[1]) + 20)
+
+    available_top = content_top + 40
+    available_bottom = H - FOOTER_HEIGHT
+    available_h = available_bottom - available_top
+
+    # Só inclui linha por linha enquanto couber no espaço real; sempre
+    # mantém pelo menos 1 linha, mesmo que ela sozinha não caiba.
+    kept_lines, kept_heights, total_h = [], [], 0
+    for line, lh in zip(lines, line_heights):
+        if kept_lines and total_h + lh > available_h:
+            break
+        kept_lines.append(line)
+        kept_heights.append(lh)
         total_h += lh
 
-    available_top = 0
-    available_bottom = H - FOOTER_HEIGHT
+    if len(kept_lines) < len(lines):
+        print(
+            f"Aviso: citação com {len(lines)} linhas não cabe entre kicker e "
+            f"rodapé; truncando pra {len(kept_lines)}."
+        )
+
     center_y = (available_top + available_bottom) // 2
     y = center_y - total_h // 2
 
-    for line, lh in zip(lines, line_heights):
+    for line, lh in zip(kept_lines, kept_heights):
         draw.text((80, y), line, font=quote_font, fill=TITLE_COLOR)
         y += lh
 

@@ -249,12 +249,13 @@ Formato de cada entrada:
   considerar que o kicker já ocupa os primeiros ~180px do canvas. Com
   `total_h` grande (citação longa), `y` inicial fica negativo o
   suficiente pra invadir essa área.
-- Status: NÃO CORRIGIDO. Identificado em 08/09/2026. Correção provável:
-  trocar `available_top = 0` pela altura real retornada por
-  `draw_kicker()` (a função já retorna `bar_y + bar_h`, só não é usada
-  aqui) e, se ainda não couber com esse ajuste, truncar linhas da
-  citação — mesma estratégia dinâmica já aplicada nos outros dois
-  scripts.
+- Status: RESOLVIDO (08/09/2026). `available_top` agora usa o valor
+  real retornado por `draw_kicker()` (`content_top + 40`, antes
+  ignorado). Além disso, linhas da citação são incluídas dinamicamente
+  só enquanto couberem no espaço real entre kicker e rodapé (mesma
+  estratégia dos outros dois scripts), sempre mantendo pelo menos 1
+  linha. Reconfirmado: citação curta idêntica a antes (sem regressão),
+  citação de 10 linhas trunca pra 7 e cabe sem sobrepor o kicker.
 - Como evitar de novo: qualquer bloco de texto "centralizado" entre
   dois limites precisa que os dois limites sejam a área REAL disponível
   (excluindo kicker, rodapé, safe zone), não coordenadas fixas do

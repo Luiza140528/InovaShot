@@ -98,17 +98,16 @@ você decide o que vale a pena publicar."
   `gen_listicle.py`. Reconfirmado com 3 casos de teste (overflow real
   de itens, cover sem regressão, cover com overflow forçado). Detalhes
   em `learnings.md`.
-- **NOVO (08/09/2026)**: `gen_bastidores_sample.py` → `bastidores_slide()`
-  centraliza a citação verticalmente entre `available_top = 0` e
-  `available_bottom = H - FOOTER_HEIGHT`, ignorando completamente a
-  altura real ocupada pelo kicker (~180px no topo). Com citação longa
-  (8 linhas no teste), o bloco de texto centralizado sobe tanto que a
-  primeira linha fica desenhada por CIMA do kicker
-  "INOVASHOT · BASTIDORES" e da barra de gradiente. Frase curta (1
-  linha) funciona bem — bug só aparece com texto longo. Mesma classe
-  de bug (falta de limite/truncamento dinâmico) já corrigida em
-  `gen_listicle.py` e `gen_reel_carousel.py`. Não corrigido ainda.
-  Detalhes em `learnings.md`.
+- ~~`gen_bastidores_sample.py` → `bastidores_slide()` centralizava a
+  citação verticalmente entre `available_top = 0` e
+  `available_bottom = H - FOOTER_HEIGHT`, ignorando a altura real
+  ocupada pelo kicker (~180px no topo) — citação longa (8+ linhas)
+  ficava desenhada por CIMA do kicker~~ — **RESOLVIDO** (08/09/2026):
+  `available_top` agora usa a altura real do kicker (retornada por
+  `draw_kicker()`, antes ignorada) e a citação é truncada dinamicamente
+  linha por linha quando não cabe — mesma estratégia dos outros dois
+  scripts. Reconfirmado: citação curta sem regressão, citação de 10
+  linhas trunca pra 7 sem sobrepor o kicker. Detalhes em `learnings.md`.
 - ~~Módulo Político → aba Trends: erro ao clicar em "Buscar Tendências"~~ —
   **RESOLVIDO** (confirmado em teste em 11/07/2026). Se voltar a falhar,
   reabrir como pendência com detalhes do erro.
