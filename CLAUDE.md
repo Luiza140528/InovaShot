@@ -90,15 +90,13 @@ você decide o que vale a pena publicar."
   que resolvia só o caso comum. Reconfirmado com 4 casos de teste (1
   item, headline curto + 6 itens, headline longo + 5 e + 7 itens) —
   nenhum estoura ou sobrepõe mais. Detalhes em `learnings.md`.
-- **NOVO (08/09/2026)**: `gen_reel_carousel.py` → `body_slide()` não
-  tem nenhum limite de conteúdo — `y` cresce item por item sem checar
-  se ultrapassa o rodapé (y=1600) ou a "safe zone" de 480px reservada
-  pra UI do Reels (y=1440, documentada no próprio docstring do script).
-  Reproduzido com sample real: 5 itens (1 com texto longo) → y final =
-  1626, 26px dentro da faixa de rodapé e bem além da safe zone. Mesma
-  classe de bug do `gen_listicle.py` (resolvido via cálculo dinâmico,
-  ver `learnings.md`), mas aqui ainda NÃO corrigido — `cover_slide()`
-  tem o mesmo risco em teoria (não reproduzido no teste feito). Detalhes
+- ~~`gen_reel_carousel.py` → `body_slide()` não tinha nenhum limite de
+  conteúdo (`y` crescia sem checar rodapé/safe zone)~~ — **RESOLVIDO**
+  (08/09/2026): `body_slide()` e `cover_slide()` agora truncam
+  dinamicamente (item por item / linha por linha) pra nunca desenhar
+  dentro de `H - SAFE_ZONE` (1440), mesma estratégia usada no fix do
+  `gen_listicle.py`. Reconfirmado com 3 casos de teste (overflow real
+  de itens, cover sem regressão, cover com overflow forçado). Detalhes
   em `learnings.md`.
 - ~~Módulo Político → aba Trends: erro ao clicar em "Buscar Tendências"~~ —
   **RESOLVIDO** (confirmado em teste em 11/07/2026). Se voltar a falhar,

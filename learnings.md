@@ -220,10 +220,15 @@ Formato de cada entrada:
 - `cover_slide()` tem a mesma estrutura de risco (headline + body sem
   limite), mas não foi reproduzido no teste feito (headline de 4 linhas
   + body de 3 linhas coube com espaço sobrando).
-- Status: NÃO CORRIGIDO. Identificado em 08/09/2026. Correção provável
-  seria replicar a mesma estratégia usada em `gen_listicle.py`: truncar
-  itens dinamicamente com base no espaço real disponível antes do
-  rodapé/safe zone, em vez de desenhar sem limite.
+- Status: RESOLVIDO (08/09/2026). `body_slide()` agora pré-calcula a
+  altura de cada item (mesma estratégia do `gen_listicle.py`) e só
+  inclui item por item enquanto couber antes de `H - SAFE_ZONE` (1440),
+  não só antes do rodapé. `cover_slide()` também corrigido: corpo de
+  texto é truncado linha por linha no mesmo limite. Reconfirmado com 3
+  casos: 5 itens (trunca pra 4, sem invadir safe zone), cover com
+  headline+body moderados (sem regressão, cabia antes e continua
+  cabendo), cover com body gigante forçado (trunca corretamente logo
+  antes da safe zone, com aviso no console).
 - Como evitar de novo: qualquer gerador de slide que desenha conteúdo
   sequencialmente (sem card/área fixa) ainda precisa de uma checagem
   de limite contra o rodapé e qualquer safe zone documentada — a

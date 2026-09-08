@@ -177,10 +177,16 @@ def cover_slide(data, out_path, page_num, total_pages):
         body_font = font(F_MEDIUM, 46)
         body_lines = wrap_text(draw, data["body"], body_font, max_w)
         ty += 30
+        # nunca desenha dentro da safe zone reservada pra UI do Reels
+        content_limit = H - SAFE_ZONE
         for line in body_lines:
-            draw.text((80, ty), line, font=body_font, fill=BODY_COLOR)
             bbox = draw.textbbox((0, 0), line, font=body_font)
-            ty += (bbox[3] - bbox[1]) + 20
+            line_h = (bbox[3] - bbox[1]) + 20
+            if ty + line_h > content_limit:
+                print("Aviso: corpo do cover_slide truncado — não cabia antes da safe zone.")
+                break
+            draw.text((80, ty), line, font=body_font, fill=BODY_COLOR)
+            ty += line_h
 
     draw_footer(img, draw, page_num, total_pages)
     img.save(out_path)
@@ -196,24 +202,56 @@ def body_slide(data, out_path, page_num, total_pages):
     content_top = draw_kicker(draw, img, data.get("eyebrow", "INOVASHOT · CORTES"))
 
     max_w = W - 160
-    y = content_top + 70
+    y_start = content_top + 70
+    # nunca desenha dentro da safe zone reservada pra UI do Reels
+    content_limit = H - SAFE_ZONE
 
-    # items: list of {"title":..., "text":...}
-    for item in data["items"]:
-        item_title_font = font(F_BOLD, 52)
+    item_title_font = font(F_BOLD, 52)
+    body_font = font(F_MEDIUM, 40)
+
+    # Pré-calcula a altura natural de cada item (title + text + espaço),
+    # só inclui item por item enquanto couber antes da safe zone — igual
+    # à estratégia usada em gen_listicle.py pro mesmo tipo de bug.
+    all_items = data["items"]
+    rows = []
+    for item in all_items:
         title_lines = wrap_text(draw, item["title"], item_title_font, max_w)
-        for line in title_lines:
-            draw.text((80, y), line, font=item_title_font, fill=TITLE_COLOR)
-            bbox = draw.textbbox((0, 0), line, font=item_title_font)
-            y += (bbox[3] - bbox[1]) + 16
-
-        body_font = font(F_MEDIUM, 40)
+        title_heights = [
+            (draw.textbbox((0, 0), line, font=item_title_font)[3]
+             - draw.textbbox((0, 0), line, font=item_title_font)[1]) + 16
+            for line in title_lines
+        ]
         text_lines = wrap_text(draw, item["text"], body_font, max_w)
-        for line in text_lines:
-            draw.text((80, y), line, font=body_font, fill=BODY_COLOR)
-            bbox = draw.textbbox((0, 0), line, font=body_font)
-            y += (bbox[3] - bbox[1]) + 14
+        text_heights = [
+            (draw.textbbox((0, 0), line, font=body_font)[3]
+             - draw.textbbox((0, 0), line, font=body_font)[1]) + 14
+            for line in text_lines
+        ]
+        item_h = sum(title_heights) + sum(text_heights) + 50
+        rows.append((title_lines, title_heights, text_lines, text_heights, item_h))
 
+    kept = []
+    total_h = 0
+    for row in rows:
+        if kept and y_start + total_h + row[4] > content_limit:
+            break
+        kept.append(row)
+        total_h += row[4]
+
+    if len(kept) < len(all_items):
+        print(
+            f"Aviso: {len(all_items)} itens não cabem antes da safe zone; "
+            f"truncando pra {len(kept)}."
+        )
+
+    y = y_start
+    for title_lines, title_heights, text_lines, text_heights, item_h in kept:
+        for line, lh in zip(title_lines, title_heights):
+            draw.text((80, y), line, font=item_title_font, fill=TITLE_COLOR)
+            y += lh
+        for line, lh in zip(text_lines, text_heights):
+            draw.text((80, y), line, font=body_font, fill=BODY_COLOR)
+            y += lh
         y += 50  # spacing between items
 
     draw_footer(img, draw, page_num, total_pages)
