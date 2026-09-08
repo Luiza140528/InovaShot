@@ -67,6 +67,18 @@ você decide o que vale a pena publicar."
   isso não se repita.
 
 ## Bugs conhecidos / pendências
+- ~~`FONT_DIR` hardcoded em `/usr/share/fonts/truetype/google-fonts`
+  (caminho que não existe fora do servidor original) quebrava a geração
+  de imagem em 4 scripts~~ — **RESOLVIDO** (07-08/09/2026), confirmado
+  rodando cada script de ponta a ponta em produção (fundo `#070412`
+  gerado corretamente): `gen_bastidores_sample.py` (commit `f55b219`),
+  `gen_listicle.py` (commit `fa7fee6`), `gen_reel_carousel.py` (commit
+  `46e4813`, na raiz do projeto — `FONT_DIR` aponta pra `scripts/fonts`
+  relativo ao próprio arquivo, não `SCRIPT_DIR/fonts` puro).
+  `gen-carousel-dark.py` já usava o padrão correto (caminho relativo ao
+  próprio arquivo) e serviu de referência. Confirmado por
+  `grep -rn "/usr/share/fonts"` que não sobra nenhum caso no repo.
+  Detalhes da investigação em `learnings.md`.
 - ~~Módulo Político → aba Trends: erro ao clicar em "Buscar Tendências"~~ —
   **RESOLVIDO** (confirmado em teste em 11/07/2026). Se voltar a falhar,
   reabrir como pendência com detalhes do erro.
