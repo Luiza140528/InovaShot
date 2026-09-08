@@ -235,6 +235,32 @@ Formato de cada entrada:
   ausência de um "container" visual não significa ausência do bug de
   overflow, só significa que ele é mais fácil de esquecer de checar.
 
+## [2026-09] gen_bastidores_sample.py: citação longa sobrepõe o kicker
+- Sintoma: ao testar edge cases (mesmo exercício que achou os bugs de
+  `gen_listicle.py` e `gen_reel_carousel.py`), rodei
+  `bastidores_slide()` com uma citação de 8 linhas e a primeira linha
+  do texto apareceu desenhada por cima do kicker
+  "INOVASHOT · BASTIDORES" e da barra de gradiente no topo. Citação
+  curta (1 linha) funciona normalmente.
+- Causa raiz: em `bastidores_slide()`
+  (scripts/gen_bastidores_sample.py:161-164), `available_top = 0` e o
+  texto é centralizado verticalmente entre 0 e
+  `H - FOOTER_HEIGHT` (860) via `center_y - total_h // 2` — sem
+  considerar que o kicker já ocupa os primeiros ~180px do canvas. Com
+  `total_h` grande (citação longa), `y` inicial fica negativo o
+  suficiente pra invadir essa área.
+- Status: NÃO CORRIGIDO. Identificado em 08/09/2026. Correção provável:
+  trocar `available_top = 0` pela altura real retornada por
+  `draw_kicker()` (a função já retorna `bar_y + bar_h`, só não é usada
+  aqui) e, se ainda não couber com esse ajuste, truncar linhas da
+  citação — mesma estratégia dinâmica já aplicada nos outros dois
+  scripts.
+- Como evitar de novo: qualquer bloco de texto "centralizado" entre
+  dois limites precisa que os dois limites sejam a área REAL disponível
+  (excluindo kicker, rodapé, safe zone), não coordenadas fixas do
+  canvas (`0`, `H`) — do contrário "centralizar" e "sobrepor conteúdo
+  fixo" viram a mesma coisa quando o bloco cresce.
+
 ## [2026-07] Nginx client_body_timeout causando falha de upload (InovaShot)
 - Sintoma: uploads de vídeo falhando em produção (DigitalOcean).
 - Causa raiz: timeout do Nginx configurado baixo demais para uploads
