@@ -134,6 +134,14 @@ Formato de cada entrada:
 - Atualização (07/09/2026): `gen_listicle.py` corrigido com o mesmo
   padrão (commit a seguir), reconfirmado rodando de ponta a ponta —
   pixel de fundo também `(7, 4, 18)`. Pendência fechada.
+- Atualização (08/09/2026): `grep -rn "/usr/share/fonts"` no repo
+  inteiro achou mais um caso — `gen_reel_carousel.py` (na raiz do
+  projeto, não em `scripts/`). Corrigido apontando `FONT_DIR` pra
+  `scripts/fonts` relativo ao próprio arquivo (não `SCRIPT_DIR/fonts`
+  puro, já que este script não mora em `scripts/`). Testado em
+  produção de ponta a ponta (fundo `(7, 4, 18)`). Confirmado por
+  `grep` que não sobra nenhum outro `/usr/share/fonts` hardcoded no
+  repo.
 - Como evitar de novo: qualquer script gerador de asset visual novo
   deve usar caminho de fonte relativo ao próprio arquivo
   (`os.path.dirname(os.path.abspath(__file__))`), nunca caminho
