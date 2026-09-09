@@ -30,13 +30,27 @@ BODY_COLOR = (220, 215, 230)  # #dcd7e6
 FOOTER_HANDLE_COLOR = (235, 232, 240)  # #ebe8f0
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-FONT_DIR = os.path.join(SCRIPT_DIR, "scripts", "fonts")
-F_BOLD = os.path.join(FONT_DIR, "Poppins-Bold.ttf")
-F_MEDIUM = os.path.join(FONT_DIR, "Poppins-Medium.ttf")
+_SYSTEM_FONT_DIR = "/usr/share/fonts/truetype/google-fonts"
+
+
+def _resolve_font_path(filename):
+    local = os.path.join(SCRIPT_DIR, "scripts", "fonts", filename)
+    if os.path.exists(local):
+        return local
+    system = os.path.join(_SYSTEM_FONT_DIR, filename)
+    if os.path.exists(system):
+        return system
+    return local  # deixa o erro original aparecer se nenhum existir
+
+
+F_BOLD = _resolve_font_path("Poppins-Bold.ttf")
+F_MEDIUM = _resolve_font_path("Poppins-Medium.ttf")
 
 FOOTER_HEIGHT = 320
 SAFE_ZONE = 480  # bottom px reserved for IG reels UI - no custom content here
 KICKER_Y = 260
+GHOST_GAP_MIN = 70  # respiro minimo obrigatorio entre o bloco de texto e o numero fantasma
+CONTENT_AREA_TOP = 360  # topo da area util de conteudo (spec: y=360 a y=1120)
 
 
 def font(path, size):
@@ -126,12 +140,120 @@ def draw_footer(img, draw, page_num, total_pages):
     draw.text((handle_x, page_y), f"{page_num:02d}/{total_pages:02d}", font=page_font, fill=FOOTER_HANDLE_COLOR)
 
 
+def _fit_ghost_font(draw, text, max_size=950, min_size=200, side_margin=40):
+    """Encolhe a fonte do numero fantasma ate caber dentro da largura do
+    frame (com margem dos dois lados). Sem isso, numeros com dois digitos
+    largos (02, 03, 04...) estouram a largura de 1080px e cortam na borda
+    esquerda. Retorna (font, bbox) no tamanho final escolhido."""
+    size = max_size
+    max_w = W - 2 * side_margin
+    fnt = font(F_BOLD, size)
+    bbox = draw.textbbox((0, 0), text, font=fnt)
+    tw = bbox[2] - bbox[0]
+    while tw > max_w and size > min_size:
+        size -= 20
+        fnt = font(F_BOLD, size)
+        bbox = draw.textbbox((0, 0), text, font=fnt)
+        tw = bbox[2] - bbox[0]
+    return fnt, bbox
+
+
+def ghost_number_top(draw, number="00"):
+    """Calcula o y do topo visivel do numero fantasma, sem desenhar nada.
+    Usado pra saber ate onde o bloco de texto pode descer com seguranca."""
+    text = f"{int(number):02d}" if str(number).isdigit() else str(number)
+    ghost_font, bbox = _fit_ghost_font(draw, text)
+    th = bbox[3] - bbox[1]
+    y = H - FOOTER_HEIGHT - th - 40 - bbox[1]
+    return y + bbox[1]  # topo visivel real do glifo
+
+
+def _measure_lines(draw, lines, fnt, extra_gap):
+    heights = []
+    for line in lines:
+        bbox = draw.textbbox((0, 0), line, font=fnt)
+        heights.append((bbox[3] - bbox[1]) + extra_gap)
+    return heights
+
+
+def layout_centered_block(draw, blocks, area_top, area_bottom, min_scale=0.72):
+    """blocks: lista de dicts {text, font_path, size, max_width, extra_gap, block_gap}
+    Faz wrap de cada bloco, calcula a altura total e SEMPRE centraliza o
+    conjunto entre area_top e area_bottom. Se nao couber no tamanho
+    original, encolhe a fonte de TODOS os blocos na mesma proporcao
+    (mantendo a hierarquia visual) ate min_scale antes de desistir e
+    truncar linhas (com aviso).
+    Retorna: lista de (text, font_obj, color, x, y) prontos pra desenhar.
+    """
+    available_h = area_bottom - area_top
+    scale = 1.0
+    result_blocks = None
+
+    while scale >= min_scale:
+        total_h = 0
+        computed = []
+        for b in blocks:
+            size = max(10, int(b["size"] * scale))
+            fnt = font(b["font_path"], size)
+            lines = wrap_text(draw, b["text"], fnt, b["max_width"])
+            heights = _measure_lines(draw, lines, fnt, b["extra_gap"])
+            block_h = sum(heights) + (b.get("block_gap", 0) if lines else 0)
+            computed.append((lines, heights, fnt, b))
+            total_h += block_h
+        if total_h <= available_h:
+            result_blocks = computed
+            break
+        scale -= 0.04
+
+    truncated = False
+    if result_blocks is None:
+        # nem no tamanho minimo coube: mantem o tamanho minimo e trunca
+        # linha por linha (do ultimo bloco pro primeiro) em vez de deixar
+        # o texto sobrepor o numero fantasma.
+        scale = min_scale
+        total_h = 0
+        computed = []
+        for b in blocks:
+            size = max(10, int(b["size"] * scale))
+            fnt = font(b["font_path"], size)
+            lines = wrap_text(draw, b["text"], fnt, b["max_width"])
+            heights = _measure_lines(draw, lines, fnt, b["extra_gap"])
+            computed.append([lines, heights, fnt, b])
+        while True:
+            total_h = sum(sum(h) + (c[3].get("block_gap", 0) if c[0] else 0) for c in computed)
+            if total_h <= available_h:
+                break
+            # remove a ultima linha do ultimo bloco que ainda tem conteudo
+            for c in reversed(computed):
+                if len(c[0]) > 1:
+                    c[0].pop()
+                    c[1].pop()
+                    truncated = True
+                    break
+            else:
+                break
+        result_blocks = computed
+
+    if truncated:
+        print("Aviso: conteudo truncado mesmo apos reduzir a fonte ao minimo — texto longo demais pro espaco disponivel.")
+
+    total_h = sum(sum(h) + (b.get("block_gap", 0) if lines else 0) for lines, h, _, b in result_blocks)
+    y = area_top + max(0, (available_h - total_h) // 2)
+
+    draw_ops = []
+    for lines, heights, fnt, b in result_blocks:
+        for line, lh in zip(lines, heights):
+            draw_ops.append((line, fnt, b.get("color", TITLE_COLOR), b.get("x", 80), y))
+            y += lh
+        y += b.get("block_gap", 0)
+    return draw_ops
+
+
 def draw_ghost_number(img, number):
-    ghost_font = font(F_BOLD, 950)
     ghost_layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     gdraw = ImageDraw.Draw(ghost_layer)
-    text = str(number)
-    bbox = gdraw.textbbox((0, 0), text, font=ghost_font)
+    text = f"{int(number):02d}" if str(number).isdigit() else str(number)
+    ghost_font, bbox = _fit_ghost_font(gdraw, text)
     tw = bbox[2] - bbox[0]
     th = bbox[3] - bbox[1]
     x = W - tw - 40 - bbox[0]
@@ -164,29 +286,25 @@ def cover_slide(data, out_path, page_num, total_pages):
 
     content_top = draw_kicker(draw, img, data.get("eyebrow", "INOVASHOT · CORTES"))
 
-    title_font = font(F_BOLD, 78)
     max_w = W - 160
-    title_lines = wrap_text(draw, data["headline"], title_font, max_w)
-    ty = content_top + 70
-    for line in title_lines:
-        draw.text((80, ty), line, font=title_font, fill=TITLE_COLOR)
-        bbox = draw.textbbox((0, 0), line, font=title_font)
-        ty += (bbox[3] - bbox[1]) + 28
+    ghost_top = ghost_number_top(draw, page_num)
+    area_top = max(content_top + 40, CONTENT_AREA_TOP)
+    area_bottom = ghost_top - GHOST_GAP_MIN
 
+    blocks = [{
+        "text": data["headline"], "font_path": F_BOLD, "size": 78,
+        "max_width": max_w, "extra_gap": 28, "block_gap": 30 if data.get("body") else 0,
+        "color": TITLE_COLOR, "x": 80,
+    }]
     if data.get("body"):
-        body_font = font(F_MEDIUM, 46)
-        body_lines = wrap_text(draw, data["body"], body_font, max_w)
-        ty += 30
-        # nunca desenha dentro da safe zone reservada pra UI do Reels
-        content_limit = H - SAFE_ZONE
-        for line in body_lines:
-            bbox = draw.textbbox((0, 0), line, font=body_font)
-            line_h = (bbox[3] - bbox[1]) + 20
-            if ty + line_h > content_limit:
-                print("Aviso: corpo do cover_slide truncado — não cabia antes da safe zone.")
-                break
-            draw.text((80, ty), line, font=body_font, fill=BODY_COLOR)
-            ty += line_h
+        blocks.append({
+            "text": data["body"], "font_path": F_MEDIUM, "size": 46,
+            "max_width": max_w, "extra_gap": 20, "block_gap": 0,
+            "color": BODY_COLOR, "x": 80,
+        })
+
+    for line, fnt, color, x, y in layout_centered_block(draw, blocks, area_top, area_bottom):
+        draw.text((x, y), line, font=fnt, fill=color)
 
     draw_footer(img, draw, page_num, total_pages)
     img.save(out_path)
@@ -202,57 +320,40 @@ def body_slide(data, out_path, page_num, total_pages):
     content_top = draw_kicker(draw, img, data.get("eyebrow", "INOVASHOT · CORTES"))
 
     max_w = W - 160
-    y_start = content_top + 70
-    # nunca desenha dentro da safe zone reservada pra UI do Reels
-    content_limit = H - SAFE_ZONE
+    ghost_top = ghost_number_top(draw, page_num)
+    area_top = max(content_top + 40, CONTENT_AREA_TOP)
+    area_bottom = ghost_top - GHOST_GAP_MIN
 
-    item_title_font = font(F_BOLD, 52)
-    body_font = font(F_MEDIUM, 40)
-
-    # Pré-calcula a altura natural de cada item (title + text + espaço),
-    # só inclui item por item enquanto couber antes da safe zone — igual
-    # à estratégia usada em gen_listicle.py pro mesmo tipo de bug.
     all_items = data["items"]
-    rows = []
-    for item in all_items:
-        title_lines = wrap_text(draw, item["title"], item_title_font, max_w)
-        title_heights = [
-            (draw.textbbox((0, 0), line, font=item_title_font)[3]
-             - draw.textbbox((0, 0), line, font=item_title_font)[1]) + 16
-            for line in title_lines
-        ]
-        text_lines = wrap_text(draw, item["text"], body_font, max_w)
-        text_heights = [
-            (draw.textbbox((0, 0), line, font=body_font)[3]
-             - draw.textbbox((0, 0), line, font=body_font)[1]) + 14
-            for line in text_lines
-        ]
-        item_h = sum(title_heights) + sum(text_heights) + 50
-        rows.append((title_lines, title_heights, text_lines, text_heights, item_h))
+    blocks = []
+    for idx, item in enumerate(all_items):
+        is_last = idx == len(all_items) - 1
+        if item.get("title"):
+            blocks.append({
+                "text": item["title"], "font_path": F_BOLD, "size": 52,
+                "max_width": max_w, "extra_gap": 16, "block_gap": 0,
+                "color": TITLE_COLOR, "x": 80,
+            })
+            blocks.append({
+                "text": item["text"], "font_path": F_MEDIUM, "size": 40,
+                "max_width": max_w, "extra_gap": 14,
+                "block_gap": 0 if is_last else 50,
+                "color": BODY_COLOR, "x": 80,
+            })
+        else:
+            # sem titulo: trata como citacao de destaque (estilo Bastidores) -
+            # Bold, branco, maior, em vez de corpo apagado. Item com esse
+            # peso visual costuma vir sozinho no slide, entao normalmente
+            # nao ha block_gap a aplicar depois.
+            blocks.append({
+                "text": item["text"], "font_path": F_BOLD, "size": 68,
+                "max_width": max_w, "extra_gap": 22,
+                "block_gap": 0 if is_last else 50,
+                "color": TITLE_COLOR, "x": 80,
+            })
 
-    kept = []
-    total_h = 0
-    for row in rows:
-        if kept and y_start + total_h + row[4] > content_limit:
-            break
-        kept.append(row)
-        total_h += row[4]
-
-    if len(kept) < len(all_items):
-        print(
-            f"Aviso: {len(all_items)} itens não cabem antes da safe zone; "
-            f"truncando pra {len(kept)}."
-        )
-
-    y = y_start
-    for title_lines, title_heights, text_lines, text_heights, item_h in kept:
-        for line, lh in zip(title_lines, title_heights):
-            draw.text((80, y), line, font=item_title_font, fill=TITLE_COLOR)
-            y += lh
-        for line, lh in zip(text_lines, text_heights):
-            draw.text((80, y), line, font=body_font, fill=BODY_COLOR)
-            y += lh
-        y += 50  # spacing between items
+    for line, fnt, color, x, y in layout_centered_block(draw, blocks, area_top, area_bottom):
+        draw.text((x, y), line, font=fnt, fill=color)
 
     draw_footer(img, draw, page_num, total_pages)
     img.save(out_path)
