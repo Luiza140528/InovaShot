@@ -167,6 +167,33 @@ sessão relevante, não só revisado esporadicamente.
 - Blog publicado via GitHub Pages + perfil no Medium (canonical do Medium
   ainda pendente de configurar)
 
+### Benchmarks de conteúdo (atualizado 09/09/2026)
+
+Baseado em dados reais de Insights (30 dias):
+
+**Regra de título vencedora:** confronto de crença > dica genérica.
+- ✅ Alto desempenho (300-400+ views): "Curtida não paga boleto",
+  "Feed bonito não vende nada", "3 erros que fazem seu vídeo parecer amador"
+- ❌ Baixo desempenho (30-50 views): "Ninguém te avisou: seguidor não é
+  audiência", "SEO em vídeo curto não é hashtag"
+- Padrão: o título precisa desmontar algo que a pessoa já acredita, não só
+  ensinar algo novo. Redator SEO e Redator Reddit devem aplicar esse teste
+  antes de fechar qualquer título/gancho: "essa frase contradiz uma
+  crença/expectativa real do leitor, ou só entrega uma dica?"
+
+**Ângulo de pauta:** conteúdo sobre produtividade/IA aplicada de forma
+ampla (prompts, frameworks tipo McKinsey/SCQA, ferramentas) performa igual
+ou melhor que conteúdo estritamente sobre edição de vídeo. Radar deve
+incluir esses temas na varredura de tendências, não só o nicho de edição
+de vídeo.
+
+**Atenção — violação de marca identificada:** o título "A IA corta e
+viraliza seu vídeo... é mentira" usou "IA" como sujeito mesmo em formato
+de debunking/contradição. O gancho de contradição é ótimo e deve ser
+mantido, mas o sujeito da frase continua sendo "o InovaShot" — Revisor
+deve pegar esse padrão especificamente em títulos de confronto de crença,
+onde é mais fácil escapar pra "a IA faz X" sem perceber.
+
 ## Como a Luiza trabalha
 - Constrói e gerencia tudo pelo celular Android
 - É cuidadora familiar (Dona Niza), o que limita o tempo disponível — prefira
