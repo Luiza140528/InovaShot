@@ -140,12 +140,29 @@ def draw_footer(img, draw, page_num, total_pages):
     draw.text((handle_x, page_y), f"{page_num:02d}/{total_pages:02d}", font=page_font, fill=FOOTER_HANDLE_COLOR)
 
 
+def _fit_ghost_font(draw, text, max_size=950, min_size=200, side_margin=40):
+    """Encolhe a fonte do numero fantasma ate caber dentro da largura do
+    frame (com margem dos dois lados). Sem isso, numeros com dois digitos
+    largos (02, 03, 04...) estouram a largura de 1080px e cortam na borda
+    esquerda. Retorna (font, bbox) no tamanho final escolhido."""
+    size = max_size
+    max_w = W - 2 * side_margin
+    fnt = font(F_BOLD, size)
+    bbox = draw.textbbox((0, 0), text, font=fnt)
+    tw = bbox[2] - bbox[0]
+    while tw > max_w and size > min_size:
+        size -= 20
+        fnt = font(F_BOLD, size)
+        bbox = draw.textbbox((0, 0), text, font=fnt)
+        tw = bbox[2] - bbox[0]
+    return fnt, bbox
+
+
 def ghost_number_top(draw, number="00"):
     """Calcula o y do topo visivel do numero fantasma, sem desenhar nada.
     Usado pra saber ate onde o bloco de texto pode descer com seguranca."""
-    ghost_font = font(F_BOLD, 950)
     text = f"{int(number):02d}" if str(number).isdigit() else str(number)
-    bbox = draw.textbbox((0, 0), text, font=ghost_font)
+    ghost_font, bbox = _fit_ghost_font(draw, text)
     th = bbox[3] - bbox[1]
     y = H - FOOTER_HEIGHT - th - 40 - bbox[1]
     return y + bbox[1]  # topo visivel real do glifo
@@ -233,11 +250,10 @@ def layout_centered_block(draw, blocks, area_top, area_bottom, min_scale=0.72):
 
 
 def draw_ghost_number(img, number):
-    ghost_font = font(F_BOLD, 950)
     ghost_layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     gdraw = ImageDraw.Draw(ghost_layer)
     text = f"{int(number):02d}" if str(number).isdigit() else str(number)
-    bbox = gdraw.textbbox((0, 0), text, font=ghost_font)
+    ghost_font, bbox = _fit_ghost_font(gdraw, text)
     tw = bbox[2] - bbox[0]
     th = bbox[3] - bbox[1]
     x = W - tw - 40 - bbox[0]
