@@ -318,12 +318,23 @@ def body_slide(data, out_path, page_num, total_pages):
                 "max_width": max_w, "extra_gap": 16, "block_gap": 0,
                 "color": TITLE_COLOR, "x": 80,
             })
-        blocks.append({
-            "text": item["text"], "font_path": F_MEDIUM, "size": 40,
-            "max_width": max_w, "extra_gap": 14,
-            "block_gap": 0 if is_last else 50,
-            "color": BODY_COLOR, "x": 80,
-        })
+            blocks.append({
+                "text": item["text"], "font_path": F_MEDIUM, "size": 40,
+                "max_width": max_w, "extra_gap": 14,
+                "block_gap": 0 if is_last else 50,
+                "color": BODY_COLOR, "x": 80,
+            })
+        else:
+            # sem titulo: trata como citacao de destaque (estilo Bastidores) -
+            # Bold, branco, maior, em vez de corpo apagado. Item com esse
+            # peso visual costuma vir sozinho no slide, entao normalmente
+            # nao ha block_gap a aplicar depois.
+            blocks.append({
+                "text": item["text"], "font_path": F_BOLD, "size": 68,
+                "max_width": max_w, "extra_gap": 22,
+                "block_gap": 0 if is_last else 50,
+                "color": TITLE_COLOR, "x": 80,
+            })
 
     for line, fnt, color, x, y in layout_centered_block(draw, blocks, area_top, area_bottom):
         draw.text((x, y), line, font=fnt, fill=color)
