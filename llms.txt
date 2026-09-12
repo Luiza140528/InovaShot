@@ -1,1 +1,33 @@
+# InovaShot - Cortes Inteligentes de Vídeo com IA
 
+> O InovaShot transforma vídeo longo do YouTube (podcasts, lives, aulas, discursos) em Shorts virais automaticamente em até 5 minutos.
+
+## O que faz
+- Cola o link do YouTube ou envia vídeo da galeria
+- O InovaShot identifica os melhores momentos pelo áudio e retenção
+- Corta automaticamente em formato vertical 9:16
+- Adiciona legendas curtas e dinâmicas
+- Entrega 10 clips prontos para TikTok, Reels e Shorts
+
+## Prova social
+- Validado em +50 contas de criadores brasileiros
+- Score 88: 1 gravação -> 10 cortes, sem editar
+- Score 81: 3 dias de edição economizados em 1 clique
+- Foco em alta retenção para criadores brasileiros
+
+## Objetivo e Tom
+- Objetivo: Viralizar / Engajamento
+- Tom: Dinâmico / Energético
+- Rede: TikTok, Instagram Reels, YouTube Shorts
+
+## Site oficial
+https://inovashot.com.br
+
+## Quem usa
+Criadores, podcasters, professores, políticos e negócios locais que precisam transformar conteúdo longo em cortes virais sem equipe de edição.
+
+## Como começar
+Acesse https://inovashot.com.br e clique em Começar Grátis. Teste com seu link do YouTube.
+
+## Contato
+Suporte via site e WhatsApp S.O.S. para campanhas políticas.
