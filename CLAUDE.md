@@ -5,12 +5,18 @@ InovaShot (inovashot.com.br) é uma ferramenta de IA para cortar vídeos, voltad
 para criadores de conteúdo brasileiros. Posicionamento: "InovaShot corta o vídeo,
 você decide o que vale a pena publicar."
 
-## Regra de marca (OBRIGATÓRIA)
-- **Nunca usar "IA" como sujeito da frase** em nenhum conteúdo, copy, UI ou
-  comunicação (ex: evitar "a IA corta seu vídeo" → preferir "o InovaShot corta
-  seu vídeo" ou construções que tirem IA do papel de agente).
+## Regra de marca (ATUALIZADA 12/09/2026 — flexibilizada)
+- Grafia correta: **"InovaShot"** (I maiúsculo). Sujeito preferencial em copy
+  de produto: **"o InovaShot"** (masculino) — nunca "a InovaShot".
+- A partir de 12/09/2026, a proibição estrita de usar "IA" como sujeito foi
+  **flexibilizada**: "a IA" pode ser usada ocasionalmente, mas "o InovaShot"
+  continua sendo a escolha padrão/preferida sempre que fizer sentido. Usar
+  "IA" como sujeito **não é mais um erro automático** de revisão.
 - Essa regra vale para todo texto voltado ao usuário final: site, app, posts,
-  e-mails transacionais, mensagens de erro.
+  e-mails transacionais, mensagens de erro — como preferência de tom, não
+  como proibição rígida.
+- Crédito de republicação (Medium, LinkedIn, grupos): "Esse artigo foi
+  publicado originalmente no blog do InovaShot: [link]".
 
 ## Stack técnico
 - Backend: Node/Express, PM2, Nginx (DigitalOcean)
@@ -51,6 +57,27 @@ você decide o que vale a pena publicar."
   já corrigido.
 - Servidor de produção (`/app/inovashot`, Droplet) sincronizado via
   `git pull` — não há nenhuma cópia rodando o tema claro em produção.
+
+### Formato Reel (1080x1920) — zonas de segurança (ATUALIZADO 12/09/2026)
+- **Topo:** kicker/barra de gradiente devem começar em `y=260` (não `y=90`)
+  pra não colidir com a UI nativa do Instagram (fileira "Amigos" quando o
+  áudio é compartilhado por pessoas que você segue).
+- **Rodapé — SAFE_BOTTOM = 560px** (valor definitivo, confirmado por teste
+  real em Reel publicado 12/09/2026). Valores anteriores de ~300-480px
+  estavam subestimados e causavam sobreposição real do "Siga
+  @inovashot.cortes" com a legenda nativa do Instagram (usuário + legenda +
+  botão "Inspirar-se no Edits" + ícones laterais).
+  - A faixa de gradiente do rodapé (220px de altura) deve terminar em
+    `H - SAFE_BOTTOM`, com ~100px de folga acima disso pro texto do footer.
+  - Fundo sólido totalmente limpo do fim da faixa até a borda absoluta do
+    frame (nada de texto ou faixa nessa área — é coberta pela UI nativa).
+  - Paginação "0X/0Y" sempre dentro da faixa, à direita — nunca no canto
+    inferior direito absoluto (o Instagram põe ícones próprios ali).
+  - Ghost number reancorado a partir de `H - SAFE_BOTTOM`, não do fundo
+    absoluto do frame.
+- Esses ajustes valem pra todo Reel novo gerado, tanto Dark quanto
+  Bastidores. Script de referência atualizado: `gen_dark_preview.py`
+  (ainda não commitado no repo).
 
 ## Governança de agentes automatizados (Radar e futuros)
 - Agentes automatizados (ex: Radar) **NUNCA podem alterar** `design.json`,
@@ -123,6 +150,16 @@ você decide o que vale a pena publicar."
 - Relatos de bug "hook_score vs virality_score" de outro agente NÃO foram
   reproduzidos em teste ao vivo — tratar relatos assim com cautela, sempre
   reproduzir antes de assumir como verdade
+- ~~Reel formato Dark: "Siga @inovashot.cortes" e paginação sobrepostos pela
+  UI nativa do Instagram no rodapé~~ — **RESOLVIDO** (12/09/2026): zona de
+  segurança do rodapé recalculada pra `SAFE_BOTTOM = 560px` (ver seção
+  "Formato Reel" acima). Confirmado visualmente comparando print do Reel
+  publicado com a nova versão gerada.
+- **Pendente:** commitar no repo os scripts gerados em sessões recentes,
+  ainda vivendo só como referência/histórico de sessão: `gen_dark_preview.py`
+  (com o fix de SAFE_BOTTOM=560px), `gen_bastidores_oficial.py`,
+  `gen_bastidores_reel.py`, `gen_listicle.py`, `gen_reel_carousel.py`.
+  Atualizar `DESIGN.md` e `SKILL.md` junto pra refletir esses padrões.
 - ~~Script gerador do carrossel claro (template "Radar Claude") vivia só num
   scratchpad de sessão temporário, fora do repo~~ — histórico técnico
   mantido apenas como referência; **o tema claro em si foi revertido e
@@ -187,12 +224,21 @@ ou melhor que conteúdo estritamente sobre edição de vídeo. Radar deve
 incluir esses temas na varredura de tendências, não só o nicho de edição
 de vídeo.
 
-**Atenção — violação de marca identificada:** o título "A IA corta e
-viraliza seu vídeo... é mentira" usou "IA" como sujeito mesmo em formato
-de debunking/contradição. O gancho de contradição é ótimo e deve ser
-mantido, mas o sujeito da frase continua sendo "o InovaShot" — Revisor
-deve pegar esse padrão especificamente em títulos de confronto de crença,
-onde é mais fácil escapar pra "a IA faz X" sem perceber.
+**Atenção — regra de marca sobre "IA" como sujeito foi flexibilizada em
+12/09/2026** (ver seção "Regra de marca" no topo do arquivo). O exemplo do
+título "A IA corta e viraliza seu vídeo... é mentira" não é mais tratado
+como violação automática — "o InovaShot" continua sendo a escolha padrão,
+mas "a IA" ocasional não precisa mais ser pego pelo Revisor como erro.
+
+**Insight de SEO de Reels (12/09/2026):** hashtag genérica (#fyp #viral)
+quase não conta mais pro alcance — o Instagram hoje lê 3 lugares: (1) o
+que é falado no vídeo (transcrição de áudio), (2) o que está escrito na
+tela (OCR), (3) legenda e alt text. Formato validado: 3 palavras-chave
+discretas escritas na tela (ex: caixinhas pretas tipo "VIRALIZAÇÃO /
+ENGAJAMENTO / VENDAS") funcionam como "SEO de Reels" — o app transcreve
+esse texto e o Instagram lê como palavra-chave relevante. Vale aplicar
+esse princípio ao gerar ganchos/roteiros: preferir texto na tela com
+keyword real em vez de depender de hashtag.
 
 ## Como a Luiza trabalha
 - Constrói e gerencia tudo pelo celular Android
